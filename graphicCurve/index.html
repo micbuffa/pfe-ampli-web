@@ -1,0 +1,40 @@
+ <!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <script src="js.js"></script>
+  <title>JS Bin</title>
+  <style>
+  canvas {
+	border:1px solid black;
+  </style>
+</head>
+<body>
+  <canvas id="myCanvas" width=100 height=100></canvas><p>
+  <div id="P_values">
+  var p0 = {x: <span id="p0x">0</span>, y: <span id="p0y">100</span>};<br>
+  var p1 = {x: <span id="p1x">50</span>, y: <span id="p1y">100</span>};<br>
+  var p2 = {x: <span id="p2x">50</span>, y: <span id="p2y">0</span>};<br>
+  var p3 = {x: <span id="p3x">100</span>, y: <span id="p3y">0</span>};<p>
+      </div>
+
+  <label for="biasX">Scale X</label><input id="biasX" type=range value=50 min=0 max=100 oninput="changeBiasX(this.value);">
+  <p>
+  <label for="biasY">Scale Y</label><input id="biasY" type=range value=50 min=0 max=100 oninput="changeBiasY(this.value);">
+     <p>
+  <label for="startY1">StartY2</label><input id="startY2" type=range value=0 min=0 max=100 oninput="changeStartY2(this.value);">
+        <p>
+  <label for="startY1">StartY1</label><input id="startY1" type=range value=100 min=0 max=100 oninput="changeStartY1(this.value);">
+           <p>
+<label for="sqx">SquarifyX</label><input id="sqx" type=range value=0 min=0 max=10 step=0.1 oninput="squeeze(this.value);">
+          <p>
+<label for="k">K</label><input id="k" type=range value=5 min=0 max=10 step=0.1 oninput="changeK(this.value);">
+            
+            <p>
+<label for="smaller">Smaller</label><input id="smaller" type=range value=0 min=0 max=10 step=0.1 oninput="changeSmaller(this.value);">
+              
+               <p>
+<label for="bias">BIAS</label><input id="bias" type=range value=5 min=0 max=10 step=0.1 oninput="changeBias(this.value);">
+</body>
+</html> 
