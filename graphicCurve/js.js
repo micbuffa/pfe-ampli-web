@@ -1,4 +1,7 @@
- var canvas, ctx;
+var canvas, ctx;
+var flag;
+var startY1;
+var startY2;
 var p0 = {x: 0, y: 100}; //use whatever points you want obviously
 var p1 = {x: 50, y: 100}; // tan
 var p2 = {x: 50, y: 0}; // tan
@@ -6,37 +9,51 @@ var p3 = {x: 100, y: 0};
 var accuracy = 0.1; //this'll give the bezier 100 segments
 window.onload = init;
 
-
 function init() {
   canvas = document.querySelector('#myCanvas');
+  startY1 = document.getElementById("startY1");
+  startY2 = document.getElementById("startY2");
   ctx = canvas.getContext('2d');
-  
-  canvas.addEventListener('click',function(evt){ getPos(evt); },false);
-  
-  drawCurve();
-  updateAll();
+  controlCanvas();
 }
 
-function getPos(evt) {
-  //alert(evt.clientX + ',' + evt.clientY);
-  // click a gauche = modifier p0 et p1
-  // click a droite = modifier p2 et p3
+function controlCanvas() {
+  // Using a flag for detecting mouse move.
+  canvas.addEventListener('mousedown',function(evt){ 
+    flag = 1;
+    canvas.addEventListener('mousemove',function(evt){ 
+      if(flag == 1) { 
+        updatePos(evt);
+      }
+    },false);
+    canvas.addEventListener('mouseup',function(evt){ 
+      flag = 0;
+      changeMouse(canvas, "default");
+    },false);
+  },false);
+  // Update positions and draw curves.
+  updateAll();
+  drawCurve();
+}
+
+function updatePos(evt) {
   var x = evt.clientX - canvas.offsetLeft;
   var y = evt.clientY - canvas.offsetTop;
-  if(x < (canvas.width/2)) {
-       p0.y = y;
-       p1.y = y;
-    }
-  else {
-      p2.y = y;
-      p3.y = y;
-    }
-  
+  // Left click = modify p1 and p1
+  if(x < (canvas.width/10)) {
+    changeStartY1(y);
+  }
+  // Right click = modify p2 and p3
+  else if(x > (canvas.width - (canvas.width / 10)))  {
+    changeStartY2(y);
+  }
   updateAll();
-  drawCurve();
 }
 
-
+function changeMouse(e, cursorstyle) {
+  // Change the style of the mouse in the element selected.
+  e.style.cursor=cursorstyle;
+}
             
 function bezier(t, p0, p1, p2, p3){
     var cX = 3 * (p1.x - p0.x),
@@ -63,9 +80,6 @@ function changeBiasX(val) {
 function changeBiasY(val) {
   p1.x = val;
   drawCurve();
-  
-   
-
 }
 
 function squeeze(val) {
@@ -74,27 +88,23 @@ function squeeze(val) {
   p2.y = val1;
   val2 = map(val, 0, 10, 100, 50);
   p1.y = val2;
-  drawCurve();
-  
-   
+  drawCurve();  
 }
 
 function changeStartY2(val) {
+  changeMouse(canvas, "n-resize");
+  startY2.value = val;
   p3.y = val;
   p2.y = val;
   drawCurve();
-  
- 
 }
 
-
-
 function changeStartY1(val) {
+  changeMouse(canvas, "n-resize");
+  startY1.value = val;
   p0.y = parseInt(val);
   p1.y = val;
   drawCurve();
-  
- 
 }
 
 
