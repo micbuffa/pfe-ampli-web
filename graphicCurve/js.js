@@ -1,4 +1,5 @@
 var canvas, ctx;
+var currentlychange;
 var flag;
 var startY1;
 var startY2;
@@ -13,6 +14,7 @@ function init() {
   canvas = document.querySelector('#myCanvas');
   startY1 = document.getElementById("startY1");
   startY2 = document.getElementById("startY2");
+  currentlychange = document.getElementById("currentlyChange");
   ctx = canvas.getContext('2d');
   controlCanvas();
 }
@@ -29,6 +31,7 @@ function controlCanvas() {
     canvas.addEventListener('mouseup',function(evt){ 
       flag = 0;
       changeMouse(canvas, "default");
+      hideCurrentAction();
     },false);
   },false);
   // Update positions and draw curves.
@@ -39,13 +42,19 @@ function controlCanvas() {
 function updatePos(evt) {
   var x = evt.clientX - canvas.offsetLeft;
   var y = evt.clientY - canvas.offsetTop;
-  // Left click = modify p1 and p1
-  if(x < (canvas.width/10)) {
+  // Click on the extreme left = modify p1 and p1
+  if(x < (canvas.width / 15)) {
     changeStartY1(y);
   }
-  // Right click = modify p2 and p3
-  else if(x > (canvas.width - (canvas.width / 10)))  {
+  // Click on the extreme right = modify p2 and p3
+  else if(x > (canvas.width - (canvas.width / 15)))  {
     changeStartY2(y);
+  }
+  else if(y < (canvas.height / 2)) {
+    changeBiasX(x);
+  }
+  else if(y > (canvas.height / 2)) {
+    changeBiasY(x);
   }
   updateAll();
 }
@@ -53,6 +62,15 @@ function updatePos(evt) {
 function changeMouse(e, cursorstyle) {
   // Change the style of the mouse in the element selected.
   e.style.cursor=cursorstyle;
+}
+
+function setCurrentAction(action) {
+    currentlychange.style.display="block";
+    currentlychange.innerHTML = action;
+}
+
+function hideCurrentAction() {
+  currentlychange.style.display="none";
 }
             
 function bezier(t, p0, p1, p2, p3){
@@ -73,11 +91,17 @@ function bezier(t, p0, p1, p2, p3){
 } 
   
 function changeBiasX(val) {
+  changeMouse(canvas, "e-resize");
+  setCurrentAction("Currently change the Bias of X");
+  biasX.value = val;
   p2.x = val;
   drawCurve(); 
 } 
 
 function changeBiasY(val) {
+  changeMouse(canvas, "e-resize");
+  setCurrentAction("Currently change the Bias of Y");
+  biasY.value = val;
   p1.x = val;
   drawCurve();
 }
@@ -93,6 +117,7 @@ function squeeze(val) {
 
 function changeStartY2(val) {
   changeMouse(canvas, "n-resize");
+  setCurrentAction("Currently change the start of Y2");
   startY2.value = val;
   p3.y = val;
   p2.y = val;
@@ -101,6 +126,7 @@ function changeStartY2(val) {
 
 function changeStartY1(val) {
   changeMouse(canvas, "n-resize");
+  setCurrentAction("Currently change the start of Y1");
   startY1.value = val;
   p0.y = parseInt(val);
   p1.y = val;
