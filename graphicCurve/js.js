@@ -2,7 +2,8 @@ var canvas, ctx;
 var currentlychange;
 var flag;
 var startY1;
-var startY2;
+var startY2
+var biasX, biasY;
 var p0 = {x: 0, y: 100}; //use whatever points you want obviously
 var p1 = {x: 50, y: 100}; // tan
 var p2 = {x: 50, y: 0}; // tan
@@ -14,6 +15,8 @@ function init() {
   canvas = document.querySelector('#myCanvas');
   startY1 = document.getElementById("startY1");
   startY2 = document.getElementById("startY2");
+  biasX = document.getElementById("biasX");
+  biasY = document.getElementById("biasY");
   currentlychange = document.getElementById("currentlyChange");
   ctx = canvas.getContext('2d');
   controlCanvas();
@@ -32,6 +35,7 @@ function controlCanvas() {
       flag = 0;
       changeMouse(canvas, "default");
       hideCurrentAction();
+      restoreBackground();
     },false);
   },false);
   // Update positions and draw curves.
@@ -93,6 +97,8 @@ function bezier(t, p0, p1, p2, p3){
 function changeBiasX(val) {
   changeMouse(canvas, "e-resize");
   setCurrentAction("Currently change the Bias of X");
+  restoreBackground()
+  biasX.style.backgroundColor="yellow";
   biasX.value = val;
   p2.x = val;
   drawCurve(); 
@@ -101,6 +107,8 @@ function changeBiasX(val) {
 function changeBiasY(val) {
   changeMouse(canvas, "e-resize");
   setCurrentAction("Currently change the Bias of Y");
+  restoreBackground()
+  biasY.style.backgroundColor="yellow";
   biasY.value = val;
   p1.x = val;
   drawCurve();
@@ -118,6 +126,8 @@ function squeeze(val) {
 function changeStartY2(val) {
   changeMouse(canvas, "n-resize");
   setCurrentAction("Currently change the start of Y2");
+  restoreBackground()
+  startY2.style.backgroundColor="yellow";
   startY2.value = val;
   p3.y = val;
   p2.y = val;
@@ -127,12 +137,20 @@ function changeStartY2(val) {
 function changeStartY1(val) {
   changeMouse(canvas, "n-resize");
   setCurrentAction("Currently change the start of Y1");
+  restoreBackground()
+  startY1.style.backgroundColor="yellow";
   startY1.value = val;
   p0.y = parseInt(val);
   p1.y = val;
   drawCurve();
 }
 
+function restoreBackground() {
+  startY1.style.backgroundColor="white";
+  startY2.style.backgroundColor="white";
+  biasY.style.backgroundColor="white";
+  biasX.style.backgroundColor="white";
+}
 
 function changeK(val) {
   val = parseFloat(val);

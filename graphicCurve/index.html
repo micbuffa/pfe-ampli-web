@@ -10,6 +10,9 @@
   canvas {
 	  border:1px solid black;
   }
+  input {
+    background-color: white;
+  }
   </style>
 </head>
 <body>
@@ -24,13 +27,13 @@
 
     <div style="display:none;margin-bottom:20px;" id="currentlyChange"></div>
 
-    <label for="biasX">Scale X</label><input id="biasX" style="background-color:yellow" type=range value=50 min=0 max=100 oninput="changeBiasX(this.value);">
+    <label for="biasX">Scale X</label><input id="biasX" type=range value=50 min=0 max=100 oninput="changeBiasX(this.value);">
     <p>
-    <label for="biasY">Scale Y</label><input id="biasY" style="background-color:yellow" type=range value=50 min=0 max=100 oninput="changeBiasY(this.value);">
+    <label for="biasY">Scale Y</label><input id="biasY"  type=range value=50 min=0 max=100 oninput="changeBiasY(this.value);">
        <p>
-    <label for="startY1">StartY2</label><input id="startY2" style="background-color:yellow" type=range value=0 min=0 max=100 oninput="changeStartY2(this.value);">
+    <label for="startY1">StartY2</label><input id="startY2" type=range value=0 min=0 max=100 oninput="changeStartY2(this.value);">
           <p>
-    <label for="startY1">StartY1</label><input id="startY1" style="background-color:yellow" type=range value=100 min=0 max=100 oninput="changeStartY1(this.value);">
+    <label for="startY1">StartY1</label><input id="startY1" type=range value=100 min=0 max=100 oninput="changeStartY1(this.value);">
              <p>
   <label for="sqx">SquarifyX</label><input id="sqx" type=range value=0 min=0 max=10 step=0.1 oninput="squeeze(this.value);">
             <p>
