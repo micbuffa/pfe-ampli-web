@@ -1,9 +1,11 @@
+'use strict';
 var canvas, ctx;
 var currentlychange;
-var flag;
+var flag = 0;
 var startY1;
 var startY2
 var biasX, biasY;
+var navigatorName;
 var p0 = {x: 0, y: 100}; //use whatever points you want obviously
 var p1 = {x: 50, y: 100}; // tan
 var p2 = {x: 50, y: 0}; // tan
@@ -18,8 +20,24 @@ function init() {
   biasX = document.getElementById("biasX");
   biasY = document.getElementById("biasY");
   currentlychange = document.getElementById("currentlyChange");
+  detectNavigator();
   ctx = canvas.getContext('2d');
   controlCanvas();
+}
+
+function detectNavigator() {
+  if(navigator.userAgent.indexOf("Chrome") != -1 )
+  {
+    navigatorName = "Chrome";
+  }
+  else if(navigator.userAgent.indexOf("Firefox") != -1 ) 
+  {
+    navigatorName = "Firefox";
+  }
+  else
+  {
+    navigatorName = "Other";
+  }
 }
 
 function controlCanvas() {
@@ -27,7 +45,7 @@ function controlCanvas() {
   canvas.addEventListener('mousedown',function(evt){ 
     flag = 1;
     canvas.addEventListener('mousemove',function(evt){ 
-      if(flag == 1) { 
+      if(flag > 0) { 
         updatePos(evt);
       }
     },false);
@@ -41,23 +59,24 @@ function controlCanvas() {
   // Update positions and draw curves.
   updateAll();
   drawCurve();
+
 }
 
 function updatePos(evt) {
   var x = evt.clientX - canvas.offsetLeft;
   var y = evt.clientY - canvas.offsetTop;
   // Click on the extreme left = modify p1 and p1
-  if(x < (canvas.width / 15)) {
+  if(x < (canvas.width / 15) && (flag==1||flag==2)) {
     changeStartY1(y);
   }
   // Click on the extreme right = modify p2 and p3
-  else if(x > (canvas.width - (canvas.width / 15)))  {
+  else if((x > (canvas.width - (canvas.width / 15))) && (flag==1||flag==3))  {
     changeStartY2(y);
   }
-  else if(y < (canvas.height / 2)) {
+  else if((y < (canvas.height / 2)) && (flag==1||flag==4)) {
     changeBiasX(x);
   }
-  else if(y > (canvas.height / 2)) {
+  else if((y > (canvas.height / 2)) && (flag==1||flag==5)) {
     changeBiasY(x);
   }
   updateAll();
@@ -68,9 +87,15 @@ function changeMouse(e, cursorstyle) {
   e.style.cursor=cursorstyle;
 }
 
-function setCurrentAction(action) {
-    currentlychange.style.display="block";
-    currentlychange.innerHTML = action;
+function setCurrentAction(action, c, cursorStyle, rangeId) {
+  currentlychange.style.display="block";
+  currentlychange.innerHTML = action;
+
+  if(navigatorName == "Firefox")
+  {
+    changeMouse(c, cursorStyle);
+    rangeId.style.backgroundColor="yellow";
+  }
 }
 
 function hideCurrentAction() {
@@ -95,22 +120,20 @@ function bezier(t, p0, p1, p2, p3){
 } 
   
 function changeBiasX(val) {
-  changeMouse(canvas, "e-resize");
-  setCurrentAction("Currently change the Bias of X");
-  restoreBackground()
-  biasX.style.backgroundColor="yellow";
+  restoreBackground();
+  setCurrentAction("Currently change the Bias of X", canvas, "e-resize", biasX);
   biasX.value = val;
   p2.x = val;
+  flag = 4;
   drawCurve(); 
 } 
 
 function changeBiasY(val) {
-  changeMouse(canvas, "e-resize");
-  setCurrentAction("Currently change the Bias of Y");
-  restoreBackground()
-  biasY.style.backgroundColor="yellow";
+  restoreBackground();
+  setCurrentAction("Currently change the Bias of Y", canvas, "e-resize", biasY);
   biasY.value = val;
   p1.x = val;
+  flag = 5;
   drawCurve();
 }
 
@@ -124,24 +147,22 @@ function squeeze(val) {
 }
 
 function changeStartY2(val) {
-  changeMouse(canvas, "n-resize");
-  setCurrentAction("Currently change the start of Y2");
-  restoreBackground()
-  startY2.style.backgroundColor="yellow";
+  restoreBackground();
+  setCurrentAction("Currently change the start of Y2", canvas, "n-resize", startY2);
   startY2.value = val;
   p3.y = val;
   p2.y = val;
+  flag = 3;
   drawCurve();
 }
 
 function changeStartY1(val) {
-  changeMouse(canvas, "n-resize");
-  setCurrentAction("Currently change the start of Y1");
-  restoreBackground()
-  startY1.style.backgroundColor="yellow";
+  restoreBackground();
+  setCurrentAction("Currently change the start of Y1", canvas, "n-resize", startY1);
   startY1.value = val;
   p0.y = parseInt(val);
   p1.y = val;
+  flag = 2;
   drawCurve();
 }
 
