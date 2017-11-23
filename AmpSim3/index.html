@@ -130,13 +130,13 @@
 
                     <p>DRIVE : distorsion levels</p>
                     <div class="controls">
-                        <label>K1</label>
+                        <label id="k1label">K1</label>
                         <input id="K1slider" type="range" value="4" step="0.1" min="0" max="10" oninput="amp.preamp.changeDistorsionValues(this.value, 0);"></input>
                         <output id="k0">4</output>
                     </div>
 
                     <div class="controls">
-                        <label>K2</label>
+                        <label id="k2label">K2</label>
                         <input id="K2slider" type="range" value="4" step="0.1" min="0" max="10" oninput="amp.preamp.changeDistorsionValues(this.value, 1);"></input>
                         <output id="k1">4</output>
                     </div>
@@ -211,13 +211,13 @@
                     <select id="QFPresetMenu2" style="position:absolute;left:850px;top:270px"></select>
 
                     <p><div style="color:white; position:absolute;left:100px;top:385px">
-                        <canvas id="distoDrawerCanvas1" style="margin-right:10px;left-margin:10px;" width="100" height="100"></canvas>
+                        <canvas id="distoDrawerCanvas1" title="Click and maintain to change distortion value" style="margin-right:10px;left-margin:10px;" width="100" height="100"></canvas>
                         <canvas id="signalDrawerCanvas1" width="100" height="100"></canvas>
                     </div>
                     <div style="color:white; position:absolute;left:100px;top:495px">Transfer function and distorded signal example...
                     </div>
                     <div style="color:white; position:absolute;left:340px;top:385px">
-                        <canvas id="distoDrawerCanvas2" style="margin-right:10px;left-margin:10px;" width="100" height="100"></canvas>
+                        <canvas id="distoDrawerCanvas2" title="Click and maintain to change distortion value" style="margin-right:10px;left-margin:10px;" width="100" height="100"></canvas>
                         <canvas id="signalDrawerCanvas2" width="100" height="100"></canvas>
                     </div>
             </section>
@@ -226,6 +226,48 @@
         <div class="events" id="events" style="background:rgba(128,128,255,0.5);overflow:scroll"></div>
 
         <script type="text/javascript">
+            // Change distortion on mouse move in Canvas distoDrawer 1
+            var canvas1, flag1, rect1, label1, kValue1;
+            canvas1 = document.querySelector('#distoDrawerCanvas1');
+            label1 = document.querySelector('#k1label');
+            kValue1 = document.querySelector('#k0');
+            rect1 = canvas1.getBoundingClientRect();
+            canvas1.addEventListener('mousedown',function(evt){ 
+                flag1 = 1;
+                canvas1.addEventListener('mousemove',function(evt){ 
+                if(flag1 > 0) { 
+                    // Change distortion value to position of the cursor in the canvas with precision of 0.1.
+                    amp.preamp.changeDistorsionValues(((evt.clientX  - rect1.left) / 10).toFixed(1) ,0);
+                    amp.preamp.highlightValues(label1, kValue1);
+                }
+            },false);
+            canvas1.addEventListener('mouseup',function(evt){ 
+                    flag1 = 0;
+                    amp.preamp.hideValues(label1, kValue1);
+                },false);
+            },false);
+
+            // Change distortion on mouse move in Canvas distoDrawer 2
+            var canvas2, flag2, rect2, label2, kValue2;
+            canvas2 = document.querySelector('#distoDrawerCanvas2');
+            label2 = document.querySelector('#k2label');
+            kValue2 = document.querySelector('#k1');
+            rect2 = canvas2.getBoundingClientRect();
+            canvas2.addEventListener('mousedown',function(evt){ 
+                flag2 = 1;
+                canvas2.addEventListener('mousemove',function(evt){ 
+                if(flag2 > 0) { 
+                    // Change distortion value to position of the cursor in the canvas with precision of 0.1.
+                    amp.preamp.changeDistorsionValues(((evt.clientX  - rect2.left) / 10).toFixed(1) ,1);
+                    amp.preamp.highlightValues(label2, kValue2);
+                }
+            },false);
+            canvas2.addEventListener('mouseup',function(evt){ 
+                    flag2 = 0;
+                    amp.preamp.hideValues(label2, kValue2);
+                },false);
+            },false);
+
             // Binding avec le vrai ampli
             // Volume
             var volumeOutputPreAmp = document.querySelector("#Knob1");

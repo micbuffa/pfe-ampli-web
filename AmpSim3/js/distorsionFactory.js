@@ -286,9 +286,9 @@ function WaveShapers() {
     } 
 
     function getBezierCurve() {
-        var p0 = {x: 0, y: 100};
+    var p0 = {x: 0, y: 100};
     var p1 = {x: 10, y: 50};
-    var p2 = {x: 0, y: 50};
+    var p2 = {x: 0, y: 100};
     var p3 = {x: 100, y: 0};
 
        var n_samples = 44100,

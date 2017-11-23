@@ -475,4 +475,18 @@ class PreAmp {
         }
     }
 
+    highlightValues(label,kvalue) {
+        label.style.fontWeight="bold";
+        label.style.color="blue";
+        kvalue.style.fontWeight="bold";
+        kvalue.style.color="blue";
+    }
+
+    hideValues(label,kvalue) {
+        label.style.fontWeight="normal";
+        label.style.color="black";
+        kvalue.style.fontWeight="normal";
+        kvalue.style.color="black";
+    }
+
 }

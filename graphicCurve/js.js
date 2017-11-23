@@ -1,5 +1,6 @@
 'use strict';
 var canvas, ctx;
+var k;
 var currentlychange;
 var flag = 0;
 var startY1;
@@ -19,6 +20,7 @@ function init() {
   startY2 = document.getElementById("startY2");
   biasX = document.getElementById("biasX");
   biasY = document.getElementById("biasY");
+  k = document.getElementById("k");
   currentlychange = document.getElementById("currentlyChange");
   detectNavigator();
   ctx = canvas.getContext('2d');
@@ -73,11 +75,8 @@ function updatePos(evt) {
   else if((x > (canvas.width - (canvas.width / 15))) && (flag==1||flag==3))  {
     changeStartY2(y);
   }
-  else if((y < (canvas.height / 2)) && (flag==1||flag==4)) {
-    changeBiasX(x);
-  }
-  else if((y > (canvas.height / 2)) && (flag==1||flag==5)) {
-    changeBiasY(x);
+  else {
+    changeK(x/10);
   }
   updateAll();
 }
@@ -120,20 +119,21 @@ function bezier(t, p0, p1, p2, p3){
 } 
   
 function changeBiasX(val) {
-  restoreBackground();
-  setCurrentAction("Currently change the Bias of X", canvas, "e-resize", biasX);
+  //restoreBackground();
+  //setCurrentAction("Currently change the Bias of X", canvas, "e-resize", biasX);
+  //flag = 4;
   biasX.value = val;
   p2.x = val;
-  flag = 4;
+  
   drawCurve(); 
 } 
 
 function changeBiasY(val) {
-  restoreBackground();
-  setCurrentAction("Currently change the Bias of Y", canvas, "e-resize", biasY);
+  //restoreBackground();
+  //setCurrentAction("Currently change the Bias of Y", canvas, "e-resize", biasY);
+  //flag = 5;
   biasY.value = val;
   p1.x = val;
-  flag = 5;
   drawCurve();
 }
 
@@ -167,15 +167,20 @@ function changeStartY1(val) {
 }
 
 function restoreBackground() {
-  startY1.style.backgroundColor="white";
-  startY2.style.backgroundColor="white";
-  biasY.style.backgroundColor="white";
-  biasX.style.backgroundColor="white";
+  var elems = document.querySelectorAll("input");
+    var index = 0, length = elems.length;
+    for ( ; index < length; index++) {
+        elems[index].style.backgroundColor="white";
+    }
 }
 
 function changeK(val) {
+  restoreBackground();
   val = parseFloat(val);
+  setCurrentAction("Currently change the K value", canvas, "e-resize", k);
+  k.value=val;
   // first map k to [0, 100]
+  flag = 4;
   var k1 = map(val, 0, 10, 100, 0);
   changeBiasX(k1);
   var k2 = map(val, 0, 10, 0, 100);
