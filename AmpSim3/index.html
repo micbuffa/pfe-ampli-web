@@ -124,9 +124,7 @@
                         <label>Stage 2 Gain</label>
                         <input id="preampStage2GainSlider" type="range" value="1" step="0.01" min="0" max="10" oninput="amp.preamp.changePreampStage2GainValue(this.value, 0);"></input>
                         <output id="preampStage2Gain">1</output>
-                    </div>
-
- 
+                    </div> 
 
                     <p>DRIVE : distorsion levels</p>
                     <div class="controls">
@@ -232,20 +230,33 @@
             label1 = document.querySelector('#k1label');
             kValue1 = document.querySelector('#k0');
             rect1 = canvas1.getBoundingClientRect();
-            canvas1.addEventListener('mousedown',function(evt){ 
+            canvas1.addEventListener('mousedown', function(evt){
+                let initKVal = amp.preamp.getDistorsionValue(0);
+                let initMouseVal = ((evt.clientX  - rect1.left) / 10).toFixed(1);
                 flag1 = 1;
-                canvas1.addEventListener('mousemove',function(evt){ 
-                if(flag1 > 0) { 
-                    // Change distortion value to position of the cursor in the canvas with precision of 0.1.
-                    amp.preamp.changeDistorsionValues(((evt.clientX  - rect1.left) / 10).toFixed(1) ,0);
+                document.addEventListener('mousemove', function(evt) { 
+                if(flag1 > 0) {
+                    let shift = ((evt.clientX  - rect1.left) / 10).toFixed(1) - initMouseVal;
+                    let newK = parseFloat(initKVal) + parseFloat(shift);
+                    if (newK < 0) {
+                        newK = 0;
+                    } else if (newK > 10) {
+                        newK = 10;
+                    }
+                    amp.preamp.changeDistorsionValues(newK, 0);
                     amp.preamp.highlightValues(label1, kValue1);
+
+                    // // Change distortion value to position of the cursor in the canvas with precision of 0.1.
+                    // amp.preamp.changeDistorsionValues(((evt.clientX  - rect1.left) / 10).toFixed(1) ,0);
+                    // amp.preamp.highlightValues(label1, kValue1);
                 }
-            },false);
-            canvas1.addEventListener('mouseup',function(evt){ 
-                    flag1 = 0;
-                    amp.preamp.hideValues(label1, kValue1);
-                },false);
-            },false);
+            }, false);
+
+            document.addEventListener('mouseup', function(evt) {
+                flag1 = 0;
+                amp.preamp.hideValues(label1, kValue1);
+                }, false);
+            }, false);
 
             // Change distortion on mouse move in Canvas distoDrawer 2
             var canvas2, flag2, rect2, label2, kValue2;
@@ -253,20 +264,33 @@
             label2 = document.querySelector('#k2label');
             kValue2 = document.querySelector('#k1');
             rect2 = canvas2.getBoundingClientRect();
-            canvas2.addEventListener('mousedown',function(evt){ 
+            canvas2.addEventListener('mousedown', function(evt) {
+                let initKVal = amp.preamp.getDistorsionValue(1);
+                let initMouseVal = ((evt.clientX  - rect2.left) / 10).toFixed(1);
                 flag2 = 1;
-                canvas2.addEventListener('mousemove',function(evt){ 
+                document.addEventListener('mousemove', function(evt) { 
                 if(flag2 > 0) { 
-                    // Change distortion value to position of the cursor in the canvas with precision of 0.1.
-                    amp.preamp.changeDistorsionValues(((evt.clientX  - rect2.left) / 10).toFixed(1) ,1);
+                    let shift = ((evt.clientX  - rect2.left) / 10).toFixed(1) - initMouseVal;
+                    let newK = parseFloat(initKVal) + parseFloat(shift);
+                    if (newK < 0) {
+                        newK = 0;
+                    } else if (newK > 10) {
+                        newK = 10;
+                    }
+                    amp.preamp.changeDistorsionValues(newK, 1);
                     amp.preamp.highlightValues(label2, kValue2);
+
+                    // // Change distortion value to position of the cursor in the canvas with precision of 0.1.
+                    // amp.preamp.changeDistorsionValues(((evt.clientX  - rect2.left) / 10).toFixed(1) ,1);
+                    // amp.preamp.highlightValues(label2, kValue2);
                 }
-            },false);
-            canvas2.addEventListener('mouseup',function(evt){ 
+            }, false);
+
+            document.addEventListener('mouseup', function(evt) {
                     flag2 = 0;
                     amp.preamp.hideValues(label2, kValue2);
-                },false);
-            },false);
+                }, false);
+            }, false);
 
             // Binding avec le vrai ampli
             // Volume
