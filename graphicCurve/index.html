@@ -27,9 +27,9 @@
 
     <div style="display:none;margin-bottom:20px;" id="currentlyChange"></div>
 
-    <label for="biasX">Scale X</label><input id="biasX" type=range value=50 min=0 max=100 oninput="changeBiasX(this.value);"/>
+    <label for="biasX">Scale X</label><input id="biasX" type=range value=50 min=0 max=100 oninput="changeScaleX(this.value);"/>
     <p>
-    <label for="biasY">Scale Y</label><input id="biasY"  type=range value=50 min=0 max=100 oninput="changeBiasY(this.value);"/>
+    <label for="biasY">Scale Y</label><input id="biasY"  type=range value=50 min=0 max=100 oninput="changeScaleY(this.value);"/>
        <p>
     <label for="startY1">StartY2</label><input id="startY2" type=range value=0 min=0 max=100 oninput="changeStartY2(this.value);"/>
           <p>
@@ -43,7 +43,7 @@
   <label for="smaller">Smaller</label><input id="smaller" type=range value=0 min=0 max=10 step=0.1 oninput="changeSmaller(this.value);"/>
                 
                  <p>
-  <label for="bias">BIAS</label><input id="bias" type=range value=5 min=0 max=10 step=0.1 oninput="changeBias(this.value);"/>
+  <label for="bias">BIAS</label><input id="bias" type=range value=0 min=-5 max=5 step=0.1 oninput="changeBias(this.value);"/>
 
 
 </body>

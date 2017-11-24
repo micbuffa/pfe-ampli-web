@@ -118,7 +118,7 @@ function bezier(t, p0, p1, p2, p3){
     return {x: x, y: y};
 } 
   
-function changeBiasX(val) {
+function changeScaleX(val) {
   //restoreBackground();
   //setCurrentAction("Currently change the Bias of X", canvas, "e-resize", biasX);
   //flag = 4;
@@ -128,12 +128,30 @@ function changeBiasX(val) {
   drawCurve(); 
 } 
 
-function changeBiasY(val) {
+function changeScaleY(val) {
   //restoreBackground();
   //setCurrentAction("Currently change the Bias of Y", canvas, "e-resize", biasY);
   //flag = 5;
   biasY.value = val;
   p1.x = val;
+  drawCurve();
+}
+function changeBiasX(val) {
+  //restoreBackground();
+  //setCurrentAction("Currently change the Bias of X", canvas, "e-resize", biasX);
+  //flag = 4;
+  biasX.value = val;
+  p2.y = val;
+  
+  drawCurve(); 
+} 
+
+function changeBiasY(val) {
+  //restoreBackground();
+  //setCurrentAction("Currently change the Bias of Y", canvas, "e-resize", biasY);
+  //flag = 5;
+  biasY.value = val;
+  p1.y = val;
   drawCurve();
 }
 
@@ -147,6 +165,7 @@ function squeeze(val) {
 }
 
 function changeStartY2(val) {
+  val = parseFloat(val);
   restoreBackground();
   setCurrentAction("Currently change the start of Y2", canvas, "n-resize", startY2);
   startY2.value = val;
@@ -219,8 +238,30 @@ function drawCurve() {
   }
   ctx.stroke();
   
+ drawControlPoint(p1);
+ drawControlPoint(p2);
+ drawLine(p1, p2);
+  
   updateAll();
 }
+
+function drawLine(p1, p2) {
+	ctx.save();
+	ctx.beginPath();
+	ctx.moveTo(p1.x, p1.y);
+	ctx.lineTo(p2.x, p2.y);
+	ctx.stroke();
+	ctx.restore();
+}
+function drawControlPoint(p) {
+	 ctx.save();
+	 ctx.translate(p.x, p.y);
+	 ctx.beginPath();
+  ctx.arc(0, 0, 3, 0, Math.PI*2);
+  ctx.fill();
+  ctx.restore();
+}
+
 
 function returnCurve() {
    var n_samples = 44100,
