@@ -93,74 +93,6 @@ function visualize() {
     requestAnimationFrame(visualize);
 }
 
-// effects
-//----------- EQUALIZER ----------- 
-function Equalizer(ctx) {
-    var filters = [];
-
-    // Set filters
-    // Fred: 80 for the low end. 10000 useless, use shelf instead...
-    [60, 170, 350, 1000, 3500, 10000].forEach(function (freq, i) {
-        var eq = ctx.createBiquadFilter();
-        eq.frequency.value = freq;
-        eq.type = "peaking";
-        eq.gain.value = 0;
-        filters.push(eq);
-    });
-
-    // Connect filters in serie
-    //sourceNode.connect(filters[0]);
-
-    for (var i = 0; i < filters.length - 1; i++) {
-        filters[i].connect(filters[i + 1]);
-    }
-
-    // connect the last filter to the speakers
-    //filters[filters.length - 1].connect(ctx.destination);
-
-    function changeGain(sliderVal, nbFilter) {
-        // sliderVal in [-30, +30]
-        var value = parseFloat(sliderVal);
-        filters[nbFilter].gain.value = value;
-
-        // update output labels
-        //var output = document.querySelector("#gain" + nbFilter);
-        //output.value = value + " dB";
-
-        // update sliders
-        //var numSlider = nbFilter + 1;
-        //var slider = document.querySelector("#EQ" + numSlider + "slider");
-        //slider.value = value;
-
-        // refresh amp slider state in the web component GUI
-        var sliderWC = document.querySelector("#slider" + (nbFilter+1));
-        // second parameter set to false will not fire an event
-        sliderWC.setValue(parseFloat(sliderVal).toFixed(0), false);
-    }
-
-    function setValues(values) {
-        values.forEach(function (val, index) {
-            changeGain(val, index);
-        });
-    }
-
-    function getValues() {
-        var values = [];
-        filters.forEach(function (f, index) {
-            values.push(f.gain.value);
-        });
-        return values;
-    }
-
-    return {
-        input: filters[0],
-        output: filters[filters.length - 1],
-        setValues: setValues,
-        getValues: getValues,
-        changeGain: changeGain
-    };
-}
-
 // ----------- AMP ---------------
 
 function Amp(context) {
@@ -169,6 +101,7 @@ function Amp(context) {
 
     var preamp = new PreAmp("JCM800", context);
     var tonestack = new ToneStack("JCM800", context);
+    var eq = new Equalizer(context);
     
     preamp.buildDistoMenu1();
     preamp.buildDistoMenu2();
@@ -244,7 +177,7 @@ function Amp(context) {
     // -----------------------------------
     // POST PROCESSING STAGE (EQ, reverb)
     // -----------------------------------
-    //  before EQ, filter highs and lows (Fred Miniere advise)
+    //  before EQ, filter highs and lows (Fred Miniere advice)
     var eqhicut = context.createBiquadFilter();
         eqhicut.frequency.value = 10000;
         eqhicut.type = "peaking";
@@ -254,8 +187,7 @@ function Amp(context) {
         eqlocut.frequency.value = 60;
         eqlocut.type = "peaking";
         eqlocut.gain.value = -19;
-    
-    var eq = new Equalizer(context);
+
     changeEQValues([0, 0, 0, 0, 0, 0]);
     var bypassEQg = context.createGain();
     bypassEQg.gain.value = 0; // by defaut EQ is in
@@ -266,6 +198,7 @@ function Amp(context) {
     var masterVolume = context.createGain();
     changeMasterVolume(2);
 
+    console.log("MASTER 1 :" + masterVolume)
     /*reverb = new Reverb(context, function () {
         console.log("reverb created");
 
@@ -343,6 +276,8 @@ function Amp(context) {
         inputEQ.connect(eq.input);
         eq.output.connect(masterVolume);
         masterVolume.connect(reverb.input);
+
+        console.log("MASTER 2 :" + masterVolume)
 
         reverb.output.connect(cabinetSim.input);
         cabinetSim.output.connect(output);
@@ -526,30 +461,48 @@ function Amp(context) {
     // --------
     function initPresets() {
         // updated 10/4/2016
-        var preset1 = {"name":"Hard Rock classic 1","boost":false,"LS1Freq":720,"LS1Gain":-6,"LS2Freq":320,"LS2Gain":-5,"gain1":1,"distoName1":"asymetric","K1":"7.8","HP1Freq":6,"HP1Q":0.707099974155426,"LS3Freq":720,"LS3Gain":-6,"gain2":1,"distoName2":"notSoDistorded","K2":"7.8","OG":"7.0","BF":"8.2","MF":"8.2","TF":"3.8","PF":"6.9","EQ":[5,11,-6,-10,7,2],"MV":"7.2","RN":"Fender Hot Rod","RG":"2.0","CN":"Marshall 1960, axis","CG":"9.4"};
+        var preset1 = {"name":"Hard Rock classic 1","boost":false,"LS1Freq":720,"LS1Gain":-6,"LS2Freq":320,"LS2Gain":-5,"gain1":1,"distoName1":"asymetric","K1":"7.8",
+            "HP1Freq":6,"HP1Q":0.707099974155426,"LS3Freq":720,"LS3Gain":-6,"gain2":1,"distoName2":"notSoDistorded","K2":"7.8","OG":"7.0","BF":"8.2","MF":"8.2","TF":"3.8","PF":"6.9",
+            "EQ":[5,11,-6,-10,7,2],"MV":"7.2","RN":"Fender Hot Rod","RG":"2.0","CN":"Marshall 1960, axis","CG":"9.4"};
         presets.push(preset1);
 
-        var preset2 = {"name":"Clean and Warm","boost":false,"LS1Freq":720,"LS1Gain":-6,"LS2Freq":320,"LS2Gain":1.600000023841858,"gain1":1,"distoName1":"asymetric","K1":"7.8","HP1Freq":6,"HP1Q":0.707099974155426,"LS3Freq":720,"LS3Gain":-6,"gain2":1,"distoName2":"standard","K2":"0.9","OG":"7.0","BF":"6.7","MF":"7.1","TF":"3.2","PF":"6.9","EQ":[10,5,-7,-7,16,0],"MV":"7.2","RN":"Fender Hot Rod","RG":"1.4","CN":"Marshall 1960, axis","CG":"8.8"};
+        var preset2 = {"name":"Clean and Warm","boost":false,"LS1Freq":720,"LS1Gain":-6,"LS2Freq":320,"LS2Gain":1.600000023841858,"gain1":1,"distoName1":"asymetric","K1":"7.8",
+            "HP1Freq":6,"HP1Q":0.707099974155426,"LS3Freq":720,"LS3Gain":-6,"gain2":1,"distoName2":"standard","K2":"0.9","OG":"7.0","BF":"6.7","MF":"7.1","TF":"3.2","PF":"6.9",
+            "EQ":[10,5,-7,-7,12,0],"MV":"7.2","RN":"Fender Hot Rod","RG":"1.4","CN":"Marshall 1960, axis","CG":"8.8"};
         presets.push(preset2);
 
-        var preset3 = {"name":"Strong and Warm","boost":false,"LS1Freq":720,"LS1Gain":-6,"LS2Freq":320,"LS2Gain":-1,"gain1":1.0299999713897705,"distoName1":"asymetric","K1":"7.8","HP1Freq":6,"HP1Q":0.707099974155426,"LS3Freq":720,"LS3Gain":-6,"gain2":1,"distoName2":"superClean","K2":"7.8","OG":"7.0","BF":"8.2","MF":"6.7","TF":"5.0","PF":"6.9","EQ":[0,0,0,-1,0,1],"MV":"5.9","RN":"Fender Hot Rod","RG":"1.1","CN":"Vox Custom Bright 4x12 M930 Axis 1","CG":"8.0"};
+        var preset3 = {"name":"Strong and Warm","boost":false,"LS1Freq":720,"LS1Gain":-6,"LS2Freq":320,"LS2Gain":-1,"gain1":1.0299999713897705,"distoName1":"asymetric","K1":"7.8",
+            "HP1Freq":6,"HP1Q":0.707099974155426,"LS3Freq":720,"LS3Gain":-6,"gain2":1,"distoName2":"superClean","K2":"7.8","OG":"7.0","BF":"8.2","MF":"6.7","TF":"5.0","PF":"6.9",
+            "EQ":[0,0,0,-1,0,1],"MV":"5.9","RN":"Fender Hot Rod","RG":"1.1","CN":"Vox Custom Bright 4x12 M930 Axis 1","CG":"8.0"};
         presets.push(preset3);
 
-        //preset4 = {"name":"Fat sound","boost":true,"LS1Freq":720,"LS1Gain":-5.800000190734863,"LS2Freq":320,"LS2Gain":6.599999904632568,"gain1":0.11999999731779099,"distoName1":"asymetric","K1":"5.4","HP1Freq":6,"HP1Q":0.707099974155426,"LS3Freq":720,"LS3Gain":-5.199999809265137,"gain2":1,"distoName2":"standard","K2":"5.4","OG":"3.5","BF":"3.2","MF":"5.0","TF":"5.0","PF":"9.7","EQ":[1,0,-6,-8,-6,-30],"MV":"3.1","RN":"Fender Hot Rod","RG":"0.0","CN":"Marshall 1960, axis","CG":"3.4"};
+        //preset4 = {"name":"Fat sound","boost":true,"LS1Freq":720,"LS1Gain":-5.800000190734863,"LS2Freq":320,"LS2Gain":6.599999904632568,"gain1":0.11999999731779099,"distoName1":"asymetric","K1":"5.4",
+        //"HP1Freq":6,"HP1Q":0.707099974155426,"LS3Freq":720,"LS3Gain":-5.199999809265137,"gain2":1,"distoName2":"standard","K2":"5.4","OG":"3.5","BF":"3.2","MF":"5.0","TF":"5.0","PF":"9.7",
+        //"EQ":[1,0,-6,-8,-6,-30],"MV":"3.1","RN":"Fender Hot Rod","RG":"0.0","CN":"Marshall 1960, axis","CG":"3.4"};
         //presets.push(preset4);
-        var preset4 = {"name":"Clean no reverb","boost":false,"LS1Freq":720,"LS1Gain":-6,"LS2Freq":320,"LS2Gain":-6.300000190734863,"gain1":1,"distoName1":"asymetric","K1":"2.1","HP1Freq":6,"HP1Q":0.707099974155426,"LS3Freq":720,"LS3Gain":-6,"gain2":1,"distoName2":"crunch","K2":"2.1","OG":"7.0","BF":"6.7","MF":"5.0","TF":"5.0","PF":"8.9","EQ":[4,13,-8,-8,15,12],"MV":"3.7","RN":"Fender Hot Rod","RG":"0.0","CN":"Marshall 1960, axis","CG":"4.5"};
+        var preset4 = {"name":"Clean no reverb","boost":false,"LS1Freq":720,"LS1Gain":-6,"LS2Freq":320,"LS2Gain":-6.300000190734863,"gain1":1,"distoName1":"asymetric","K1":"2.1",
+            "HP1Freq":6,"HP1Q":0.707099974155426,"LS3Freq":720,"LS3Gain":-6,"gain2":1,"distoName2":"crunch","K2":"2.1","OG":"7.0","BF":"6.7","MF":"5.0","TF":"5.0","PF":"8.9",
+            "EQ":[4,12,-8,-8,12,12],"MV":"3.7","RN":"Fender Hot Rod","RG":"0.0","CN":"Marshall 1960, axis","CG":"4.5"};
         presets.push(preset4);
 
-        var preset5 = {"name":"Another Clean Sound","boost":false,"LS1Freq":720,"LS1Gain":-6,"LS2Freq":320,"LS2Gain":-6.300000190734863,"gain1":1,"distoName1":"asymetric","K1":"6.4","HP1Freq":6,"HP1Q":0.707099974155426,"LS3Freq":720,"LS3Gain":-6,"gain2":1,"distoName2":"crunch","K2":"6.4","OG":"7.0","BF":"6.7","MF":"5.0","TF":"5.0","PF":"8.9","EQ":[4,13,-8,-8,15,12],"MV":"3.7","RN":"Fender Hot Rod","RG":"2","CN":"Marshall 1960, axis","CG":"4.5"};
+        var preset5 = {"name":"Another Clean Sound","boost":false,"LS1Freq":720,"LS1Gain":-6,"LS2Freq":320,"LS2Gain":-6.300000190734863,"gain1":1,"distoName1":"asymetric","K1":"6.4",
+            "HP1Freq":6,"HP1Q":0.707099974155426,"LS3Freq":720,"LS3Gain":-6,"gain2":1,"distoName2":"crunch","K2":"6.4","OG":"7.0","BF":"6.7","MF":"5.0","TF":"5.0","PF":"8.9",
+            "EQ":[4,12,-8,-8,12,12],"MV":"3.7","RN":"Fender Hot Rod","RG":"2","CN":"Marshall 1960, axis","CG":"4.5"};
         presets.push(preset5);
 
-        var preset6 = {"name":"Mostly even harmonics","boost":false,"LS1Freq":720,"LS1Gain":-6,"LS2Freq":320,"LS2Gain":-7.5,"gain1":1,"distoName1":"standard","K1":"6.7","HP1Freq":6,"HP1Q":0.707099974155426,"LS3Freq":720,"LS3Gain":-6,"gain2":1,"distoName2":"standard","K2":"6.7","OG":"7.0","BF":"4.3","MF":"2.6","TF":"6.1","PF":"4.2","EQ":[5,12,-5,-10,2,10],"MV":"1.7","RN":"Fender Hot Rod","RG":"0.0","CN":"Vintage Marshall 1","CG":"8.4"};
+        var preset6 = {"name":"Mostly even harmonics","boost":false,"LS1Freq":720,"LS1Gain":-6,"LS2Freq":320,"LS2Gain":-7.5,"gain1":1,"distoName1":"standard","K1":"6.7",
+            "HP1Freq":6,"HP1Q":0.707099974155426,"LS3Freq":720,"LS3Gain":-6,"gain2":1,"distoName2":"standard","K2":"6.7","OG":"7.0","BF":"4.3","MF":"2.6","TF":"6.1","PF":"4.2",
+            "EQ":[5,12,-5,-10,2,10],"MV":"1.7","RN":"Fender Hot Rod","RG":"0.0","CN":"Vintage Marshall 1","CG":"8.4"};
         presets.push(preset6);
 
-        var preset7 = {"name":"Hard Rock classic 2","boost":false,"LS1Freq":720,"LS1Gain":-6,"LS2Freq":320,"LS2Gain":-10.199999809265137,"gain1":1,"distoName1":"standard","K1":"5.2","HP1Freq":6,"HP1Q":0.707099974155426,"LS3Freq":720,"LS3Gain":-6,"gain2":1,"distoName2":"notSoDistorded","K2":"5.1","OG":"7.0","BF":"8.7","MF":"8.0","TF":"3.8","PF":"9.4","EQ":[19,8,-6,-10,7,2],"MV":"5.5","RN":"Fender Hot Rod","RG":"0.7","CN":"Marshall 1960, axis","CG":"9.2"};
+        var preset7 = {"name":"Hard Rock classic 2","boost":false,"LS1Freq":720,"LS1Gain":-6,"LS2Freq":320,"LS2Gain":-10.199999809265137,"gain1":1,"distoName1":"standard","K1":"5.2",
+            "HP1Freq":6,"HP1Q":0.707099974155426,"LS3Freq":720,"LS3Gain":-6,"gain2":1,"distoName2":"notSoDistorded","K2":"5.1","OG":"7.0","BF":"8.7","MF":"8.0","TF":"3.8","PF":"9.4",
+            "EQ":[12,8,-6,-10,7,2],"MV":"5.5","RN":"Fender Hot Rod","RG":"0.7","CN":"Marshall 1960, axis","CG":"9.2"};
         presets.push(preset7);
         
-        var preset8 = {"name":"SuperClean/Jazz","boost":false,"LS1Freq":720,"LS1Gain":-6,"LS2Freq":320,"LS2Gain":-6.300000190734863,"gain1":1,"distoName1":"crunch","K1":"5.4","HP1Freq":6,"HP1Q":0.707099974155426,"LS3Freq":720,"LS3Gain":-6,"gain2":1,"distoName2":"crunch","K2":"5.4","OG":"7.0","BF":"7.0","MF":"5.1","TF":"5.2","PF":"3.1","EQ":[10,7,0,-10,5,12],"MV":"3.8","RN":"Fender Hot Rod","RG":"1.5","CN":"Marshall 1960, axis","CG":"4.5"};
+        var preset8 = {"name":"SuperClean/Jazz","boost":false,"LS1Freq":720,"LS1Gain":-6,"LS2Freq":320,"LS2Gain":-6.300000190734863,"gain1":1,"distoName1":"crunch","K1":"5.4",
+            "HP1Freq":6,"HP1Q":0.707099974155426,"LS3Freq":720,"LS3Gain":-6,"gain2":1,"distoName2":"crunch","K2":"5.4","OG":"7.0","BF":"7.0","MF":"5.1","TF":"5.2","PF":"3.1",
+            "EQ":[10,7,0,-10,5,12],"MV":"3.8","RN":"Fender Hot Rod","RG":"1.5","CN":"Marshall 1960, axis","CG":"4.5"};
         presets.push(preset8);
 
         presets.forEach(function (p, index) {
@@ -618,44 +571,6 @@ function Amp(context) {
         setPreset(presets[0]);
     }
 
-    function printCurrentAmpValues() {
-        var currentPresetValue = {
-            name: 'current',
-            
-            boost: preamp.boost.isActivated(),
-
-            LS1Freq: preamp.lowShelf1.frequency.value,
-            LS1Gain: preamp.lowShelf1.gain.value,
-            LS2Freq: preamp.lowShelf2.frequency.value,
-            LS2Gain: preamp.lowShelf2.gain.value,
-            gain1: preamp.preampStage1Gain.gain.value,
-            distoName1 : preamp.menuDisto1.value,
-            K1: preamp.getDistorsionValue(0),
-            HP1Freq: preamp.highPass1.frequency.value,
-            HP1Q: preamp.highPass1.Q.value,
-
-            LS3Freq: preamp.lowShelf3.frequency.value,
-            LS3Gain: preamp.lowShelf3.gain.value,
-            gain2: preamp.preampStage2Gain.gain.value,
-            distoName2 : preamp.menuDisto2.value,
-            K2: preamp.getDistorsionValue(1),
-
-            OG: (output.gain.value*10).toFixed(1),
-            BF: ((tonestack.bassFilter.gain.value / 7) + 10).toFixed(1), // bassFilter.gain.value = (value-5) * 3;
-            MF: ((tonestack.midFilter.gain.value / 4) + 5).toFixed(1), // midFilter.gain.value = (value-5) * 2;
-            TF: ((tonestack.trebleFilter.gain.value / 10) + 10).toFixed(1), // trebleFilter.gain.value = (value-5) * 5;
-            PF: ((tonestack.presenceFilter.gain.value / 2) + 5).toFixed(1), // presenceFilter.gain.value = (value-5) * 2;
-            EQ: eq.getValues(),
-            MV: masterVolume.gain.value.toFixed(1),
-            RN: reverb.getName(),
-            RG: (reverb.getGain()*10).toFixed(1),
-            CN: cabinetSim.getName(),
-            CG: (cabinetSim.getGain()*10).toFixed(1)
-       };
-
-       console.log(JSON.stringify(currentPresetValue));
-    }
-
     // END PRESETS
 
     function bypass(cb) {
@@ -722,6 +637,7 @@ function Amp(context) {
         cabinet: cabinetSim,
         tonestack: tonestack,
         preamp: preamp,
+        master: masterVolume,
 
         changeDrive: preamp.changeDrive,
         changeOversampling: changeOversampling,
@@ -735,7 +651,6 @@ function Amp(context) {
         setDefaultPreset: setDefaultPreset,
         getPresets: getPresets,
         setPreset: setPreset,
-        printCurrentAmpValues : printCurrentAmpValues,
         bypass: bypass,
         bypassEQ: bypassEQ
     };
