@@ -26,29 +26,44 @@ function Visualization() {
     //buildAudioGraph();
     
     // Try changing for lower values: 512, 256, 128, 64...
-      analyzer.fftSize = 1024;
-      bufferLength = analyzer.frequencyBinCount;
-      dataArray = new Uint8Array(bufferLength);
+    analyzer.fftSize = 1024;
+    bufferLength = analyzer.frequencyBinCount;
+    dataArray = new Uint8Array(bufferLength);
   };
 
+  function update() {
+    clearCanvas();  
+    drawVolumeMeter();
+    drawWaveform();
+  }
+
   function clearCanvas() {
-     canvasContext.save();
+    canvasContext.save();
     
-     // clear the canvas
-     // like this: canvasContext.clearRect(0, 0, width, height);
+    // clear the canvas
+    // like this: canvasContext.clearRect(0, 0, width, height);
     
-     // Or use rgba fill to give a slight blur effect
+    // Or use rgba fill to give a slight blur effect
     canvasContext.fillStyle = 'rgba(0, 0, 0, 0.5)';
     canvasContext.fillRect(0, 0, width, height);
     
     canvasContext.restore();
   }
 
-  function update() {
+  function drawVolumeMeter() {
+    canvasContext.save();
     
-    clearCanvas();  
-    drawVolumeMeter();
-    drawWaveform();
+    analyzer.getByteFrequencyData(dataArray);
+    var average = getAverageVolume(dataArray);
+    
+    // set the fill style to a nice gradient
+    canvasContext.fillStyle=gradient;
+   
+    // draw the vertical meter
+    var value = Math.max(height-average*0.5, 0)
+    canvasContext.fillRect(0,value,25,height);
+    
+    canvasContext.restore();
   }
 
   function drawWaveform() {
@@ -91,22 +106,6 @@ function Visualization() {
     canvasContext.restore();
   }
 
-  function drawVolumeMeter() {
-    canvasContext.save();
-    
-    analyzer.getByteFrequencyData(dataArray);
-    var average = getAverageVolume(dataArray);
-    
-    // set the fill style to a nice gradient
-    canvasContext.fillStyle=gradient;
-   
-    // draw the vertical meter
-    var value = Math.max(height-average*0.5, 0)
-    canvasContext.fillRect(0,value,25,height);
-    
-    canvasContext.restore();
-  }
-
   function getAverageVolume(array) {
     var values = 0;
     var average;
@@ -125,6 +124,6 @@ function Visualization() {
   // API
   return {
     configure: configure,
-    update:update
+    update: update
   }
 }

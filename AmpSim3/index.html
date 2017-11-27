@@ -7,11 +7,12 @@
         <script src="js/initAudio.js"></script>
         <script src="js/visualization.js"></script>
         <script src="js/amp.js"></script>
+        <script src="js/preamp.js"></script>
+        <script src="js/tonestack.js"></script>
+        <script src="js/ampController.js"></script>
         <script src="js/utils.js"></script>
         <script src="js/distorsionFactory.js"></script>
         <script src="js/curveDrawer.js"></script>
-        <script src="js/preamp.js"></script>
-        <script src="js/tonestack.js"></script>
 
     <script src="./bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
     <link rel="import" href="./bower_components/polymer/polymer.html">
@@ -51,7 +52,7 @@
                         Your browser does not support the audio tag.
                     </audio>
                     <div id="demoSample">Choose a demo sample: 
-                        <select id="demoSampleMenu" onchange="changeDemoSample(this.value);">
+                        <select id="demoSampleMenu" onchange="ampCtrl.changeDemoSample(this.value);">
                           <option value="0">Metal riff 1</option>
                           <option value="1">Metal riff 2</option>
                           <!--
@@ -195,7 +196,7 @@
                     <webaudio-switch id="led" style="position:absolute;left:1043px;top:125px" src="img/led_23_red.png" value="1" height="23" width="23" tooltip="Switch-B"></webaudio-switch>
                     <webaudio-switch id="switch2"   midilearn="true" style="position:absolute;left:1033px;top:140px" src="img/switch_toggle.png" value="0" height="45" width="45" tooltip="Switch-B"></webaudio-switch>
                     <button  style="position:absolute;left:570px;top:270px" type="button" onclick="amp.printCurrentAmpValues();">Show current settings in console</button>
-                    <button  id="toggleGuitarIn" style="position:absolute;left:570px;top:300px" class="pulse"  type="button" onclick="toggleGuitarInput(event)">Guitar input: <span style='color:red;'>NOT ACTIVATED</span>, click to toggle on/off!</button>
+                    <button  id="toggleGuitarIn" style="position:absolute;left:570px;top:300px" class="pulse"  type="button" onclick="ampCtrl.toggleGuitarInput(event)">Guitar input: <span style='color:red;'>NOT ACTIVATED</span>, click to toggle on/off!</button>
                     <webaudio-knob id="Knob9"     midilearn="true" style="position:absolute;left:570px;top:350px" src="img/Prophet.png" value="1" default="1" min="0" max="10" step="0.1" diameter="49" sprites="99" tooltip="InputGain"></webaudio-knob>
 
                     <canvas id="inputSignalCanvas" style="position:absolute;left:630px;top:350px" width=150 height=50></canvas>
@@ -370,15 +371,15 @@
             // input gain
             var inputGain = document.querySelector("#Knob9");
             inputGain.addEventListener("change", function (evt) {
-                if(amp !== undefined)
-                    amp.changeInputGainValue(evt.target.value);
+                if(ampCtrl !== undefined)
+                    ampCtrl.changeInputGainValue(evt.target.value);
             });
 
             // output gain
             var outputGain = document.querySelector("#Knob10");
             outputGain.addEventListener("change", function (evt) {
-                if(amp !== undefined)
-                    amp.changeOutputGainValue(evt.target.value);
+                if(ampCtrl !== undefined)
+                    ampCtrl.changeOutputGainValue(evt.target.value);
             });
 
             // Equalizer

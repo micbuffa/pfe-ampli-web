@@ -28,7 +28,6 @@ function gotStream() {
     } catch(e) {
         console.log("ShadowDOMPolyfill undefined, running native Web Component code");
     }
-
     
     if(input2 === undefined) {
         input2 = audioContext.createMediaElementSource(audioPlayer);
@@ -41,16 +40,9 @@ function gotStream() {
     console.log('AMP CREATED')
 }
 
-
-function changeDemoSample(val) {
-    console.log(val);
-    audioPlayer.src = demoSampleURLs[val];
-    audioPlayer.play();
-}
-
 var amp;
+var ampCtrl;
 var analyzerAtInput, analyzerAtOutput;
-var guitarPluggedIn = false;
 var convolverSlider;
 var convolverCabinetSlider;
 var guitarInput;
@@ -59,15 +51,12 @@ var guitarInput;
 function createAmp(context, input1, input2) {
     guitarInput = input1;
 
-    // create quadrafuzz
     amp = new Amp(context);
-    analyzerAtInput = context.createAnalyser();
-    amp.input.connect(analyzerAtInput);
+    ampCtrl = new AmpController(amp);
 
     // build graph
-    if(guitarPluggedIn) {
-        guitarInput.connect(amp.input);
-    }
+    analyzerAtInput = context.createAnalyser();
+    amp.input.connect(analyzerAtInput);
 
     // connect audio player to amp for previewing presets
     input2.connect(amp.input);
@@ -83,21 +72,6 @@ function createAmp(context, input1, input2) {
     initVisualizations();
 }
 
-function toggleGuitarInput(event) {
-    var button = document.querySelector("#toggleGuitarIn");
-
-    if(!guitarPluggedIn) {
-        guitarInput.connect(amp.input);
-        button.innerHTML = "Guitar input: <span style='color:green;'>ACTIVATED</span>, click to toggle on/off!";
-        button.classList.remove("pulse");
-    } else {
-        guitarInput.disconnect();
-        button.innerHTML = "Guitar input: <span style='color:red;'>NOT ACTIVATED</span>, click to toggle on/off!";
-        button.classList.add("pulse");
-    }
-    guitarPluggedIn = !guitarPluggedIn;
-}
-
 // Visualizations
 var inputVisualization, outputVisualization;
 
@@ -107,7 +81,6 @@ function initVisualizations() {
 
     outputVisualization = new Visualization();
     outputVisualization.configure("outputSignalCanvas", analyzerAtOutput);
-
 
     // start updating the visualizations
     requestAnimationFrame(visualize);
@@ -257,7 +230,7 @@ function Amp(context) {
 
     // output gain after preamp stage
     var outputGain = context.createGain();
-    changeOutputGainValue(7);
+    output.gain.value = 0.5;
 
     // ------------------------------
     // TONESTACK STAGES
@@ -378,15 +351,6 @@ function Amp(context) {
 
         // byPass route
         byPass.connect(output);
-    }
-
-    function changeInputGainValue(sliderVal) {
-        input.gain.value = parseFloat(sliderVal);
-    }
-
-    function changeOutputGainValue(sliderVal) {
-        output.gain.value = parseFloat(sliderVal)/10;
-        console.log("changeOutputGainValue value = " + output.gain.value);
     }
 
     function changeHicutFreqValue(sliderVal) {
@@ -756,8 +720,6 @@ function Amp(context) {
         eq: eq,
         reverb: reverb,
         cabinet: cabinetSim,
-        changeInputGainValue: changeInputGainValue,
-        changeOutputGainValue: changeOutputGainValue,
         tonestack: tonestack,
         preamp: preamp,
 
@@ -780,37 +742,38 @@ function Amp(context) {
 }
 
 var reverbImpulses = [
-        {
-            name: "Fender Hot Rod",
-            url: "assets/impulses/reverb/cardiod-rear-levelled.wav"
-        },
-        {
-            name: "PCM 90 clean plate",
-            url: "assets/impulses/reverb/pcm90cleanplate.wav"
-        },
-        {
-            name: "Scala de Milan",
-            url: "assets/impulses/reverb/ScalaMilanOperaHall.wav"
-        }
-    ];
+    {
+        name: "Fender Hot Rod",
+        url: "assets/impulses/reverb/cardiod-rear-levelled.wav"
+    },
+    {
+        name: "PCM 90 clean plate",
+        url: "assets/impulses/reverb/pcm90cleanplate.wav"
+    },
+    {
+        name: "Scala de Milan",
+        url: "assets/impulses/reverb/ScalaMilanOperaHall.wav"
+    }
+];
 var cabinetImpulses = [
-{
-            name: "Marshall 1960, axis",
-            url: "assets/impulses/cabinet/Marshall1960.wav"
-        },    
-        {
-            name: "Vintage Marshall 1",
-            url: "assets/impulses/cabinet/Block%20Inside.wav"
-        },
-        {
-            name: "Vox Custom Bright 4x12 M930 Axis 1",
-            url: "assets/impulses/cabinet/voxCustomBrightM930OnAxis1.wav"
-        },
-        {
-            name: "Fender Champ, axis",
-            url: "assets/impulses/cabinet/FenderChampAxisStereo.wav"
-        }
-    ];
+    {
+        name: "Marshall 1960, axis",
+        url: "assets/impulses/cabinet/Marshall1960.wav"
+    },    
+    {
+        name: "Vintage Marshall 1",
+        url: "assets/impulses/cabinet/Block%20Inside.wav"
+    },
+    {
+        name: "Vox Custom Bright 4x12 M930 Axis 1",
+        url: "assets/impulses/cabinet/voxCustomBrightM930OnAxis1.wav"
+    },
+    {
+        name: "Fender Champ, axis",
+        url: "assets/impulses/cabinet/FenderChampAxisStereo.wav"
+    }
+];
+
 // ------- CONVOLVER, used for both reverb and cabinet simulation -------------------
 function Convolver(context, impulses, menuId) {
     var convolverNode, convolverGain, directGain;
@@ -861,6 +824,7 @@ function Convolver(context, impulses, menuId) {
                 break;
             }
         }
+
         if(url === "none") {
             console.log("ERROR loading reverb impulse name = " + name);
         } else {
@@ -911,7 +875,6 @@ function Convolver(context, impulses, menuId) {
         return currentImpulse.name;
     }
 
-
     function buildIRsMenu(menuId) {
         menuIRs = document.querySelector("#" + menuId);
 
@@ -924,6 +887,7 @@ function Convolver(context, impulses, menuId) {
 
         menuIRs.oninput = loadImpulseFromMenu;
     }
+
     //--------------------------------------
     // API : exposed methods and properties
     // -------------------------------------
@@ -932,7 +896,7 @@ function Convolver(context, impulses, menuId) {
         output: outputGain,
         setGain: setGain,
         getGain: getGain,
-        getName:getName,
+        getName: getName,
         loadImpulseByName: loadImpulseByName
     };
 }
@@ -1009,12 +973,13 @@ var Boost = function(context) {
         }
         return curve;
     }
+
     // API
     return {
-        input:input,
-        output:output,
+        input: input,
+        output: output,
         onOff: onOff,
-        toggle:toggle,
+        toggle: toggle,
         isActivated: isActivated,
         setOversampling: setOversampling
     };

@@ -60,6 +60,23 @@ var audioInputSelect;
 var audioOutputSelect;
 var selectors;
 
+function startWithFirefoxComaptibility() {
+    var constraints = { 
+       audio: {
+            echoCancellation: false, mozNoiseSuppression: false, mozAutoGainControl: false  
+       } 
+   };
+
+    navigator.mediaDevices.getUserMedia(constraints)
+            .then(function (stream) {
+                window.stream = stream; // make stream available to console
+                // Refresh button list in case labels have become available
+            })
+            .then(gotStream);
+}
+
+// Not used currently
+
 function start() {
     audioInputSelect = document.querySelector('select#audioSource');
     audioInputSelect.onchange = start;
@@ -93,21 +110,6 @@ function start() {
             .then(gotDevices)
             .then(gotStream);
     //.catch(errorCallback);
-}
-
-function startWithFirefoxComaptibility() {
-    var constraints = { 
-       audio: {
-            echoCancellation: false, mozNoiseSuppression: false, mozAutoGainControl: false  
-       } 
-   };
-
-    navigator.mediaDevices.getUserMedia(constraints)
-            .then(function (stream) {
-                window.stream = stream; // make stream available to console
-                // Refresh button list in case labels have become available
-            })
-            .then(gotStream);
 }
 
 function gotDevices(deviceInfos) {
@@ -147,6 +149,7 @@ function gotDevices(deviceInfos) {
         }
     });
 }
+
 function errorCallback(error) {
     console.log('navigator.getUserMedia error: ', error);
 }
