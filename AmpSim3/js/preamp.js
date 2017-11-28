@@ -287,142 +287,62 @@ class PreAmp {
     // Gain-related functions
     //
 
-    changePreampStage1GainValue(sliderVal) {
+    changePreampStage1GainValuePA(sliderVal) {
         var value = parseFloat(sliderVal);
         this.preampStage1Gain.gain.value = value;
-
-        // update output labels
-        var output = document.querySelector("#preampStage1Gain");
-        output.value = parseFloat(sliderVal).toFixed(2);
-
-        // refresh slider state
-        var slider = document.querySelector("#preampStage1GainSlider");
-        slider.value = parseFloat(sliderVal).toFixed(2);
     }
 
-    changePreampStage2GainValue(sliderVal) {
+    changePreampStage2GainValuePA(sliderVal) {
         var value = parseFloat(sliderVal);
         this.preampStage2Gain.gain.value = value;
-
-        // update output labels
-        var output = document.querySelector("#preampStage2Gain");
-        output.value = parseFloat(sliderVal).toFixed(2);
-
-        // refresh slider state
-        var slider = document.querySelector("#preampStage2GainSlider");
-        slider.value = parseFloat(sliderVal).toFixed(2);
     }
 
     //
     // Filter-related functions
     //
 
-    changeLowShelf1FrequencyValue(sliderVal) {
+    changeLowShelf1FrequencyValuePA(sliderVal) {
         var value = parseFloat(sliderVal);
         this.lowShelf1.frequency.value = value;
         //console.log("Freq value : " + value)
-
-        // update output labels
-        var output = document.querySelector("#lowShelf1Freq");
-        output.value = parseFloat(sliderVal).toFixed(1) + " Hz";
-
-        // refresh slider state
-        var slider = document.querySelector("#lowShelf1FreqSlider");
-        slider.value = parseFloat(sliderVal).toFixed(1);
     }
 
-    changeLowShelf1GainValue(sliderVal) {
+    changeLowShelf1GainValuePA(sliderVal) {
         var value = parseFloat(sliderVal);
         this.lowShelf1.gain.value = value;
         //console.log("Gain value : " + value)
-
-        // update output labels
-        var output = document.querySelector("#lowShelf1Gain");
-        output.value = parseFloat(sliderVal).toFixed(1) + " dB";
-
-        // refresh slider state
-        var slider = document.querySelector("#lowShelf1GainSlider");
-        slider.value = parseFloat(sliderVal).toFixed(1);
     }
 
-    changeLowShelf2FrequencyValue(sliderVal) {
+    changeLowShelf2FrequencyValuePA(sliderVal) {
         var value = parseFloat(sliderVal);
         this.lowShelf2.frequency.value = value;
-
         //console.log("lowshelf 2 freq = " + value);
-        // update output labels
-        var output = document.querySelector("#lowShelf2Freq");
-        output.value = parseFloat(sliderVal).toFixed(1) + " Hz";
-
-        // refresh slider state
-        var slider = document.querySelector("#lowShelf2FreqSlider");
-        slider.value = parseFloat(sliderVal).toFixed(1);
     }
 
-    changeLowShelf2GainValue(sliderVal) {
+    changeLowShelf2GainValuePA(sliderVal) {
         var value = parseFloat(sliderVal);
         this.lowShelf2.gain.value = value;
-
         //console.log("lowshelf 2 gain = " + value);
-        // update output labels
-        var output = document.querySelector("#lowShelf2Gain");
-        output.value = parseFloat(sliderVal).toFixed(1) + " dB";
-
-        // refresh slider state
-        var slider = document.querySelector("#lowShelf2GainSlider");
-        slider.value = parseFloat(sliderVal).toFixed(1);
     }
 
-    changeLowShelf3FrequencyValue(sliderVal) {
+    changeLowShelf3FrequencyValuePA(sliderVal) {
         var value = parseFloat(sliderVal);
         this.lowShelf3.frequency.value = value;
-
-        // update output labels
-        var output = document.querySelector("#lowShelf3Freq");
-        output.value = parseFloat(sliderVal).toFixed(1) + " Hz";
-
-        // refresh slider state
-        var slider = document.querySelector("#lowShelf3FreqSlider");
-        slider.value = parseFloat(sliderVal).toFixed(1);
     }
 
-    changeLowShelf3GainValue(sliderVal) {
+    changeLowShelf3GainValuePA(sliderVal) {
         var value = parseFloat(sliderVal);
         this.lowShelf3.gain.value = value;
-
-        // update output labels
-        var output = document.querySelector("#lowShelf3Gain");
-        output.value = parseFloat(sliderVal).toFixed(1) + " dB";
-
-        // refresh slider state
-        var slider = document.querySelector("#lowShelf3GainSlider");
-        slider.value = parseFloat(sliderVal).toFixed(1);
     }
 
-    changeHighPass1FrequencyValue(sliderVal) {
+    changeHighPass1FrequencyValuePA(sliderVal) {
         var value = parseFloat(sliderVal);
         this.highPass1.frequency.value = value;
-
-        // update output labels
-        var output = document.querySelector("#highPass1Freq");
-        output.value = parseFloat(sliderVal).toFixed(1) + " Hz";
-
-        // refresh slider state
-        var slider = document.querySelector("#highPass1FreqSlider");
-        slider.value = parseFloat(sliderVal).toFixed(1);
     }
 
-    changeHighPass1QValue(sliderVal) {
+    changeHighPass1QValuePA(sliderVal) {
         var value = parseFloat(sliderVal);
         this.highPass1.Q.value = value;
-
-        // update output labels
-        var output = document.querySelector("#highPass1Q");
-        output.value = parseFloat(sliderVal).toFixed(4);
-
-        // refresh slider state
-        var slider = document.querySelector("#highPass1QSlider");
-        slider.value = parseFloat(sliderVal).toFixed(4);
     }
 
     //

@@ -41,81 +41,29 @@ class ToneStack {
 
 	}
 
-	changeBassFilterValue(sliderVal) {
+    changeBassFilterValueTS(sliderVal) {
         // sliderVal is in [0, 10]
         var value = parseFloat(sliderVal);
         this.bassFilter.gain.value = (value-10) * 7;
         //console.log("bass gain set to " + this.bassFilter.gain.value);
-
-        // update output labels
-        //var output = document.querySelector("#bassFreq");
-        //output.value = parseFloat(sliderVal).toFixed(1);
-
-        // refresh slider state
-        //var slider = document.querySelector("#bassFreqSlider");
-        //slider.value = parseFloat(sliderVal).toFixed(1);
-
-        // refresh knob state
-        //sliderVal = value / 7 + 10;
-        var knob = document.querySelector("#Knob4");
-        knob.setValue(parseFloat(sliderVal).toFixed(1), false);
     }
 
-    changeMidFilterValue(sliderVal) {
+    changeMidFilterValueTS(sliderVal) {
         // sliderVal is in [0, 10]
         var value = parseFloat(sliderVal);
         this.midFilter.gain.value = (value-5) * 4;
-
-        // update output labels
-        //var output = document.querySelector("#midFreq");
-        //output.value = parseFloat(sliderVal).toFixed(1);
-
-        // refresh slider state
-        //var slider = document.querySelector("#midFreqSlider");
-        //slider.value = parseFloat(sliderVal).toFixed(1);
-
-        // refresh knob state
-         //sliderVal = value /4 + 5;
-        var knob = document.querySelector("#Knob5");
-        knob.setValue(parseFloat(sliderVal).toFixed(1), false);
     }
 
-    changeTrebleFilterValue(sliderVal) {
+    changeTrebleFilterValueTS(sliderVal) {
         // sliderVal is in [0, 10]
         var value = parseFloat(sliderVal);
         this.trebleFilter.gain.value = (value-10) * 10;
-
-        // update output labels
-        //var output = document.querySelector("#trebleFreq");
-        //output.value = parseFloat(sliderVal).toFixed(1);
-
-        // refresh slider state
-        //var slider = document.querySelector("#trebleFreqSlider");
-        //slider.value = parseFloat(sliderVal).toFixed(1);
-
-        // refresh knob state
-        //sliderVal = value /10 + 10;
-        var knob = document.querySelector("#Knob6");
-        knob.setValue(parseFloat(sliderVal).toFixed(1), false);
     }
 
-    changePresenceFilterValue(sliderVal) {
+    changePresenceFilterValueTS(sliderVal) {
         // sliderVal is in [0, 10]
         var value = parseFloat(sliderVal);
         this.presenceFilter.gain.value = (value-5) * 2;
-        //console.log("set presence freq to " + presenceFilter.frequency.value)
-
-        // update output labels
-        //var output = document.querySelector("#presenceFreq");
-        //output.value = parseFloat(sliderVal).toFixed(1);
-
-        // refresh slider state
-        //var slider = document.querySelector("#presenceFreqSlider");
-        //slider.value = parseFloat(sliderVal).toFixed(1);
-
-        // refresh knob state
-        var knob = document.querySelector("#Knob8");
-        knob.setValue(parseFloat(sliderVal).toFixed(1), false);
     }
 
 }

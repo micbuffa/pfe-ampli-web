@@ -14,7 +14,6 @@ var demoSampleURLs = [
   "assets/audio/Muse2Rythm.mp3"
 ];
 
-
 function gotStream() {
     // Create an AudioNode from the stream.
     audioPlayer = document.getElementById('player');
@@ -37,7 +36,7 @@ function gotStream() {
     audioInput = convertToMono(input);
 
     createAmp(audioContext, audioInput, input2);
-    console.log('AMP CREATED')
+    console.log('--- AMP CREATED ---')
 }
 
 var amp;
@@ -53,6 +52,8 @@ function createAmp(context, input1, input2) {
 
     amp = new Amp(context);
     ampCtrl = new AmpController(amp);
+    // set default preset
+    ampCtrl.setDefaultPreset();
 
     // build graph
     analyzerAtInput = context.createAnalyser();
@@ -198,7 +199,6 @@ function Amp(context) {
     var masterVolume = context.createGain();
     changeMasterVolume(2);
 
-    console.log("MASTER 1 :" + masterVolume)
     /*reverb = new Reverb(context, function () {
         console.log("reverb created");
 
@@ -227,8 +227,7 @@ function Amp(context) {
         changeRoom(7.5); // TO REMOVE ONCE PRESETS MANAGER WORKS
         initPresets();
 
-        setDefaultPreset();
-        console.log("running");
+        console.log("Running");
     }
 
 
@@ -276,8 +275,6 @@ function Amp(context) {
         inputEQ.connect(eq.input);
         eq.output.connect(masterVolume);
         masterVolume.connect(reverb.input);
-
-        console.log("MASTER 2 :" + masterVolume)
 
         reverb.output.connect(cabinetSim.input);
         cabinetSim.output.connect(output);
@@ -511,64 +508,6 @@ function Amp(context) {
             option.text = p.name;
             menuPresets.appendChild(option);
         });
-        menuPresets.onchange = changePreset;
-    }
-
-    function changePreset() {
-        setPreset(presets[menuPresets.value]);
-    }
-
-    function setPreset(p) {
-        if(p.distoName1 === undefined) {
-            p.distoName1 = "standard";
-        }
-         if(p.distoName2 === undefined) {
-            p.distoName2 = "standard";
-        }
-
-        if(p.boost === undefined) p.boost = false;
-        preamp.changeBoost(p.boost);
-
-        // stage 1
-        preamp.changeLowShelf1FrequencyValue(p.LS1Freq);
-        preamp.changeLowShelf1GainValue(p.LS1Gain);
-        preamp.changeLowShelf2FrequencyValue(p.LS2Freq);
-        preamp.changeLowShelf2GainValue(p.LS2Gain);
-        preamp.changePreampStage1GainValue(p.gain1);
-        preamp.changeDisto1TypeFromPreset(p.distoName1);
-        preamp.changeDistorsionValues(p.K1, 0);
-
-        // stage 2
-        preamp.changeLowShelf3FrequencyValue(p.LS3Freq);
-        preamp.changeLowShelf3GainValue(p.LS3Gain);
-        preamp.changePreampStage2GainValue(p.gain2);
-        preamp.changeDisto2TypeFromPreset(p.distoName2);
-        preamp.changeDistorsionValues(p.K2, 1);
-
-        changeOutputGain(p.OG);
-
-        tonestack.changeBassFilterValue(p.BF);
-        tonestack.changeMidFilterValue(p.MF);
-        tonestack.changeTrebleFilterValue(p.TF);
-        tonestack.changePresenceFilterValue(p.PF);
-
-        changeMasterVolume(p.MV);
-
-        changeReverbGain(p.RG);
-        changeReverbImpulse(p.RN);
-
-        changeRoom(p.CG);
-        changeCabinetSimImpulse(p.CN);
-
-        changeEQValues(p.EQ);
-    }
-
-    function getPresets() {
-        return presets;
-    }
-
-    function setDefaultPreset() {
-        setPreset(presets[0]);
     }
 
     // END PRESETS
@@ -628,16 +567,17 @@ function Amp(context) {
     }
 
     // API: methods exposed
-    return { 
+    return {
         input: input,
         output: output,
-        boostOnOff:boostOnOff,
+        boostOnOff: boostOnOff,
         eq: eq,
         reverb: reverb,
         cabinet: cabinetSim,
         tonestack: tonestack,
         preamp: preamp,
         master: masterVolume,
+        presets: presets,
 
         changeDrive: preamp.changeDrive,
         changeOversampling: changeOversampling,
@@ -646,11 +586,10 @@ function Amp(context) {
 
         changeMasterVolume: changeMasterVolume,
         changeReverbGain: changeReverbGain,
+        changeReverbImpulse: changeReverbImpulse,
+        changeCabinetSimImpulse: changeCabinetSimImpulse,
         changeRoom: changeRoom,
         changeEQValues: changeEQValues,
-        setDefaultPreset: setDefaultPreset,
-        getPresets: getPresets,
-        setPreset: setPreset,
         bypass: bypass,
         bypassEQ: bypassEQ
     };

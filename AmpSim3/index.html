@@ -75,58 +75,58 @@
                     <p>Preamp internals</p>
                     <div class="controls">
                         <label>lowShelf1 Freq</label>
-                        <input id="lowShelf1FreqSlider" type="range" value="720" step="1" min="500" max="1000" oninput="amp.preamp.changeLowShelf1FrequencyValue(this.value, 0);"></input>
+                        <input id="lowShelf1FreqSlider" type="range" value="720" step="1" min="500" max="1000" oninput="ampCtrl.changeLowShelf1FrequencyValue(this.value, 0);"></input>
                         <output id="lowShelf1Freq">720 Hz</output>
                     </div>
                     <div class="controls">
                         <label>lowShelf1 Gain</label>
-                        <input id="lowShelf1GainSlider" type="range" value="-6" step="0.1" min="-10" max="0" oninput="amp.preamp.changeLowShelf1GainValue(this.value, 0);"></input>
+                        <input id="lowShelf1GainSlider" type="range" value="-6" step="0.1" min="-10" max="0" oninput="ampCtrl.changeLowShelf1GainValue(this.value, 0);"></input>
                         <output id="lowShelf1Gain">-6 dB</output>
                     </div>
                     <div class="controls">
                         <label>lowShelf2 Freq</label>
-                        <input id="lowShelf2FreqSlider" type="range" value="320" step="1" min="300" max="400" oninput="amp.preamp.changeLowShelf2FrequencyValue(this.value, 0);"></input>
+                        <input id="lowShelf2FreqSlider" type="range" value="320" step="1" min="300" max="400" oninput="ampCtrl.changeLowShelf2FrequencyValue(this.value, 0);"></input>
                         <output id="lowShelf2Freq">320 Hz</output>
                     </div>
                     <div class="controls">
                         <label>lowShelf2 Gain</label>
-                        <input id="lowShelf2GainSlider" type="range" value="-6" step="0.1" min="-12" max="10" oninput="amp.preamp.changeLowShelf2GainValue(this.value, 0);"></input>
+                        <input id="lowShelf2GainSlider" type="range" value="-6" step="0.1" min="-12" max="10" oninput="ampCtrl.changeLowShelf2GainValue(this.value, 0);"></input>
                         <output id="lowShelf2Gain">-5 dB</output>
                     </div>
 
                     <div class="controls">
                         <label>Stage 1 Gain</label>
-                        <input id="preampStage1GainSlider" type="range" value="0.1" step="0.01" min="0" max="10" oninput="amp.preamp.changePreampStage1GainValue(this.value, 0);"></input>
+                        <input id="preampStage1GainSlider" type="range" value="0.1" step="0.01" min="0" max="10" oninput="ampCtrl.changePreampStage1GainValue(this.value, 0);"></input>
                         <output id="preampStage1Gain">1</output>
                     </div>
 
                     <div class="controls">
                         <label>HighPass1 freq</label>
-                        <input id="highPass1FreqSlider" type="range" value="6" step="1" min="5" max="7" oninput="amp.preamp.changeHighPass1FrequencyValue(this.value, 0);"></input>
+                        <input id="highPass1FreqSlider" type="range" value="6" step="1" min="5" max="7" oninput="ampCtrl.changeHighPass1FrequencyValue(this.value, 0);"></input>
                         <output id="highPass1Freq">6 Hz</output>
                     </div>
                     <div class="controls">
                         <label>HighPass1 Q</label>
-                        <input id="highPass1QSlider" type="range" value="0.7071" step="0.001" min="0" max="5" oninput="amp.preamp.changeHighPass1QValue(this.value, 0);"></input>
+                        <input id="highPass1QSlider" type="range" value="0.7071" step="0.001" min="0" max="5" oninput="ampCtrl.changeHighPass1QValue(this.value, 0);"></input>
                         <output id="highPass1Q">0.7071</output>
                     </div>
 
                     <div class="controls">
                         <label>lowShelf3 Freq</label>
-                        <input id="lowShelf3FreqSlider" type="range" value="720" step="1" min="300" max="1000" oninput="amp.preamp.changeLowShelf3FrequencyValue(this.value, 0);"></input>
+                        <input id="lowShelf3FreqSlider" type="range" value="720" step="1" min="300" max="1000" oninput="ampCtrl.changeLowShelf3FrequencyValue(this.value, 0);"></input>
                         <output id="lowShelf3Freq">720 Hz</output>
                     </div>
                     <div class="controls">
                         <label>lowShelf3 Gain</label>
-                        <input id="lowShelf3GainSlider" type="range" value="-6" step="0.1" min="-10" max="0" oninput="amp.preamp.changeLowShelf3GainValue(this.value, 0);"></input>
+                        <input id="lowShelf3GainSlider" type="range" value="-6" step="0.1" min="-10" max="0" oninput="ampCtrl.changeLowShelf3GainValue(this.value, 0);"></input>
                         <output id="lowShelf3Gain">-6 dB</output>
                     </div>
 
                     <div class="controls">
                         <label>Stage 2 Gain</label>
-                        <input id="preampStage2GainSlider" type="range" value="1" step="0.01" min="0" max="10" oninput="amp.preamp.changePreampStage2GainValue(this.value, 0);"></input>
+                        <input id="preampStage2GainSlider" type="range" value="1" step="0.01" min="0" max="10" oninput="ampCtrl.changePreampStage2GainValue(this.value, 0);"></input>
                         <output id="preampStage2Gain">1</output>
-                    </div> 
+                    </div>
 
                     <p>DRIVE : distorsion levels</p>
                     <div class="controls">
@@ -208,7 +208,7 @@
                     <div style="color:white; position:absolute;left:763px;top:405px">Output Gain
                     </div>
                     <label for="QFPresetMenu2" style="color:white; position:absolute;left:790px;top:270px">Presets :</label>
-                    <select id="QFPresetMenu2" style="position:absolute;left:850px;top:270px"></select>
+                    <select id="QFPresetMenu2" style="position:absolute;left:850px;top:270px" onchange="ampCtrl.setPreset()"></select>
 
                     <p><div style="color:white; position:absolute;left:100px;top:385px">
                         <canvas id="distoDrawerCanvas1" title="Click and maintain to change distortion value" style="margin-right:10px;left-margin:10px;" width="100" height="100"></canvas>
@@ -337,22 +337,22 @@
             // Bass
             var bass = document.querySelector("#Knob4");
             bass.addEventListener("change", function (evt) {
-                if(amp !== undefined)
-                    amp.tonestack.changeBassFilterValue(evt.target.value);
+                if(ampCtrl !== undefined)
+                    ampCtrl.changeBassFilterValue(evt.target.value);
             });
 
             // Middle
             var mid = document.querySelector("#Knob5");
             mid.addEventListener("change", function (evt) {
-                if(amp !== undefined)
-                    amp.tonestack.changeMidFilterValue(evt.target.value);
+                if(ampCtrl !== undefined)
+                    ampCtrl.changeMidFilterValue(evt.target.value);
             });
 
             // Treble
             var treble = document.querySelector("#Knob6");
             treble.addEventListener("change", function (evt) {
-                if(amp !== undefined)
-                    amp.tonestack.changeTrebleFilterValue(evt.target.value);
+                if(ampCtrl !== undefined)
+                    ampCtrl.changeTrebleFilterValue(evt.target.value);
             });
 
             // Reverb
@@ -365,8 +365,8 @@
             // Presence 
             var presence = document.querySelector("#Knob8");
             presence.addEventListener("change", function (evt) {
-                if(amp !== undefined)
-                    amp.tonestack.changePresenceFilterValue(evt.target.value);
+                if(ampCtrl !== undefined)
+                    ampCtrl.changePresenceFilterValue(evt.target.value);
             });
 
             // input gain
