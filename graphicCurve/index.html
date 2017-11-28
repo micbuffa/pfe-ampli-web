@@ -23,7 +23,8 @@
       var p1 = {x: <span id="p1x">50</span>, y: <span id="p1y">100</span>};<br>
       var p2 = {x: <span id="p2x">50</span>, y: <span id="p2y">0</span>};<br>
       var p3 = {x: <span id="p3x">100</span>, y: <span id="p3y">0</span>};<p>
-    </div>
+  </div>
+      Angle : <span id="angle"></span><p>
 
     <div style="display:none;margin-bottom:20px;" id="currentlyChange"></div>
 
@@ -43,7 +44,9 @@
   <label for="smaller">Smaller</label><input id="smaller" type=range value=0 min=0 max=10 step=0.1 oninput="changeSmaller(this.value);"/>
                 
                  <p>
-  <label for="bias">BIAS</label><input id="bias" type=range value=0 min=-5 max=5 step=0.1 oninput="changeBias(this.value);"/>
+  <label for="bias">BIAS P2</label><input id="bias2" type=range value=0 min=0 max=100 step=0.1 oninput="changeBiasP2(this.value);"/>
+                   <p>
+  <label for="bias">BIAS P1</label><input id="bias1" type=range value=0 min=0 max=100 step=0.1 oninput="changeBiasP1(this.value);"/>
 
 
 </body>
