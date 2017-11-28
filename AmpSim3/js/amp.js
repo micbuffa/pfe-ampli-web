@@ -55,9 +55,6 @@ function createAmp(context, input1, input2) {
     ampCtrl = new AmpController(amp);
     // set default preset
     ampCtrl.setDefaultPreset();
-    // set distortion values to knobs
-    ampCtrl.changeDistoLabels(initialDistoVal, 0);
-    ampCtrl.changeDistoLabels(initialDistoVal, 1);
 
     // build graph
     analyzerAtInput = context.createAnalyser();
@@ -841,4 +838,3 @@ var Boost = function(context) {
         setOversampling: setOversampling
     };
 };
- 

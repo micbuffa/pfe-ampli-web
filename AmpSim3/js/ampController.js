@@ -56,17 +56,13 @@ class AmpController {
         this.amp.preamp.currentK = linearValue;
     }
 
-    changeDistoType1(sliderVal) {
-        //console.log("[CONTROLLER] Changing disto1 to : " + sliderVal);
-        this.amp.preamp.currentDistoName = sliderVal;   
-        this.amp.preamp.distoTypes[0] = sliderVal;
+    changeDisto1Type(sliderVal) {
+        this.amp.preamp.changeDisto1TypePA(sliderVal);
         this.changeDrive(this.amp.preamp.currentK);
     }
 
-    changeDistoType2(sliderVal) {
-        //console.log("[CONTROLLER] Changing disto2 to : " + sliderVal);
-        this.amp.preamp.currentDistoName = sliderVal;  
-        this.amp.preamp.distoTypes[1] = sliderVal;
+    changeDisto2Type(sliderVal) {
+        this.amp.preamp.changeDisto2TypePA(sliderVal);
         this.changeDrive(this.amp.preamp.currentK);
     }
 

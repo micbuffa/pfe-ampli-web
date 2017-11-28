@@ -188,6 +188,16 @@ class PreAmp {
         return this.currentWSCurve;
     }
 
+    changeDisto1TypePA(name) {
+        this.currentDistoName = name;   
+        this.distoTypes[0] = name;
+    }
+
+    changeDisto2TypePA(name) {
+        this.currentDistoName = name;   
+        this.distoTypes[1] = name;
+    }
+
     changeDisto1TypeFromPreset(name) {
         this.currentDistoName = name;
         this.menuDisto1.value = name;
