@@ -11,6 +11,65 @@ class AmpController {
 	// Preamp handlers
 	//
 
+	// Distortions
+
+    changeDrive(sliderValue) {
+      // sliderValue in [0,10]
+      // We can imagine having some "profiles here" -> generate
+      // different K values from one single sliderValue for the
+      // drive.
+      // other values i.e [0.5, 0.5, 0.8, 1] -> less distorsion
+      // on bass frequencies and top high frequency
+      
+      for(var i = 0; i < 2; i++) {
+            this.changeDistorsionValues(sliderValue, i);
+      }
+    }
+
+    changeDistorsionValues(sliderValue, numDisto) {
+        // update model values
+        this.amp.preamp.changeDistorsionValuesPA(sliderValue, numDisto);
+        
+        this.changeDistoLabels(sliderValue, numDisto);
+    }
+
+    changeDistoLabels(sliderValue, numDisto) {
+        // update output labels
+        var output = document.querySelector("#k" + numDisto);
+        output.value = parseFloat(sliderValue).toFixed(1);
+
+        // update sliders
+        var numSlider = numDisto + 1;
+        var slider = document.querySelector("#K" + numSlider + "slider");
+        slider.value = parseFloat(sliderValue).toFixed(1);
+
+        // refresh knob state
+        var knob = document.querySelector("#Knob3");
+        var maxPosVal1 = Math.max(logToPos(this.amp.preamp.k[2]), logToPos(this.amp.preamp.k[3]));
+        var maxPosVal2 = Math.max(logToPos(this.amp.preamp.k[0]), logToPos(this.amp.preamp.k[1]));
+        var maxPosVal = Math.max(maxPosVal1, maxPosVal2);
+        //var maxPosVal = Math.max(logToPos(k[2]), logToPos(k[3]));
+        var linearValue = parseFloat(maxPosVal).toFixed(1);
+        knob.setValue(linearValue, false);
+
+        // in [0, 10]
+        this.amp.preamp.currentK = linearValue;
+    }
+
+    changeDistoType1(sliderVal) {
+        //console.log("[CONTROLLER] Changing disto1 to : " + sliderVal);
+        this.amp.preamp.currentDistoName = sliderVal;   
+        this.amp.preamp.distoTypes[0] = sliderVal;
+        this.changeDrive(this.amp.preamp.currentK);
+    }
+
+    changeDistoType2(sliderVal) {
+        //console.log("[CONTROLLER] Changing disto2 to : " + sliderVal);
+        this.amp.preamp.currentDistoName = sliderVal;  
+        this.amp.preamp.distoTypes[1] = sliderVal;
+        this.changeDrive(this.amp.preamp.currentK);
+    }
+
 	// Gains
 
     changePreampStage1GainValue(sliderVal) {
@@ -217,7 +276,7 @@ class AmpController {
         this.changeLowShelf2GainValue(p.LS2Gain);
         this.changePreampStage1GainValue(p.gain1);
         this.amp.preamp.changeDisto1TypeFromPreset(p.distoName1);
-        this.amp.preamp.changeDistorsionValues(p.K1, 0);
+        this.changeDistorsionValues(p.K1, 0);
 
         // Stage 2
 
@@ -227,7 +286,7 @@ class AmpController {
         this.changeLowShelf3GainValue(p.LS3Gain);
         this.changePreampStage2GainValue(p.gain2);
         this.amp.preamp.changeDisto2TypeFromPreset(p.distoName2);
-        this.amp.preamp.changeDistorsionValues(p.K2, 1);
+        this.changeDistorsionValues(p.K2, 1);
 
         this.amp.changeOutputGain(p.OG);
 
@@ -265,6 +324,12 @@ class AmpController {
 	        button.classList.add("pulse");
 	    }
 	    this.guitarPluggedIn = !this.guitarPluggedIn;
+	}
+
+	changeDemoSample(val) {
+	    console.log(val);
+	    audioPlayer.src = demoSampleURLs[val];
+	    audioPlayer.play();
 	}
 
 	//
@@ -317,11 +382,5 @@ class AmpController {
         this.amp.output.gain.value = parseFloat(sliderVal)/10;
         //console.log("changeOutputGainValue value = " + output.gain.value);
     }
-
-	changeDemoSample(val) {
-	    console.log(val);
-	    audioPlayer.src = demoSampleURLs[val];
-	    audioPlayer.play();
-	}
 
 }

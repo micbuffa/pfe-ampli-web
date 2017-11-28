@@ -45,6 +45,7 @@ var analyzerAtInput, analyzerAtOutput;
 var convolverSlider;
 var convolverCabinetSlider;
 var guitarInput;
+var initialDistoVal = 4;
 
 // Create the amp
 function createAmp(context, input1, input2) {
@@ -54,6 +55,9 @@ function createAmp(context, input1, input2) {
     ampCtrl = new AmpController(amp);
     // set default preset
     ampCtrl.setDefaultPreset();
+    // set distortion values to knobs
+    ampCtrl.changeDistoLabels(initialDistoVal, 0);
+    ampCtrl.changeDistoLabels(initialDistoVal, 1);
 
     // build graph
     analyzerAtInput = context.createAnalyser();
@@ -159,8 +163,8 @@ function Amp(context) {
     preamp.createDisto("disto1");
     preamp.createDisto("disto2");
 
-    preamp.changeDistorsionValues(4, 0);
-    preamp.changeDistorsionValues(4, 1);
+    preamp.changeDistorsionValuesPA(initialDistoVal, 0);
+    preamp.changeDistorsionValuesPA(initialDistoVal, 1);
 
     // output gain after preamp stage
     var outputGain = context.createGain();
@@ -578,8 +582,7 @@ function Amp(context) {
         preamp: preamp,
         master: masterVolume,
         presets: presets,
-
-        changeDrive: preamp.changeDrive,
+        
         changeOversampling: changeOversampling,
         changeOutputGain: changeOutputGain,
         changeInputGain: changeInputGain,

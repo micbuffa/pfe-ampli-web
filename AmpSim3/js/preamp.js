@@ -102,7 +102,7 @@ class PreAmp {
     // Distortion-related functions
     //
 
-    changeDistorsionValues(sliderValue, numDisto) {
+    changeDistorsionValuesPA(sliderValue, numDisto) {
         // sliderValue is in [0, 10] range, adjust to [0, 1500] range  
         var value = 150 * parseFloat(sliderValue);
         var minp = 0;
@@ -126,46 +126,14 @@ class PreAmp {
         //od[numDisto].curve = makeDistortionCurve(sliderValue);
         //makeDistortionCurve(k[numDisto]);
         //od[numDisto].curve = makeDistortionCurve(sliderValue);
-        // update output labels
-        var output = document.querySelector("#k" + numDisto);
-        output.value = parseFloat(sliderValue).toFixed(1);
 
-        // update sliders
-        var numSlider = numDisto + 1;
-        var slider = document.querySelector("#K" + numSlider + "slider");
-        slider.value = parseFloat(sliderValue).toFixed(1);
-
-        // refresh knob state
-        var knob = document.querySelector("#Knob3");
-        var maxPosVal1 = Math.max(this.logToPos(this.k[2]), this.logToPos(this.k[3]));
-        var maxPosVal2 = Math.max(this.logToPos(this.k[0]), this.logToPos(this.k[1]));
-        var maxPosVal = Math.max(maxPosVal1, maxPosVal2);
-        //var maxPosVal = Math.max(logToPos(k[2]), logToPos(k[3]));
-        var linearValue = parseFloat(maxPosVal).toFixed(1);
-        knob.setValue(linearValue, false);
-        // in [0, 10]
-        this.currentK = linearValue;
         // redraw curves
         this.drawCurrentDistos();
     }
 
-    logToPos(logValue) {
-        var minp = 0;
-        var maxp = 1500;
-
-        // The result should be between 10 an 1500
-        var minv = Math.log(10);
-        var maxv = Math.log(1500);
-
-        // calculate adjustment factor
-        var scale = (maxv - minv) / (maxp - minp);
-
-        return (minp + (Math.log(logValue) - minv) / scale) / 150;
-    }
-
     // Returns an array of distorsions values in [0, 10] range
     getDistorsionValue(numChannel) {
-        var pos = this.logToPos(this.k[numChannel]);
+        var pos = logToPos(this.k[numChannel]);
         return parseFloat(pos).toFixed(1);
     }
 
@@ -220,20 +188,6 @@ class PreAmp {
         return this.currentWSCurve;
     }
 
-    changeDistoType1() {
-        console.log("Changing disto1 to : " + this.menuDisto1.value);
-        this.currentDistoName = this.menuDisto1.value;   
-        this.distoTypes[0] = this.currentDistoName;
-        this.changeDrive(this.currentK);
-    }
-
-    changeDistoType2() {
-        console.log("Changing disto2 to : " + this.menuDisto2.value);
-        this.currentDistoName = this.menuDisto2.value;   
-        this.distoTypes[1] = this.currentDistoName;
-        this.changeDrive(this.currentK);
-    }
-
     changeDisto1TypeFromPreset(name) {
         this.currentDistoName = name;
         this.menuDisto1.value = name;
@@ -248,19 +202,6 @@ class PreAmp {
         //changeDrive(currentK);
     }
 
-    changeDrive(sliderValue) {
-      // sliderValue in [0,10]
-      // We can imagine having some "profiles here" -> generate
-      // different K values from one single sliderValue for the
-      // drive.
-      // other values i.e [0.5, 0.5, 0.8, 1] -> less distorsion
-      // on bass frequencies and top high frequency
-      
-      for(var i = 0; i < 2; i++) {
-            this.changeDistorsionValues(sliderValue, i);
-      }
-    }
-
     // Build a drop down menu with all distorsion names
     buildDistoMenu1() {
         for(var p in this.wsFactory.distorsionCurves) {
@@ -269,7 +210,7 @@ class PreAmp {
             option.text = p;
             this.menuDisto1.appendChild(option);    
         }
-        this.menuDisto1.onchange = () => this.changeDistoType1();
+        //this.menuDisto1.onchange = () => this.changeDistoType1();
     }
 
     // Build a drop down menu with all distorsion names
@@ -280,7 +221,7 @@ class PreAmp {
             option.text = p;
             this.menuDisto2.appendChild(option);    
         }
-        this.menuDisto2.onchange = () => this.changeDistoType2();
+        //this.menuDisto2.onchange = () => this.changeDistoType2();
     }
 
     //
