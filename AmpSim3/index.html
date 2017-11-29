@@ -308,21 +308,21 @@
             // Volume
             var volumeOutputPreAmp = document.querySelector("#Knob1");
             volumeOutputPreAmp.addEventListener("change", function (evt) {
-                if(amp !== undefined)
+                if(ampCtrl !== undefined)
                     ampCtrl.changeOutputGain(evt.target.value);
             });
 
             // Master Volume
             var masterVolume = document.querySelector("#Knob2");
             masterVolume.addEventListener("change", function (evt) {
-                if(amp !== undefined)
+                if(ampCtrl !== undefined)
                     ampCtrl.changeMasterVolume(evt.target.value);
             });
 
             // Drive
             var drive = document.querySelector("#Knob3");
             drive.addEventListener("change", function (evt) {
-                if(amp !== undefined)
+                if(ampCtrl !== undefined)
                     ampCtrl.changeDrive(evt.target.value);
             });
 
@@ -350,7 +350,7 @@
             // Reverb
             var reverb = document.querySelector("#Knob7");
             reverb.addEventListener("change", function (evt) {
-                if(amp !== undefined)
+                if(ampCtrl !== undefined)
                     ampCtrl.changeReverbGain(evt.target.value);
             });
 
