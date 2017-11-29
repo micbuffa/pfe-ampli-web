@@ -190,7 +190,6 @@ function Amp(context) {
         eqlocut.type = "peaking";
         eqlocut.gain.value = -19;
 
-    changeEQValues([0, 0, 0, 0, 0, 0]);
     var bypassEQg = context.createGain();
     bypassEQg.gain.value = 0; // by defaut EQ is in
     var inputEQ = context.createGain();
@@ -286,21 +285,7 @@ function Amp(context) {
         byPass.connect(output);
     }
 
-    function changeHicutFreqValue(sliderVal) {
-        var value = parseFloat(sliderVal);
-        for(var i =0; i < 4; i++) {
-            hiCutFilters[i].frequency.value = value;
-    }
-        // update output labels
-        var output = document.querySelector("#hiCutFreq");
-        output.value = parseFloat(sliderVal).toFixed(1) + " Hz";
-
-        // refresh slider state
-        var slider = document.querySelector("#hiCutFreqSlider");
-        slider.value = parseFloat(sliderVal).toFixed(1);
-    }
-
-    function changeOversampling(cb) {
+    function changeOversamplingAmp(cb) {
         for (var i = 0; i < 2; i++) {
             if(cb.checked) {
                 // Oversampling generates some (small) latency
@@ -314,37 +299,10 @@ function Amp(context) {
             }
          }
          // Not sure if this is necessary... My ears can't hear the difference
-         // between oversampling=node and 4x ? Maybe we should re-init the
+         // between oversampling=none and 4x ? Maybe we should re-init the
          // waveshaper curves ?
-         //changeDistoType1();
-         //changeDistoType2();
-    }
-
-    function changeQValues(sliderVal, numQ) {
-        var value = parseFloat(sliderVal);
-        filters[numQ].Q.value = value;
-
-        // update output labels
-        var output = document.querySelector("#q" + numQ);
-        output.value = value.toFixed(1);
-
-        // update sliders
-        var numSlider = numQ + 1;
-        var slider = document.querySelector("#Q" + numSlider + "slider");
-        slider.value = value;
-    }
-
-    function changeFreqValues(sliderVal, numF) {
-        var value = parseFloat(sliderVal);
-        filters[numF].frequency.value = value;
-
-        // update output labels
-        var output = document.querySelector("#freq" + numF);
-        output.value = value + " Hz";
-        // refresh slider state
-        var numSlider = numF + 1;
-        var slider = document.querySelector("#F" + numSlider + "slider");
-        slider.value = value;
+         // changeDistoType1();
+         // changeDistoType2();
     }
 
     // volume aka preamp output volume
@@ -386,10 +344,6 @@ function Amp(context) {
 
     function changeCabinetSimImpulse(name) {
         cabinetSim.loadImpulseByName(name);
-    }
-
-    function changeEQValues(eqValues) {
-        eq.setValues(eqValues);
     }
 
     // --------
@@ -451,7 +405,7 @@ function Amp(context) {
 
     // END PRESETS
 
-    function bypass(cb) {
+    function bypassAmp(cb) {
         console.log("byPass : " + cb.checked);
 
         if (cb.checked) {
@@ -463,23 +417,9 @@ function Amp(context) {
             inputGain.gain.value = 0;
             byPass.gain.value = 1;
         }
-
-        // update buttons states
-        //var onOffButton = document.querySelector("#myonoffswitch");
-        var led = document.querySelector("#led");
-
-        //onOffButton.checked = cb.checked;
-        var onOffSwitch = document.querySelector("#switch1");
-        if(cb.checked) {
-            onOffSwitch.setValue(0,false);
-            led.setValue(1, false);
-        } else {
-            onOffSwitch.setValue(1,false);
-            led.setValue(0, false);
-        }
     }
 
-    function bypassEQ(cb) {
+    function bypassEQAmp(cb) {
         console.log("EQ byPass : " + cb.checked);
 
         if (cb.checked) {
@@ -490,18 +430,6 @@ function Amp(context) {
             // normal amp running mode
             inputEQ.gain.value = 0;
             bypassEQg.gain.value = 1;
-        }
-
-        // update buttons states
-        //var onOffButton = document.querySelector("#myonoffswitch");
-        var led = document.querySelector("#led");
-
-        //onOffButton.checked = cb.checked;
-        var eqOnOffSwitch = document.querySelector("#switch2");
-        if(cb.checked) {
-            eqOnOffSwitch.setValue(0,false);
-        } else {
-            eqOnOffSwitch.setValue(1,false);
         }
     }
 
@@ -518,7 +446,7 @@ function Amp(context) {
         master: masterVolume,
         presets: presets,
         
-        changeOversampling: changeOversampling,
+        changeOversamplingAmp: changeOversamplingAmp,
         changeOutputGainAmp: changeOutputGainAmp,
         changeInputGainAmp: changeInputGainAmp,
 
@@ -527,9 +455,8 @@ function Amp(context) {
         changeReverbImpulse: changeReverbImpulse,
         changeCabinetSimImpulse: changeCabinetSimImpulse,
         changeRoomAmp: changeRoomAmp,
-        changeEQValues: changeEQValues,
-        bypass: bypass,
-        bypassEQ: bypassEQ
+        bypassAmp: bypassAmp,
+        bypassEQAmp: bypassEQAmp
     };
 }
 
@@ -692,87 +619,3 @@ function Convolver(context, impulses, menuId) {
         loadImpulseByName: loadImpulseByName
     };
 }
-
-// Booster, useful to add a "Boost channel"
-var Boost = function(context) {
-    // Booster not activated by default
-    var activated = false;
-
-    var input = context.createGain();
-    var inputGain = context.createGain();
-    inputGain.gain.value = 0;
-    var byPass = context.createGain();
-    byPass.gain.value = 1;
-    var filter = context.createBiquadFilter();
-    filter.frequency.value = 3317;
-    var shaper = context.createWaveShaper();
-    shaper.curve = makeDistortionCurve(640);
-    var outputGain = context.createGain();
-    outputGain.gain.value = 2;
-    var output = context.createGain();
-
-    // build graph
-    input.connect(inputGain);
-    inputGain.connect(shaper);
-    shaper.connect(filter);
-    filter.connect(outputGain);
-    outputGain.connect(output);
-
-    // bypass route
-    input.connect(byPass);
-    byPass.connect(output);
-
-    function isActivated() {
-        return activated;
-    }
-
-    function onOff(wantedState) {
-        if(wantedState === undefined) {
-            // do not boost
-            if(activated) toggle();
-            return;
-        }
-        var currentState = activated;
-
-        if(wantedState !== currentState) {
-            toggle();
-        }
-    }
-
-    function toggle() {
-        if(!activated) {
-            byPass.gain.value = 0;
-            inputGain.gain.value = 1;
-        } else {
-            byPass.gain.value = 1;
-            inputGain.gain.value = 0;
-        }
-        activated = !activated;
-    }
-
-    function setOversampling(value) {
-        shaper.oversample = value;
-        console.log("boost set oversampling to " + value);
-    }
-
-    function makeDistortionCurve(k) {
-        var n_samples = 44100; //65536; //22050;     //44100
-        var curve = new Float32Array(n_samples);
-        var deg = Math.PI / 180;
-        for (var i = 0; i < n_samples; i += 1) {
-            var x = i * 2 / n_samples - 1;
-            curve[i] = (3 + k) * x * 20 * deg / (Math.PI + k * Math.abs(x));
-        }
-        return curve;
-    }
-
-    // API
-    return {
-        input: input,
-        output: output,
-        onOff: onOff,
-        toggle: toggle,
-        isActivated: isActivated,
-        setOversampling: setOversampling
-    };
-};

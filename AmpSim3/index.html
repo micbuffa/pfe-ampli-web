@@ -142,7 +142,7 @@
                     </div>
                    <p>
                     <div class="onoffswitch">
-                        <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch"  onclick="amp.changeOversampling(this);">
+                        <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch"  onclick="ampCtrl.changeOversampling(this);">
                         <label class="onoffswitch-label" for="myonoffswitch">
                             <span class="onoffswitch-inner"></span>
                             <span class="onoffswitch-switch"></span>
@@ -377,22 +377,21 @@
 
             // Equalizer
             for (var i = 1; i < 7; i++) {
-
                 createListenerForEQ(i);
             }
 
             function createListenerForEQ(i) {
                 var eq = document.querySelector("#slider" + i);
                 eq.addEventListener("change", function (evt) {
-                    if(amp !== undefined)
-                        amp.eq.changeGain(evt.target.value, i - 1);
+                    if(ampCtrl !== undefined)
+                        ampCtrl.changeGain(evt.target.value, i - 1);
                 });
             }
 
             // On / Off switch
             var onOff = document.querySelector("#switch1");
             onOff.addEventListener("change", function (evt) {
-                if(amp === undefined) return;
+                if(ampCtrl === undefined) return;
                 
                 var state = {};
                 if (evt.target.value == 1) {
@@ -400,7 +399,7 @@
                 } else {
                     state.checked = true;
                 }
-                amp.bypass(state);
+                ampCtrl.bypass(state);
             });
 
             // EQ on/off switch
@@ -412,7 +411,7 @@
                 } else {
                     state.checked = true;
                 }
-                amp.bypassEQ(state);
+                ampCtrl.bypassEQ(state);
             });
 
             var boostOnOff = document.querySelector("#toggleBoost");
@@ -423,7 +422,7 @@
                 } else {
                     state.checked = true;
                 }
-                amp.preamp.boostOnOff(state);
+                ampCtrl.boostOnOff(state);
             });
 
         </script>

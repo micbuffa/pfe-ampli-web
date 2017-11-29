@@ -19,33 +19,13 @@ function Equalizer(ctx) {
         filters[i].connect(filters[i + 1]);
     }
 
-    // connect the last filter to the speakers
+    // Connect the last filter to the speakers
     //filters[filters.length - 1].connect(ctx.destination);
 
-    function changeGain(sliderVal, nbFilter) {
-        // sliderVal in [-30, +30]
+    function changeGainEQ(sliderVal, numFilter) {
+        // sliderVal in [-12, +12]
         var value = parseFloat(sliderVal);
-        filters[nbFilter].gain.value = value;
-
-        // update output labels
-        //var output = document.querySelector("#gain" + nbFilter);
-        //output.value = value + " dB";
-
-        // update sliders
-        //var numSlider = nbFilter + 1;
-        //var slider = document.querySelector("#EQ" + numSlider + "slider");
-        //slider.value = value;
-
-        // refresh amp slider state in the web component GUI
-        var sliderWC = document.querySelector("#slider" + (nbFilter+1));
-        // second parameter set to false will not fire an event
-        sliderWC.setValue(parseFloat(sliderVal).toFixed(0), false);
-    }
-
-    function setValues(values) {
-        values.forEach(function (val, index) {
-            changeGain(val, index);
-        });
+        filters[numFilter].gain.value = value;
     }
 
     function getValues() {
@@ -59,8 +39,7 @@ function Equalizer(ctx) {
     return {
         input: filters[0],
         output: filters[filters.length - 1],
-        setValues: setValues,
         getValues: getValues,
-        changeGain: changeGain
+        changeGainEQ: changeGainEQ
     };
 }

@@ -316,7 +316,7 @@ class AmpController {
         }
 
         if(p.boost === undefined) p.boost = false;
-        this.amp.preamp.changeBoost(p.boost);
+        this.changeBoost(p.boost);
 
         // Stage 1
 
@@ -353,8 +353,106 @@ class AmpController {
         this.changeRoom(p.CG);
         this.amp.changeCabinetSimImpulse(p.CN);
 
-        this.amp.changeEQValues(p.EQ);
+        this.changeEQValues(p.EQ);
 	}
+
+	// Equalizer handlers
+
+    changeEQValues(values) {
+        values.forEach((val, index) => {
+            this.changeGain(val, index);
+        });
+    }
+
+	changeGain(sliderVal, numFilter) {
+        // set eq value
+        this.amp.eq.changeGainEQ(sliderVal, numFilter);
+
+        this.updateEQSlider(sliderVal, numFilter);        
+    }
+
+    updateEQSlider(sliderVal, nbFilter) {
+		// refresh amp slider state in the web component GUI
+        var sliderWC = document.querySelector("#slider" + (nbFilter+1));
+        // second parameter set to false will not fire an event
+        sliderWC.setValue(parseFloat(sliderVal).toFixed(0), false);
+    }
+
+	// Boost handler
+
+   	changeOversampling(cb) {
+    	this.amp.changeOversamplingAmp(cb);
+    }
+
+    boostOnOff(cb) {  
+        // called when we click the switch on the GUI      
+        this.amp.preamp.boost.toggle();
+
+        this.amp.preamp.adjustOutputGainIfBoostActivated();
+        this.updateBoostLedButtonState(this.amp.preamp.boost.isActivated());
+    }
+
+    changeBoost(state) {
+
+        if(this.amp.preamp.boost.isActivated() !== state) {
+            // we need to adjust the output gain
+            console.log("changeBoost: we change boost state");
+            this.amp.preamp.boost.onOff(state);
+            this.amp.preamp.adjustOutputGainIfBoostActivated();
+            this.updateBoostLedButtonState(this.amp.preamp.boost.isActivated());
+        } else {
+            console.log("changeBoost: we do not change boost state");
+        }
+
+        console.log("changeBoost, boost after: " + this.amp.preamp.boost.isActivated());
+    }
+
+    updateBoostLedButtonState(activated) {
+        // update buttons states
+        var boostSwitch = document.querySelector("#toggleBoost");
+
+        if(this.amp.preamp.boost.isActivated()) {
+            boostSwitch.setValue(1,false);
+        } else {
+            boostSwitch.setValue(0,false);
+        }
+    }
+
+    // Bypass handlers
+
+    bypass(cb) {
+        this.amp.bypassAmp(cb);
+
+        // update buttons states
+        //var onOffButton = document.querySelector("#myonoffswitch");
+        var led = document.querySelector("#led");
+
+        //onOffButton.checked = cb.checked;
+        var onOffSwitch = document.querySelector("#switch1");
+        if(cb.checked) {
+            onOffSwitch.setValue(0,false);
+            led.setValue(1, false);
+        } else {
+            onOffSwitch.setValue(1,false);
+            led.setValue(0, false);
+        }
+    }
+
+    bypassEQ(cb) {
+    	this.amp.bypassEQAmp(cb);
+
+        // update buttons states
+        //var onOffButton = document.querySelector("#myonoffswitch");
+        var led = document.querySelector("#led");
+
+        //onOffButton.checked = cb.checked;
+        var eqOnOffSwitch = document.querySelector("#switch2");
+        if(cb.checked) {
+            eqOnOffSwitch.setValue(0,false);
+        } else {
+            eqOnOffSwitch.setValue(1,false);
+        }
+    }
 
 	//
 	// Input handler

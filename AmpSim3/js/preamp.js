@@ -317,50 +317,15 @@ class PreAmp {
     // Boost-related functions
     //
 
-    boostOnOff(cb) {  
-        // called when we click the switch on the GUI      
-        this.boost.toggle();
-
-        this.adjustOutputGainIfBoostActivated();
-        this.updateBoostLedButtonState(this.boost.isActivated());
-    }
-
-    changeBoost(state) {
-        //console.log("changeBoost, boost before: " + this.boost.isActivated() + " output gain=" + amp.output.gain.value);
-
-        if(this.boost.isActivated() !== state) {
-            // we need to adjust the output gain
-            console.log("changeBoost: we change boost state");
-            this.boost.onOff(state);
-            adjustOutputGainIfBoostActivated();
-            updateBoostLedButtonState(this.boost.isActivated());
-        } else {
-            console.log("changeBoost: we do not change boost state");
-        }
-
-        console.log("changeBoost, boost after: " + this.boost.isActivated());
-    }
-
     adjustOutputGainIfBoostActivated() {
-        console.log("adjustOutputGainIfBoostActivated: output gain value before = " + amp.output.gain.value)
+        //console.log("adjustOutputGainIfBoostActivated: output gain value before = " + amp.output.gain.value)
 
         if(this.boost.isActivated()) {
             amp.output.gain.value /= 2;
         } else {
             amp.output.gain.value *= 2;
         }
-        console.log("adjustOutputGainIfBoostActivated: output gain value after = " + amp.output.gain.value)
-    }
-
-    updateBoostLedButtonState(activated) {
-        // update buttons states
-        var boostSwitch = document.querySelector("#toggleBoost");
-
-        if(this.boost.isActivated()) {
-            boostSwitch.setValue(1,false);
-        } else {
-            boostSwitch.setValue(0,false);
-        }
+        //console.log("adjustOutputGainIfBoostActivated: output gain value after = " + amp.output.gain.value)
     }
 
     highlightValues(label,kvalue) {
@@ -378,3 +343,87 @@ class PreAmp {
     }
 
 }
+
+// Booster, useful to add a "Boost channel"
+var Boost = function(context) {
+    // Booster not activated by default
+    var activated = false;
+
+    var input = context.createGain();
+    var inputGain = context.createGain();
+    inputGain.gain.value = 0;
+    var byPass = context.createGain();
+    byPass.gain.value = 1;
+    var filter = context.createBiquadFilter();
+    filter.frequency.value = 3317;
+    var shaper = context.createWaveShaper();
+    shaper.curve = makeDistortionCurve(640);
+    var outputGain = context.createGain();
+    outputGain.gain.value = 2;
+    var output = context.createGain();
+
+    // build graph
+    input.connect(inputGain);
+    inputGain.connect(shaper);
+    shaper.connect(filter);
+    filter.connect(outputGain);
+    outputGain.connect(output);
+
+    // bypass route
+    input.connect(byPass);
+    byPass.connect(output);
+
+    function isActivated() {
+        return activated;
+    }
+
+    function onOff(wantedState) {
+        if(wantedState === undefined) {
+            // do not boost
+            if(activated) toggle();
+            return;
+        }
+        var currentState = activated;
+
+        if(wantedState !== currentState) {
+            toggle();
+        }
+    }
+
+    function toggle() {
+        if(!activated) {
+            byPass.gain.value = 0;
+            inputGain.gain.value = 1;
+        } else {
+            byPass.gain.value = 1;
+            inputGain.gain.value = 0;
+        }
+        activated = !activated;
+    }
+
+    function setOversampling(value) {
+        shaper.oversample = value;
+        console.log("boost set oversampling to " + value);
+    }
+
+    function makeDistortionCurve(k) {
+        var n_samples = 44100; //65536; //22050;     //44100
+        var curve = new Float32Array(n_samples);
+        var deg = Math.PI / 180;
+        for (var i = 0; i < n_samples; i += 1) {
+            var x = i * 2 / n_samples - 1;
+            curve[i] = (3 + k) * x * 20 * deg / (Math.PI + k * Math.abs(x));
+        }
+        return curve;
+    }
+
+    // API
+    return {
+        input: input,
+        output: output,
+        onOff: onOff,
+        toggle: toggle,
+        isActivated: isActivated,
+        setOversampling: setOversampling
+    };
+};
