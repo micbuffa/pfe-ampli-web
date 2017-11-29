@@ -241,6 +241,60 @@ class AmpController {
     }
 
     //
+    // Amp handlers
+    //
+
+    // volume aka preamp output volume
+	changeOutputGain(sliderVal) {
+        // set gain value
+        this.amp.changeOutputGainAmp(sliderVal);
+
+        // refresh knob state
+        var knob = document.querySelector("#Knob1");
+        knob.setValue(parseFloat(sliderVal).toFixed(1), false);
+    }
+
+    changeInputGain(sliderVal) {
+        // set gain value
+        this.amp.changeInputGainAmp(sliderVal);
+
+        // refresh knob state
+        var knob = document.querySelector("#Knob1");
+        knob.setValue(parseFloat(sliderVal).toFixed(1), false);
+    }
+
+    changeMasterVolume(sliderVal) {
+        // set gain value
+        this.amp.changeMasterVolumeAmp(sliderVal);
+        
+        // refresh knob state
+        var knob = document.querySelector("#Knob2");
+        knob.setValue(parseFloat(sliderVal).toFixed(1), false);
+    }
+
+    changeReverbGain(sliderVal) {
+        // set gain value
+        this.amp.changeReverbGainAmp(sliderVal);
+
+        // refresh knob state
+        var knob = document.querySelector("#Knob7");
+        knob.setValue(parseFloat(sliderVal).toFixed(1), false);
+    }
+
+    changeRoom(sliderVal) {
+        // set room value
+        this.amp.changeRoomAmp(sliderVal);
+
+        // update output labels
+        var output = document.querySelector("#cabinetGainOutput");
+        output.value = parseFloat(sliderVal).toFixed(1);
+
+        // refresh slider state
+        var slider = document.querySelector("#convolverCabinetSlider");
+        slider.value = parseFloat(sliderVal).toFixed(1);
+    }
+
+    //
     // Preset handlers
     //
 
@@ -253,11 +307,11 @@ class AmpController {
 	}
 
 	setValuesFromPreset(p) {
-        if(p.distoName1 === undefined) {
+        if (p.distoName1 === undefined) {
             p.distoName1 = "standard";
         }
 
-	    if(p.distoName2 === undefined) {
+	    if (p.distoName2 === undefined) {
             p.distoName2 = "standard";
         }
 
@@ -284,19 +338,19 @@ class AmpController {
         this.amp.preamp.changeDisto2TypeFromPreset(p.distoName2);
         this.changeDistorsionValues(p.K2, 1);
 
-        this.amp.changeOutputGain(p.OG);
+        this.changeOutputGain(p.OG);
 
         this.changeBassFilterValue(p.BF);
         this.changeMidFilterValue(p.MF);
         this.changeTrebleFilterValue(p.TF);
         this.changePresenceFilterValue(p.PF);
 
-        this.amp.changeMasterVolume(p.MV);
+        this.changeMasterVolume(p.MV);
 
-        this.amp.changeReverbGain(p.RG);
+        this.changeReverbGain(p.RG);
         this.amp.changeReverbImpulse(p.RN);
 
-        this.amp.changeRoom(p.CG);
+        this.changeRoom(p.CG);
         this.amp.changeCabinetSimImpulse(p.CN);
 
         this.amp.changeEQValues(p.EQ);

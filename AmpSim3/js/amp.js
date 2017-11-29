@@ -198,7 +198,7 @@ function Amp(context) {
     var cabinetSim, reverb;
     // Master volume
     var masterVolume = context.createGain();
-    changeMasterVolume(2);
+    changeMasterVolumeAmp(2);
 
     /*reverb = new Reverb(context, function () {
         console.log("reverb created");
@@ -225,7 +225,7 @@ function Amp(context) {
 
         // Build web audio graph, set default preset
         buildGraph();
-        changeRoom(7.5); // TO REMOVE ONCE PRESETS MANAGER WORKS
+        changeRoomAmp(7.5); // TO REMOVE ONCE PRESETS MANAGER WORKS
         initPresets();
 
         console.log("Running");
@@ -332,7 +332,6 @@ function Amp(context) {
         var numSlider = numQ + 1;
         var slider = document.querySelector("#Q" + numSlider + "slider");
         slider.value = value;
-
     }
 
     function changeFreqValues(sliderVal, numF) {
@@ -349,101 +348,40 @@ function Amp(context) {
     }
 
     // volume aka preamp output volume
-    function changeOutputGain(sliderVal) {
-        // sliderVal is in [0, 10]
-        // Adjust to [0, 1]
+    function changeOutputGainAmp(sliderVal) {
+        // sliderVal is in [0, 10], adjust to [0, 1]
         var value = parseFloat(sliderVal/10);
         outputGain.gain.value = value;
-
-        // update output labels
-        //var output = document.querySelector("#outputGain");
-        //output.value = parseFloat(sliderVal).toFixed(1);
-
-        // refresh slider state
-        //var slider = document.querySelector("#OGslider");
-        //slider.value = parseFloat(sliderVal).toFixed(1);
-
-        // refresh knob state
-        var knob = document.querySelector("#Knob1");
-        knob.setValue(parseFloat(sliderVal).toFixed(1), false);
     }
 
-        // volume aka preamp output volume
-    function changeInputGain(sliderVal) {
-        // sliderVal is in [0, 10]
-        // Adjust to [0, 1]
+    // volume aka preamp output volume
+    function changeInputGainAmp(sliderVal) {
+        // sliderVal is in [0, 10], adjust to [0, 1]
         var value = parseFloat(sliderVal/10);
         inputGain.gain.value = value;
-
-        // update output labels
-        //var output = document.querySelector("#outputGain");
-        //output.value = parseFloat(sliderVal).toFixed(1);
-
-        // refresh slider state
-        //var slider = document.querySelector("#OGslider");
-        //slider.value = parseFloat(sliderVal).toFixed(1);
-
-        // refresh knob state
-        var knob = document.querySelector("#Knob1");
-        knob.setValue(parseFloat(sliderVal).toFixed(1), false);
     }
 
-    function changeMasterVolume(sliderVal) {
+    function changeMasterVolumeAmp(sliderVal) {
         // sliderVal is in [0, 10]
         var value = parseFloat(sliderVal);
         masterVolume.gain.value = value;
-
-        // update output labels
-        //var output = document.querySelector("#MVOutputGain");
-        //output.value = parseFloat(sliderVal).toFixed(1);
-
-        // refresh slider state
-        //var slider = document.querySelector("#MVslider");
-        //slider.value = parseFloat(sliderVal).toFixed(1);
-        
-        // refresh knob state
-        var knob = document.querySelector("#Knob2");
-        knob.setValue(parseFloat(sliderVal).toFixed(1), false);
     }
 
-    function changeReverbGain(sliderVal) {
-        // slider val in [0, 10] range
-        // adjust to [0, 1]
+    function changeReverbGainAmp(sliderVal) {
+        // slider val in [0, 10] , adjust to [0, 1]
         var value = parseFloat(sliderVal) / 10;
         reverb.setGain(value);
-
-        // update output labels
-        //var output = document.querySelector("#reverbGainOutput");
-        //output.value = parseFloat(sliderVal).toFixed(1);
-
-        // refresh slider state
-        //var slider = document.querySelector("#convolverSlider");
-        //slider.value = parseFloat(sliderVal).toFixed(1);
-
-        // refresh knob state
-        var knob = document.querySelector("#Knob7");
-        knob.setValue(parseFloat(sliderVal).toFixed(1), false);
     }
 
     function changeReverbImpulse(name) {
         reverb.loadImpulseByName(name);
     }
 
-    function changeRoom(sliderVal) {
-        // slider val in [0, 10] range
-        // adjust to [0, 1]
+    function changeRoomAmp(sliderVal) {
+        // slider val in [0, 10] range, adjust to [0, 1]
         console.log('change room');
         var value = parseFloat(sliderVal) / 10;
         cabinetSim.setGain(value);
-
-        // update output labels
-        var output = document.querySelector("#cabinetGainOutput");
-        output.value = parseFloat(sliderVal).toFixed(1);
-
-        // refresh slider state
-        var slider = document.querySelector("#convolverCabinetSlider");
-        slider.value = parseFloat(sliderVal).toFixed(1);
-
     }
 
     function changeCabinetSimImpulse(name) {
@@ -581,14 +519,14 @@ function Amp(context) {
         presets: presets,
         
         changeOversampling: changeOversampling,
-        changeOutputGain: changeOutputGain,
-        changeInputGain: changeInputGain,
+        changeOutputGainAmp: changeOutputGainAmp,
+        changeInputGainAmp: changeInputGainAmp,
 
-        changeMasterVolume: changeMasterVolume,
-        changeReverbGain: changeReverbGain,
+        changeMasterVolumeAmp: changeMasterVolumeAmp,
+        changeReverbGainAmp: changeReverbGainAmp,
         changeReverbImpulse: changeReverbImpulse,
         changeCabinetSimImpulse: changeCabinetSimImpulse,
-        changeRoom: changeRoom,
+        changeRoomAmp: changeRoomAmp,
         changeEQValues: changeEQValues,
         bypass: bypass,
         bypassEQ: bypassEQ

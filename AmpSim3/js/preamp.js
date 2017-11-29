@@ -118,7 +118,7 @@ class PreAmp {
         value = Math.exp(minv + scale * (value - minp));
         // end of logarithmic adjustment
 
-		if(this.distoTypes[numDisto] == "bezier") {
+		if (this.distoTypes[numDisto] == "bezier") {
 			// point equal x value
 			this.changeBezier(point);
 			this.od[numDisto].curve = this.wsFactory.distorsionCurves[this.distoTypes[numDisto]](this.bezierPoints);

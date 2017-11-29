@@ -150,8 +150,8 @@
                     </div>
 
                     <p>
-                        <label for="convolverCabinetSlider">Cabinet Simulator (Dry/Wet)</label>
-                        <input type="range" min="0" max="10" step="0.1" value="7.5" id="convolverCabinetSlider" oninput="amp.changeRoom(this.value);"/>
+                        <label for="convolverCabinetSlider">Cabinet Sim (Dry/Wet)</label>
+                        <input type="range" min="0" max="10" step="0.1" value="7.5" id="convolverCabinetSlider" oninput="ampCtrl.changeRoom(this.value);"/>
                         <output id="cabinetGainOutput">2</output>
 
                     <p>
@@ -309,14 +309,14 @@
             var volumeOutputPreAmp = document.querySelector("#Knob1");
             volumeOutputPreAmp.addEventListener("change", function (evt) {
                 if(amp !== undefined)
-                    amp.changeOutputGain(evt.target.value);
+                    ampCtrl.changeOutputGain(evt.target.value);
             });
 
             // Master Volume
             var masterVolume = document.querySelector("#Knob2");
             masterVolume.addEventListener("change", function (evt) {
                 if(amp !== undefined)
-                    amp.changeMasterVolume(evt.target.value);
+                    ampCtrl.changeMasterVolume(evt.target.value);
             });
 
             // Drive
@@ -351,7 +351,7 @@
             var reverb = document.querySelector("#Knob7");
             reverb.addEventListener("change", function (evt) {
                 if(amp !== undefined)
-                    amp.changeReverbGain(evt.target.value);
+                    ampCtrl.changeReverbGain(evt.target.value);
             });
 
             // Presence 
