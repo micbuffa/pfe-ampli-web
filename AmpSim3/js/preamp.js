@@ -31,7 +31,7 @@ class PreAmp {
         this.lowShelf2 = this.context.createBiquadFilter();
         this.lowShelf3 = this.context.createBiquadFilter();
         this.highPass1 = this.context.createBiquadFilter();        
-		
+		this.bezierPoints = [{x: 0, y: 100},{x: 10, y: 50},{x: 0, y: 50},{x: 100, y: 0}];
 	}
 
     createDisto(type) {
@@ -101,8 +101,8 @@ class PreAmp {
     //
     // Distortion-related functions
     //
-
-    changeDistorsionValuesPA(sliderValue, numDisto) {
+	
+    changeDistorsionValuesPA(sliderValue, numDisto, point) {
         // sliderValue is in [0, 10] range, adjust to [0, 1500] range  
         var value = 150 * parseFloat(sliderValue);
         var minp = 0;
@@ -118,18 +118,35 @@ class PreAmp {
         value = Math.exp(minv + scale * (value - minp));
         // end of logarithmic adjustment
 
-        this.k[numDisto] = value;
-        //console.log("k = " + value + " pos = " + logToPos(value));
-        //console.log("distoTypes = " + distoTypes[numDisto]);
-        this.od[numDisto].curve = this.wsFactory.distorsionCurves[this.distoTypes[numDisto]](this.k[numDisto]); //makeDistortionCurve(k[numDisto]);
-        this.currentWSCurve = this.od[numDisto].curve;
-        //od[numDisto].curve = makeDistortionCurve(sliderValue);
-        //makeDistortionCurve(k[numDisto]);
-        //od[numDisto].curve = makeDistortionCurve(sliderValue);
+		if(this.distoTypes[numDisto] == "bezier") {
+			// point equal x value
+			this.changeBezier(point);
+			this.od[numDisto].curve = this.wsFactory.distorsionCurves[this.distoTypes[numDisto]](this.bezierPoints);
+			this.currentWSCurve = this.od[numDisto].curve;
+		} else {
+			this.k[numDisto] = value;
+			//console.log("k = " + value + " pos = " + logToPos(value));
+			//console.log("distoTypes = " + distoTypes[numDisto]);
+			this.od[numDisto].curve = this.wsFactory.distorsionCurves[this.distoTypes[numDisto]](this.k[numDisto]); //makeDistortionCurve(k[numDisto]);
+			this.currentWSCurve = this.od[numDisto].curve;
+			//od[numDisto].curve = makeDistortionCurve(sliderValue);
+			//makeDistortionCurve(k[numDisto]);
+			//od[numDisto].curve = makeDistortionCurve(sliderValue);
+		}
+		
 
         // redraw curves
         this.drawCurrentDistos();
     }
+	
+	changeBezier(point) {
+		if(point != undefined) {
+			this.bezierPoints[0].y += point;
+			this.bezierPoints[1].y += point;
+			this.bezierPoints[2].y += point;
+			this.bezierPoints[3].y += point;
+		}
+	}
 
     // Returns an array of distorsions values in [0, 10] range
     getDistorsionValue(numChannel) {

@@ -26,9 +26,9 @@ class AmpController {
       }
     }
 
-    changeDistorsionValues(sliderValue, numDisto) {
+    changeDistorsionValues(sliderValue, numDisto, point) {
         // update model values
-        this.amp.preamp.changeDistorsionValuesPA(sliderValue, numDisto);
+        this.amp.preamp.changeDistorsionValuesPA(sliderValue, numDisto, point);
         
         this.changeDistoLabels(sliderValue, numDisto);
     }

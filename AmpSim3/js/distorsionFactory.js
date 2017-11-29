@@ -51,10 +51,9 @@ function WaveShapers() {
             return c;
         };
         
-                // classic curve from WebAudio specification
-        distorsionCurves.bezier = function (distorsionValue) {
-            var k = distorsionValue;
-            var c = getBezierCurve();
+        // classic curve from WebAudio specification
+        distorsionCurves.bezier = function (bezierPoints) {
+            var c = getBezierCurve(bezierPoints);
             return c;
         };
 
@@ -285,12 +284,12 @@ function WaveShapers() {
         return {x: x, y: y};
     } 
 
-    function getBezierCurve() {
-		var p0 = {x: 0, y: 100};
-		var p1 = {x: 10, y: 50};
-		var p2 = {x: 0, y: 50};
-		var p3 = {x: 100, y: 0};
-
+    function getBezierCurve(bezierPoints) {
+	   var p0 = bezierPoints[0];
+	   var p1 = bezierPoints[1];
+	   var p2 = bezierPoints[2];
+	   var p3 = bezierPoints[3];
+	   
        var n_samples = 44100,
        accuracy = 1/n_samples,
        curve = new Float32Array(n_samples),
@@ -306,7 +305,7 @@ function WaveShapers() {
       
       return curve;
     }  
-        // END OF WAVE SHAPING FUNCTIONS
+    // END OF WAVE SHAPING FUNCTIONS
 
 
     // API
