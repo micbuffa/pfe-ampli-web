@@ -6,6 +6,20 @@ class AmpViewer {
         // Distortion menus
         this.menuDisto1 = document.querySelector("#distorsionMenu1");
         this.menuDisto2 = document.querySelector("#distorsionMenu2");
+        this.menuPresets = document.querySelector("#QFPresetMenu2");
+	}
+
+	//
+	// Display preset menu
+	//
+
+	createPresetMenu() {
+        this.amp.presets.forEach((p, index) => {
+            var option = document.createElement("option");
+            option.value = index;
+            option.text = p.name;
+            this.menuPresets.appendChild(option);
+        });
 	}
 
 	//
@@ -39,11 +53,11 @@ class AmpViewer {
         }
     }
 
-    updateDisto1Label(name) {
+    updateDisto1Name(name) {
     	this.menuDisto1.value = name;
     }
 
-    updateDisto2Label(name) {
+    updateDisto2Name(name) {
     	this.menuDisto2.value = name;
     }
 
@@ -55,6 +69,7 @@ class AmpViewer {
         // Signal visualisation
 		var inputVisualization = new Visualization();
 		var outputVisualization = new Visualization();
+
 	    inputVisualization.configure("inputSignalCanvas", analyzerAtInput);
 	    outputVisualization.configure("outputSignalCanvas", analyzerAtOutput);
 

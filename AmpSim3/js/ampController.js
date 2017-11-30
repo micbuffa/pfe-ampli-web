@@ -327,7 +327,7 @@ class AmpController {
         this.changeLowShelf2GainValue(p.LS2Gain);
         this.changePreampStage1GainValue(p.gain1);
         this.amp.preamp.changeDisto1TypeFromPreset(p.distoName1);
-        this.ampViewer.updateDisto1Label(p.distoName1);
+        this.ampViewer.updateDisto1Name(p.distoName1);
         this.changeDistorsionValues(p.K1, 0);
 
         // Stage 2
@@ -338,7 +338,7 @@ class AmpController {
         this.changeLowShelf3GainValue(p.LS3Gain);
         this.changePreampStage2GainValue(p.gain2);
         this.amp.preamp.changeDisto2TypeFromPreset(p.distoName2);
-        this.ampViewer.updateDisto2Label(p.distoName2);
+        this.ampViewer.updateDisto2Name(p.distoName2);
         this.changeDistorsionValues(p.K2, 1);
 
         this.changeOutputGain(p.OG);

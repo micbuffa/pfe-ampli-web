@@ -52,13 +52,14 @@ function createAmp(context, input1, input2, ampName) {
     guitarInput = input1;
 
     amp = new Amp(context, ampName);
+
     ampView = new AmpViewer(amp, ampName);
-    ampCtrl = new AmpController(amp, ampView);
     // create view disto menus
     ampView.createDistoMenus();
     // create preset menu
-    //ampView.createPresetMenu();
+    ampView.createPresetMenu();
 
+    ampCtrl = new AmpController(amp, ampView);
     // set default preset
     ampCtrl.setDefaultPreset();
 
@@ -81,7 +82,6 @@ function createAmp(context, input1, input2, ampName) {
 
 function Amp(context, ampName) {
     var presets = [];
-    var menuPresets = document.querySelector("#QFPresetMenu2");
 
     var preamp = new PreAmp(ampName, context);
     var tonestack = new ToneStack(ampName, context);
@@ -96,6 +96,9 @@ function Amp(context, ampName) {
     // amp input gain towards pream stage
     var inputGain = context.createGain();
     inputGain.gain.value = 1;
+
+    // output gain after preamp stage
+    var outputGain = context.createGain();
 
     // ------------
     // PREAM STAGE
@@ -138,9 +141,6 @@ function Amp(context, ampName) {
 
     preamp.createDisto("disto1");
     preamp.createDisto("disto2");
-
-    // output gain after preamp stage
-    var outputGain = context.createGain();
 
     // ------------------------------
     // TONESTACK STAGES
@@ -198,7 +198,6 @@ function Amp(context, ampName) {
 
         // Build web audio graph, set default preset
         buildGraph();
-        changeRoomAmp(7.5); // TO REMOVE ONCE PRESETS MANAGER WORKS
         initPresets();
 
         console.log("Running");
@@ -320,10 +319,9 @@ function Amp(context, ampName) {
         cabinetSim.loadImpulseByName(name);
     }
 
-    // --------
-    // PRESETS
-    // --------
     function initPresets() {
+        // presets are added from the preset repertory
+        // here presets are js variables
         presets.push(preset1);
         presets.push(preset2);
         presets.push(preset3);        
@@ -332,16 +330,7 @@ function Amp(context, ampName) {
         presets.push(preset6);
         presets.push(preset7);
         presets.push(preset8);
-
-        presets.forEach(function (p, index) {
-            var option = document.createElement("option");
-            option.value = index;
-            option.text = p.name;
-            menuPresets.appendChild(option);
-        });
     }
-
-    // END PRESETS
 
     function bypassAmp(cb) {
         console.log("byPass : " + cb.checked);
