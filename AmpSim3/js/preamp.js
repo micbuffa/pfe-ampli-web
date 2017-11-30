@@ -1,15 +1,12 @@
 class PreAmp {
 
-	constructor(model, context) {
+	constructor(ampName, context) {
 		// Model not used here but can be used to adjust
 		// the values according to model/brand
-		this.model = model;
+		this.ampName = ampName;
 		this.context = context;
         // Channel booster
         this.boost = new Boost(context);
-        // Distortion menus
-        this.menuDisto1 = document.querySelector("#distorsionMenu1");
-        this.menuDisto2 = document.querySelector("#distorsionMenu2");
         // To handle distortion
         this.DRAWER_CANVAS_SIZE = 100;
         this.distoDrawer1 = new CurveDrawer("distoDrawerCanvas1");
@@ -41,13 +38,11 @@ class PreAmp {
                 // generate odd harmonics
                 this.od[0] = this.context.createWaveShaper();
                 this.od[0].curve = this.wsFactory.distorsionCurves[this.distoTypes[0]](0);
-                this.menuDisto1.value = this.distoTypes[0];
                 break;
             case "disto2" :
                 // Distorsion 2, symetric function to generate even harmonics
                 this.od[1] = this.context.createWaveShaper();
                 this.od[1].curve = this.wsFactory.distorsionCurves[this.distoTypes[1]](0);
-                this.menuDisto2.value = this.distoTypes[1];
                 break;
         }
 
@@ -133,7 +128,6 @@ class PreAmp {
 			//makeDistortionCurve(k[numDisto]);
 			//od[numDisto].curve = makeDistortionCurve(sliderValue);
 		}
-		
 
         // redraw curves
         this.drawCurrentDistos();
@@ -231,38 +225,14 @@ class PreAmp {
 
     changeDisto1TypeFromPreset(name) {
         this.currentDistoName = name;
-        this.menuDisto1.value = name;
         this.distoTypes[0] = this.currentDistoName;
         //changeDrive(currentK);
     }
 
     changeDisto2TypeFromPreset(name) {
         this.currentDistoName = name;
-        this.menuDisto2.value = name;
         this.distoTypes[1] = this.currentDistoName;
         //changeDrive(currentK);
-    }
-
-    // Build a drop down menu with all distorsion names
-    buildDistoMenu1() {
-        for(var p in this.wsFactory.distorsionCurves) {
-            var option = document.createElement("option");
-            option.value = p;
-            option.text = p;
-            this.menuDisto1.appendChild(option);    
-        }
-        //this.menuDisto1.onchange = () => this.changeDistoType1();
-    }
-
-    // Build a drop down menu with all distorsion names
-    buildDistoMenu2() {
-        for(var p in this.wsFactory.distorsionCurves) {
-            var option = document.createElement("option");
-            option.value = p;
-            option.text = p;
-            this.menuDisto2.appendChild(option);    
-        }
-        //this.menuDisto2.onchange = () => this.changeDistoType2();
     }
 
     //

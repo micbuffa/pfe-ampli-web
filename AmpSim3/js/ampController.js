@@ -1,7 +1,8 @@
 class AmpController {
 
-	constructor(amp) {
+	constructor(amp, ampViewer) {
 		this.amp = amp;
+		this.ampViewer = ampViewer;
 		this.guitarPluggedIn = false;
 		this.menuPresets = document.querySelector("#QFPresetMenu2");
 		this.presets = amp.presets;
@@ -326,6 +327,7 @@ class AmpController {
         this.changeLowShelf2GainValue(p.LS2Gain);
         this.changePreampStage1GainValue(p.gain1);
         this.amp.preamp.changeDisto1TypeFromPreset(p.distoName1);
+        this.ampViewer.updateDisto1Label(p.distoName1);
         this.changeDistorsionValues(p.K1, 0);
 
         // Stage 2
@@ -336,6 +338,7 @@ class AmpController {
         this.changeLowShelf3GainValue(p.LS3Gain);
         this.changePreampStage2GainValue(p.gain2);
         this.amp.preamp.changeDisto2TypeFromPreset(p.distoName2);
+        this.ampViewer.updateDisto2Label(p.distoName2);
         this.changeDistorsionValues(p.K2, 1);
 
         this.changeOutputGain(p.OG);
@@ -495,7 +498,7 @@ class AmpController {
             LS2Freq: this.amp.preamp.lowShelf2.frequency.value,
             LS2Gain: this.amp.preamp.lowShelf2.gain.value,
             gain1: this.amp.preamp.preampStage1Gain.gain.value,
-            distoName1 : this.amp.preamp.menuDisto1.value,
+            distoName1 : this.ampViewer.menuDisto1.value,
             K1: this.amp.preamp.getDistorsionValue(0),
             HP1Freq: this.amp.preamp.highPass1.frequency.value,
             HP1Q: this.amp.preamp.highPass1.Q.value,
@@ -503,7 +506,7 @@ class AmpController {
             LS3Freq: this.amp.preamp.lowShelf3.frequency.value,
             LS3Gain: this.amp.preamp.lowShelf3.gain.value,
             gain2: this.amp.preamp.preampStage2Gain.gain.value,
-            distoName2 : this.amp.preamp.menuDisto2.value,
+            distoName2 : this.ampViewer.menuDisto2.value,
             K2: this.amp.preamp.getDistorsionValue(1),
 
             OG: (this.amp.output.gain.value*10).toFixed(1),

@@ -23,8 +23,6 @@ function Visualization() {
     gradient.addColorStop(0.75,'#ffff00');
     gradient.addColorStop(1,'#00FF00');
     
-    //buildAudioGraph();
-    
     // Try changing for lower values: 512, 256, 128, 64...
     analyzer.fftSize = 1024;
     bufferLength = analyzer.frequencyBinCount;

@@ -1,9 +1,9 @@
 class ToneStack {
 
-	constructor(model, context) {
+	constructor(ampName, context) {
 		// Model not used here but can be used to adjust
 		// the values according to model/brand
-		this.model = model;
+		this.ampName = ampName;
 		this.context = context;
 		this.bassFilter = undefined;
 		this.midFilter = undefined;
