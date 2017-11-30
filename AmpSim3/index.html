@@ -250,7 +250,7 @@
                         } else if (newK > 10) {
                             newK = 10;
                         }
-                        ampCtrl.changeDistorsionValues(newK, 0, newK/10);
+                        ampCtrl.changeDistorsionValues(newK, 0, 0);
                         amp.preamp.highlightValues(label1, kValue1);
                         console.log(amp.preamp.distoTypes[0]);
                     }
@@ -290,7 +290,7 @@
                         } else if (newK > 10) {
                             newK = 10;
                         }
-                        ampCtrl.changeDistorsionValues(newK, 1, newK/10);
+                        ampCtrl.changeDistorsionValues(newK, 1, 0);
                         amp.preamp.highlightValues(label2, kValue2);
                     }
                 }
