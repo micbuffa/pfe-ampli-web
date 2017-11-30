@@ -38,7 +38,7 @@ function CurveDrawer(canvasId) {
   this.drawCurve = function(color, lineWidth) {
     this.ctx.save();
     this.ctx.strokeStyle = color;
-     this.ctx.lineWidth = lineWidth;
+    this.ctx.lineWidth = lineWidth;
     this.ctx.beginPath();
     this.ctx.moveTo(this.height, (this.curve[0] + 1 ) * this.width / 2);
     
@@ -50,6 +50,45 @@ function CurveDrawer(canvasId) {
     this.ctx.stroke();
     this.ctx.restore();
   };
+  
+  this.drawControlsPoint = function(points) {
+	var p1 = points[0];
+	var p2 = points[3];
+	this.ctx.save();
+	this.ctx.translate(p1.x,p1.y);
+	this.ctx.beginPath();
+	this.ctx.fillStyle = "white";
+	this.ctx.arc(0, 0, 5, 0, Math.PI*2);
+	this.ctx.fill();
+	this.ctx.restore();
+	this.ctx.save();
+	this.ctx.translate(p2.x,p2.y);
+	this.ctx.beginPath();
+	this.ctx.fillStyle = "white";
+	this.ctx.arc(0, 0, 5, 0, Math.PI*2);
+	this.ctx.fill();
+	this.ctx.restore();
+  };
+  
+  this.drawLine = function(p1, p2) {
+	this.ctx.save();
+	this.ctx.beginPath();
+	this.ctx.strokeStyle = "white";
+	this.ctx.moveTo(p1.x, p1.y);
+	this.ctx.lineTo(p2.x, p2.y);
+	this.ctx.stroke();
+	this.ctx.restore();
+}
+
+  this.drawControlPoint = function(p) {
+	this.ctx.save();
+	this.ctx.translate(p.x, p.y);
+	this.ctx.beginPath();
+	this.ctx.fillStyle = "white";
+	this.ctx.arc(0, 0, 3, 0, Math.PI*2);
+	this.ctx.fill();
+	this.ctx.restore();
+  }
   
   this.makeCurve = function(equation, minX, maxX) {
     var range = maxX - minX;

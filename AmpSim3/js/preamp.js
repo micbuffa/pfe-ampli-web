@@ -31,7 +31,7 @@ class PreAmp {
         this.lowShelf2 = this.context.createBiquadFilter();
         this.lowShelf3 = this.context.createBiquadFilter();
         this.highPass1 = this.context.createBiquadFilter();        
-		this.bezierPoints = [{x: 0, y: 100},{x: 10, y: 50},{x: 0, y: 50},{x: 100, y: 0}];
+		this.bezierPoints = [{x: 0, y: 100},{x: 52, y: 96},{x: 50, y: 0},{x: 100, y: 0}];
 	}
 
     createDisto(type) {
@@ -157,13 +157,27 @@ class PreAmp {
     drawCurrentDistos() {
         // draws both the transfer function and a sinusoidal
         // signal transformed, for each distorsion stage
-        this.drawDistoCurves(this.distoDrawer1, this.signalDrawer1, this.od[0].curve);
-        this.drawDistoCurves(this.distoDrawer2, this.signalDrawer2, this.od[1].curve);
+        this.drawDistoCurves(this.distoDrawer1, this.signalDrawer1, this.od[0].curve, 0);
+        this.drawDistoCurves(this.distoDrawer2, this.signalDrawer2, this.od[1].curve, 1);
     }
 
-    drawDistoCurves(distoDrawer, signalDrawer, curve) {
+    drawDistoCurves(distoDrawer, signalDrawer, curve, curveNumber) {
         var c = curve;
         distoDrawer.clear();
+		// Draw control points and line only for bezier curve.
+		if(this.distoTypes[curveNumber] == "bezier") {
+			var p1 = this.bezierPoints[1];
+			var	p2 = this.bezierPoints[2];
+			// bias point
+  			var biasPoint = {
+				x: (p1.x + p2.x) / 2,
+				y: (p1.y + p2.y) / 2,
+			}
+			distoDrawer.drawControlPoint(biasPoint);
+			distoDrawer.drawControlPoint(p1);
+			distoDrawer.drawControlPoint(p2);
+			distoDrawer.drawLine(p1, p2);
+		}
         drawCurve(distoDrawer, c);
 
         // draw signal
