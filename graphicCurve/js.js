@@ -6,13 +6,8 @@ var startY1;
 var startY2
 var biasX, biasY, bias1, bias2;
 var navigatorName;
-var p0 = {x: 0, y: 100}; //use whatever points you want obviously
-var p1 = {x: 50, y: 100}; // tan
-var initialP1 = {x: 50, y: 100}; // tan
-
-var p2 = {x: 50, y: 0}; // tan
-var initialP2 = {x: 50, y: 0}; // tan
-var p3 = {x: 100, y: 0};
+var h;
+var p0, p1, initialP1, initialP2, p2,p3;
 var accuracy = 0.1; //this'll give the bezier 100 segments
 
 var angle;
@@ -21,7 +16,7 @@ var curve;
 window.onload = init;
 
 function init() {
-  canvas = document.querySelector('#myCanvas');
+  canvas = document.querySelector("#myCanvas");
   startY1 = document.getElementById("startY1");
   startY2 = document.getElementById("startY2");
   biasX = document.getElementById("biasX");
@@ -29,6 +24,15 @@ function init() {
   bias1 = document.getElementById("bias1");
   bias2 = document.getElementById("bias2");
   k = document.getElementById("k");
+
+  h = document.querySelector("#myCanvas").width;
+  p0 = {x: 0, y: h}; //use whatever points you want obviously
+  p1 = {x: h/2, y: h}; // tan
+  initialP1 = {x: h/2, y: h}; // tan
+  p2 = {x: h/2, y: 0}; // tan
+  initialP2 = {x: h/2, y: 0}; // tan
+  p3 = {x: h, y: 0};
+
   rect = canvas.getBoundingClientRect();
   currentlychange = document.getElementById("currentlyChange");
   detectNavigator();
@@ -38,7 +42,6 @@ function init() {
    angle= getLinearPartAngle();
   updateAngle();
 }
-
 function detectNavigator() {
   if(navigator.userAgent.indexOf("Chrome") != -1 )
   {
@@ -66,14 +69,14 @@ function controlCanvas() {
       var y = evt.clientY - canvas.offsetTop - rect.left;
       // Click on the left
       if((x < (canvas.width / 2)) && (flag > 0)) {
-        changeBiasP2(Math.min(100,(canvas.width)-(x*2)));
+        changeBiasP2(Math.min(h,(canvas.width)-(x*2)));
         changeBiasP1(0);
         restoreBackground();
         setCurrentAction("Currently change the Bias", canvas, "e-resize", bias2);
       }
       // Click on the right
       else if((x > (canvas.width / 2)) && (flag > 0))  {
-        changeBiasP1(Math.min(100,(x*2)-(canvas.width)));
+        changeBiasP1(Math.min(h,(x*2)-(canvas.width)));
         changeBiasP2(0);
         setCurrentAction("Currently change the Bias", canvas, "e-resize", bias1);
       }
@@ -183,10 +186,10 @@ function changeBiasY(val) {
 
 function squeeze(val) {
   val = parseFloat(val);
-  val1 = map(val, 0, 10, 0, 50);
+  val1 = map(val, 0, 10, 0, h/2);
   p2.y = val1;
   initialP2.y = val1;
-  val2 = map(val, 0, 10, 100, 50);
+  val2 = map(val, 0, 10, h, h/2);
   p1.y = val2;
   initialP1.y = val2;
   
@@ -243,9 +246,9 @@ function changeK(val) {
   k.value=val;
   // first map k to [0, 100]
   flag = 4;
-  var k1 = map(val, 0, 10, 100, 0);
+  var k1 = map(val, 0, 10, h, 0);
   changeBiasX(k1);
-  var k2 = map(val, 0, 10, 0, 100);
+  var k2 = map(val, 0, 10, 0, h);
   changeBiasY(k2);
   
     angle = getLinearPartAngle();
@@ -257,9 +260,9 @@ function changeK(val) {
 
 function changeSmaller(val) {
   val = parseFloat(val);
-  var startY1 = map(val, 0, 10, 100, 50);
+  var startY1 = map(val, 0, 10, h, h/2);
   changeStartY1(startY1);
-  var startY2 = map(val, 0, 10, 0, 50);
+  var startY2 = map(val, 0, 10, 0, h/2);
   changeStartY2(startY2);
 } 
 
@@ -290,7 +293,12 @@ function changeBiasP1(val) {
   var incY = val*Math.sin(angle);
   p1.x = initialP1.x - incX;
   p1.y = initialP1.y - incY; 
+    angletmp = angle;
   
+    angle = getLinearPartAngle();
+  updateAngle();
+  angle = angletmp;
+
   drawCurve();
 }
 
@@ -332,31 +340,42 @@ function drawControlPoint(p) {
    ctx.save();
    ctx.translate(p.x, p.y);
    ctx.beginPath();
-  ctx.arc(0, 0, 3, 0, Math.PI*2);
+  ctx.arc(0, 0, Math.min(6,Math.max(3,2*(h/100))), 0, Math.PI*2);
   ctx.fill();
   ctx.restore();
 }
 
+var oldAngle;
 
 function getLinearPartAngle() {
    curve = returnCurve();
   console.log("nb points = " + curve.length);
   var midPointIndex = Math.abs(curve.length/2);
   
-  var p1X = map(midPointIndex, 0, curve.length, -1, 1);
-  var p1Y = curve[midPointIndex];
-  var p2X = map(midPointIndex+1, 0, curve.length, -1, 1);
-  var p2Y = curve[midPointIndex+1];
+  for(var i = 0; i < curve.length; i+=100) {
+      var p1X = map(i, 0, curve.length, -1, 1);
+      var p1Y = curve[i];
+      var p2X = map(i+1, 0, curve.length, -1, 1);
+      var p2Y = curve[i+1];
   
-  console.log(`P1x = ${p1X} + P1Y = ${p1Y}`);
-  console.log(`P2x = ${p2X} + P2Y = ${p2Y}`);
+  //console.log(`P1x = ${p1X} + P1Y = ${p1Y}`);
+  //console.log(`P2x = ${p2X} + P2Y = ${p2Y}`);
   
-  var dx = p1X - p2X;
-  var dy = p1Y - p2Y;
-  var angle = Math.atan2(dy, dx);
-  console.log("angle radians = " + angle + " en deg " + 180*angle/Math.PI);
-  
-  return angle;
+     var dx = p1X - p2X;
+    var dy = p1Y - p2Y;
+    var angle = Math.atan2(dy, dx);
+    
+   // console.log(angle + " / " + oldAngle)
+
+    if(oldAngle !== undefined) {
+        if(angle === oldAngle) {
+            console.log("angle radians = " + angle + " en deg " + 180*angle/Math.PI);
+
+          return angle;
+        }
+    } 
+    oldAngle = angle;
+  }
 }
 
 function returnCurve() {
@@ -366,12 +385,12 @@ function returnCurve() {
    curve = new Float32Array(n_samples),
    index = 0;
   
-  curve[index++] = map(p0.y, 0, 100, -1, 1);
+  curve[index++] = map(p0.y, 0, h, -1, 1);
   
   // 
   for (var i=0; i<1; i+=accuracy){
     var p = bezier(i, p0, p1, p2, p3);
-    curve[index++] = map(p.y, 0, 100, -1, 1);
+    curve[index++] = map(p.y, 0, h, -1, 1);
   }
   
   return curve;
