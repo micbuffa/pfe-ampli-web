@@ -4,7 +4,6 @@ class AmpController {
 		this.amp = amp;
 		this.ampViewer = ampViewer;
 		this.guitarPluggedIn = false;
-		this.menuPresets = document.querySelector("#QFPresetMenu2");
 		this.presets = amp.presets;
 	}
 
@@ -13,6 +12,33 @@ class AmpController {
 	//
 
 	// Distortions
+
+    changeDistorsionValues(sliderValue, numDisto, point) {
+        // update processing values
+        this.amp.preamp.changeDistorsionValuesPA(sliderValue, numDisto, point);
+        // update view
+        this.ampViewer.changeDistoLabels(sliderValue, numDisto);
+    }
+
+    changeDisto1Type(sliderVal) {
+        this.amp.preamp.changeDisto1TypePA(sliderVal);
+        this.changeDrive(this.amp.preamp.currentK);
+    }
+
+    changeDisto1FromPreset(name) {
+        this.amp.preamp.changeDisto1TypeFromPreset(name);
+        this.ampViewer.updateDisto1Name(name);
+    }
+
+    changeDisto2Type(sliderVal) {
+        this.amp.preamp.changeDisto2TypePA(sliderVal);
+        this.changeDrive(this.amp.preamp.currentK);
+    }
+
+    changeDisto2FromPreset(name) {
+        this.amp.preamp.changeDisto2TypeFromPreset(name);
+        this.ampViewer.updateDisto2Name(name);
+    }
 
     changeDrive(sliderValue) {
       // sliderValue in [0,10]
@@ -27,178 +53,58 @@ class AmpController {
       }
     }
 
-    changeDistorsionValues(sliderValue, numDisto, point) {
-        // update model values
-        this.amp.preamp.changeDistorsionValuesPA(sliderValue, numDisto, point);
-        
-        this.changeDistoLabels(sliderValue, numDisto);
-    }
-
-    changeDistoLabels(sliderValue, numDisto) {
-        // update output labels
-        var output = document.querySelector("#k" + numDisto);
-        output.value = parseFloat(sliderValue).toFixed(1);
-
-        // update sliders
-        var numSlider = numDisto + 1;
-        var slider = document.querySelector("#K" + numSlider + "slider");
-        slider.value = parseFloat(sliderValue).toFixed(1);
-
-        // refresh knob state
-        var knob = document.querySelector("#Knob3");
-        var maxPosVal1 = Math.max(logToPos(this.amp.preamp.k[2]), logToPos(this.amp.preamp.k[3]));
-        var maxPosVal2 = Math.max(logToPos(this.amp.preamp.k[0]), logToPos(this.amp.preamp.k[1]));
-        var maxPosVal = Math.max(maxPosVal1, maxPosVal2);
-        //var maxPosVal = Math.max(logToPos(k[2]), logToPos(k[3]));
-        var linearValue = parseFloat(maxPosVal).toFixed(1);
-        knob.setValue(linearValue, false);
-
-        // in [0, 10]
-        this.amp.preamp.currentK = linearValue;
-    }
-
-    changeDisto1Type(sliderVal) {
-        this.amp.preamp.changeDisto1TypePA(sliderVal);
-        this.changeDrive(this.amp.preamp.currentK);
-    }
-
-    changeDisto2Type(sliderVal) {
-        this.amp.preamp.changeDisto2TypePA(sliderVal);
-        this.changeDrive(this.amp.preamp.currentK);
-    }
-
 	// Gains
 
     changePreampStage1GainValue(sliderVal) {
-        // set gain value
         this.amp.preamp.changePreampStage1GainValuePA(sliderVal);
-
-        // update output labels
-        var output = document.querySelector("#preampStage1Gain");
-        output.value = parseFloat(sliderVal).toFixed(2);
-
-        // refresh slider state
-        var slider = document.querySelector("#preampStage1GainSlider");
-        slider.value = parseFloat(sliderVal).toFixed(2);
+        this.ampViewer.changePreampStage1GainValuePA(sliderVal);
     }
 
     changePreampStage2GainValue(sliderVal) {
-        // set gain value
         this.amp.preamp.changePreampStage2GainValuePA(sliderVal);
-
-        // update output labels
-        var output = document.querySelector("#preampStage2Gain");
-        output.value = parseFloat(sliderVal).toFixed(2);
-
-        // refresh slider state
-        var slider = document.querySelector("#preampStage2GainSlider");
-        slider.value = parseFloat(sliderVal).toFixed(2);
+        this.ampViewer.changePreampStage2GainValuePA(sliderVal);
     }
 
 	// Filters
 
 	changeLowShelf1FrequencyValue(sliderVal) {
-        // set filter value
         this.amp.preamp.changeLowShelf1FrequencyValuePA(sliderVal);
-
-        // update output labels
-        var output = document.querySelector("#lowShelf1Freq");
-        output.value = parseFloat(sliderVal).toFixed(1) + " Hz";
-
-        // refresh slider state
-        var slider = document.querySelector("#lowShelf1FreqSlider");
-        slider.value = parseFloat(sliderVal).toFixed(1);
+        this.ampViewer.changeLowShelf1FrequencyValuePA(sliderVal);
     }
 
     changeLowShelf1GainValue(sliderVal) {
-        // set filter value
         this.amp.preamp.changeLowShelf1GainValuePA(sliderVal);
-
-        // update output labels
-        var output = document.querySelector("#lowShelf1Gain");
-        output.value = parseFloat(sliderVal).toFixed(1) + " dB";
-
-        // refresh slider state
-        var slider = document.querySelector("#lowShelf1GainSlider");
-        slider.value = parseFloat(sliderVal).toFixed(1);
+		this.ampViewer.changeLowShelf1GainValuePA(sliderVal);
     }
 
     changeLowShelf2FrequencyValue(sliderVal) {
-        // set filter value
         this.amp.preamp.changeLowShelf2FrequencyValuePA(sliderVal);
-
-        // update output labels
-        var output = document.querySelector("#lowShelf2Freq");
-        output.value = parseFloat(sliderVal).toFixed(1) + " Hz";
-
-        // refresh slider state
-        var slider = document.querySelector("#lowShelf2FreqSlider");
-        slider.value = parseFloat(sliderVal).toFixed(1);
+        this.ampViewer.changeLowShelf2FrequencyValuePA(sliderVal);
     }
 
     changeLowShelf2GainValue(sliderVal) {
-        // set filter value
         this.amp.preamp.changeLowShelf2GainValuePA(sliderVal);
-
-        // update output labels
-        var output = document.querySelector("#lowShelf2Gain");
-        output.value = parseFloat(sliderVal).toFixed(1) + " dB";
-
-        // refresh slider state
-        var slider = document.querySelector("#lowShelf2GainSlider");
-        slider.value = parseFloat(sliderVal).toFixed(1);
+        this.ampViewer.changeLowShelf2GainValuePA(sliderVal);
     }
 
     changeLowShelf3FrequencyValue(sliderVal) {
-        // set filter value
         this.amp.preamp.changeLowShelf3FrequencyValuePA(sliderVal);
-
-        // update output labels
-        var output = document.querySelector("#lowShelf3Freq");
-        output.value = parseFloat(sliderVal).toFixed(1) + " Hz";
-
-        // refresh slider state
-        var slider = document.querySelector("#lowShelf3FreqSlider");
-        slider.value = parseFloat(sliderVal).toFixed(1);
+        this.ampViewer.changeLowShelf3FrequencyValuePA(sliderVal);
     }
 
     changeLowShelf3GainValue(sliderVal) {
-        // set filter value
         this.amp.preamp.changeLowShelf3GainValuePA(sliderVal);
-
-        // update output labels
-        var output = document.querySelector("#lowShelf3Gain");
-        output.value = parseFloat(sliderVal).toFixed(1) + " dB";
-
-        // refresh slider state
-        var slider = document.querySelector("#lowShelf3GainSlider");
-        slider.value = parseFloat(sliderVal).toFixed(1);
+		this.ampViewer.changeLowShelf3GainValuePA(sliderVal);
     }
 
     changeHighPass1FrequencyValue(sliderVal) {
-		// set filter value
         this.amp.preamp.changeHighPass1FrequencyValuePA(sliderVal);
-
-        // update output labels
-        var output = document.querySelector("#highPass1Freq");
-        output.value = parseFloat(sliderVal).toFixed(1) + " Hz";
-
-        // refresh slider state
-        var slider = document.querySelector("#highPass1FreqSlider");
-        slider.value = parseFloat(sliderVal).toFixed(1);
+        this.ampViewer.changeHighPass1FrequencyValuePA(sliderVal);
     }
 
     changeHighPass1QValue(sliderVal) {
-		// set filter value
         this.amp.preamp.changeHighPass1QValuePA(sliderVal);
-
-        // update output labels
-        var output = document.querySelector("#highPass1Q");
-        output.value = parseFloat(sliderVal).toFixed(4);
-
-        // refresh slider state
-        var slider = document.querySelector("#highPass1QSlider");
-        slider.value = parseFloat(sliderVal).toFixed(4);
+        this.ampViewer.changeHighPass1QValuePA(sliderVal);
     }
 
 	//
@@ -206,39 +112,23 @@ class AmpController {
 	//
 
 	changeBassFilterValue(sliderVal) {
-		// set filter value
         this.amp.tonestack.changeBassFilterValueTS(sliderVal);
-
-        // refresh knob state
-        var knob = document.querySelector("#Knob4");
-        knob.setValue(parseFloat(sliderVal).toFixed(1), false);
+		this.ampViewer.changeBassFilterValueTS(sliderVal);
     }
 
     changeMidFilterValue(sliderVal) {
-        // set filter value
         this.amp.tonestack.changeMidFilterValueTS(sliderVal);
-
-        // refresh knob state
-        var knob = document.querySelector("#Knob5");
-        knob.setValue(parseFloat(sliderVal).toFixed(1), false);
+        this.ampViewer.changeMidFilterValueTS(sliderVal);
     }
 
     changeTrebleFilterValue(sliderVal) {
-      	// set filter value
         this.amp.tonestack.changeTrebleFilterValueTS(sliderVal);
-
-        // refresh knob state
-        var knob = document.querySelector("#Knob6");
-        knob.setValue(parseFloat(sliderVal).toFixed(1), false);
+        this.ampViewer.changeTrebleFilterValueTS(sliderVal);
     }
 
     changePresenceFilterValue(sliderVal) {
-      	// set filter value
         this.amp.tonestack.changePresenceFilterValueTS(sliderVal);
-
-        // refresh knob state
-        var knob = document.querySelector("#Knob8");
-        knob.setValue(parseFloat(sliderVal).toFixed(1), false);
+        this.ampViewer.changePresenceFilterValueTS(sliderVal);
     }
 
     //
@@ -247,52 +137,28 @@ class AmpController {
 
     // volume aka preamp output volume
 	changeOutputGain(sliderVal) {
-        // set gain value
         this.amp.changeOutputGainAmp(sliderVal);
-
-        // refresh knob state
-        var knob = document.querySelector("#Knob1");
-        knob.setValue(parseFloat(sliderVal).toFixed(1), false);
+        this.ampViewer.changeOutputGainAmp(sliderVal);
     }
 
     changeInputGain(sliderVal) {
-        // set gain value
         this.amp.changeInputGainAmp(sliderVal);
-
-        // refresh knob state
-        var knob = document.querySelector("#Knob1");
-        knob.setValue(parseFloat(sliderVal).toFixed(1), false);
+        this.ampViewer.changeInputGainAmp(sliderVal);
     }
 
     changeMasterVolume(sliderVal) {
-        // set gain value
         this.amp.changeMasterVolumeAmp(sliderVal);
-        
-        // refresh knob state
-        var knob = document.querySelector("#Knob2");
-        knob.setValue(parseFloat(sliderVal).toFixed(1), false);
+        this.ampViewer.changeMasterVolumeAmp(sliderVal);
     }
 
     changeReverbGain(sliderVal) {
-        // set gain value
         this.amp.changeReverbGainAmp(sliderVal);
-
-        // refresh knob state
-        var knob = document.querySelector("#Knob7");
-        knob.setValue(parseFloat(sliderVal).toFixed(1), false);
+        this.ampViewer.changeReverbGainAmp(sliderVal);
     }
 
     changeRoom(sliderVal) {
-        // set room value
         this.amp.changeRoomAmp(sliderVal);
-
-        // update output labels
-        var output = document.querySelector("#cabinetGainOutput");
-        output.value = parseFloat(sliderVal).toFixed(1);
-
-        // refresh slider state
-        var slider = document.querySelector("#convolverCabinetSlider");
-        slider.value = parseFloat(sliderVal).toFixed(1);
+        this.ampViewer.changeRoomAmp(sliderVal);
     }
 
     //
@@ -304,7 +170,7 @@ class AmpController {
 	}
 
 	setPreset() {
-		this.setValuesFromPreset(this.presets[this.menuPresets.value]);
+		this.setValuesFromPreset(this.presets[this.ampViewer.menuPresets.value]);
 	}
 
 	setValuesFromPreset(p) {
@@ -326,8 +192,7 @@ class AmpController {
         this.changeLowShelf2FrequencyValue(p.LS2Freq);
         this.changeLowShelf2GainValue(p.LS2Gain);
         this.changePreampStage1GainValue(p.gain1);
-        this.amp.preamp.changeDisto1TypeFromPreset(p.distoName1);
-        this.ampViewer.updateDisto1Name(p.distoName1);
+        this.changeDisto1FromPreset(p.distoName1);
         this.changeDistorsionValues(p.K1, 0);
 
         // Stage 2
@@ -337,8 +202,7 @@ class AmpController {
         this.changeLowShelf3FrequencyValue(p.LS3Freq);
         this.changeLowShelf3GainValue(p.LS3Gain);
         this.changePreampStage2GainValue(p.gain2);
-        this.amp.preamp.changeDisto2TypeFromPreset(p.distoName2);
-        this.ampViewer.updateDisto2Name(p.distoName2);
+		this.changeDisto2FromPreset(p.distoName2);
         this.changeDistorsionValues(p.K2, 1);
 
         this.changeOutputGain(p.OG);
@@ -368,17 +232,8 @@ class AmpController {
     }
 
 	changeGain(sliderVal, numFilter) {
-        // set eq value
         this.amp.eq.changeGainEQ(sliderVal, numFilter);
-
-        this.updateEQSlider(sliderVal, numFilter);        
-    }
-
-    updateEQSlider(sliderVal, nbFilter) {
-		// refresh amp slider state in the web component GUI
-        var sliderWC = document.querySelector("#slider" + (nbFilter+1));
-        // second parameter set to false will not fire an event
-        sliderWC.setValue(parseFloat(sliderVal).toFixed(0), false);
+        this.ampViewer.updateEQSlider(sliderVal, numFilter);        
     }
 
 	// Boost handler
@@ -390,9 +245,8 @@ class AmpController {
     boostOnOff(cb) {  
         // called when we click the switch on the GUI      
         this.amp.preamp.boost.toggle();
-
         this.amp.preamp.adjustOutputGainIfBoostActivated();
-        this.updateBoostLedButtonState(this.amp.preamp.boost.isActivated());
+        this.ampViewer.updateBoostLedButtonState(this.amp.preamp.boost.isActivated());
     }
 
     changeBoost(state) {
@@ -402,59 +256,23 @@ class AmpController {
             console.log("changeBoost: we change boost state");
             this.amp.preamp.boost.onOff(state);
             this.amp.preamp.adjustOutputGainIfBoostActivated();
-            this.updateBoostLedButtonState(this.amp.preamp.boost.isActivated());
+            this.ampViewer.updateBoostLedButtonState(this.amp.preamp.boost.isActivated());
         } else {
             console.log("changeBoost: we do not change boost state");
         }
-
         console.log("changeBoost, boost after: " + this.amp.preamp.boost.isActivated());
-    }
-
-    updateBoostLedButtonState(activated) {
-        // update buttons states
-        var boostSwitch = document.querySelector("#toggleBoost");
-
-        if(this.amp.preamp.boost.isActivated()) {
-            boostSwitch.setValue(1,false);
-        } else {
-            boostSwitch.setValue(0,false);
-        }
     }
 
     // Bypass handlers
 
     bypass(cb) {
         this.amp.bypassAmp(cb);
-
-        // update buttons states
-        //var onOffButton = document.querySelector("#myonoffswitch");
-        var led = document.querySelector("#led");
-
-        //onOffButton.checked = cb.checked;
-        var onOffSwitch = document.querySelector("#switch1");
-        if(cb.checked) {
-            onOffSwitch.setValue(0,false);
-            led.setValue(1, false);
-        } else {
-            onOffSwitch.setValue(1,false);
-            led.setValue(0, false);
-        }
+        this.ampViewer.bypassAmp(cb);
     }
 
     bypassEQ(cb) {
     	this.amp.bypassEQAmp(cb);
-
-        // update buttons states
-        //var onOffButton = document.querySelector("#myonoffswitch");
-        var led = document.querySelector("#led");
-
-        //onOffButton.checked = cb.checked;
-        var eqOnOffSwitch = document.querySelector("#switch2");
-        if(cb.checked) {
-            eqOnOffSwitch.setValue(0,false);
-        } else {
-            eqOnOffSwitch.setValue(1,false);
-        }
+    	this.ampViewer.bypassEQAmp(cb);
     }
 
 	//
@@ -462,17 +280,13 @@ class AmpController {
 	//
 
 	toggleGuitarInput(event) {
-	    var button = document.querySelector("#toggleGuitarIn");
-
 	    if(!this.guitarPluggedIn) {
 	        guitarInput.connect(this.amp.input);
-	        button.innerHTML = "Guitar input: <span style='color:green;'>ACTIVATED</span>, click to toggle on/off!";
-	        button.classList.remove("pulse");
 	        this.changeOutputGainValue(5);
+	        this.ampViewer.setButton("ACTIVATED");
 	    } else {
 	        guitarInput.disconnect();
-	        button.innerHTML = "Guitar input: <span style='color:red;'>NOT ACTIVATED</span>, click to toggle on/off!";
-	        button.classList.add("pulse");
+	        this.ampViewer.setButton("NOT ACTIVATED");
 	    }
 	    this.guitarPluggedIn = !this.guitarPluggedIn;
 	}

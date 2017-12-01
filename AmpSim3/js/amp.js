@@ -90,6 +90,10 @@ function Amp(context, ampName) {
         gainsOds[i].gain.value = 1;
     }*/
 
+    // Creates Boost channel for distortion 
+    // before preamp, disabled by default
+    preamp.createBoost();
+
     preamp.createFilter("lowshelf1");
     preamp.createFilter("lowshelf2");
     preamp.createFilter("lowshelf3");
@@ -309,7 +313,6 @@ function Amp(context, ampName) {
     return {
         input: input,
         output: output,
-        boostOnOff: boostOnOff,
         eq: eq,
         reverb: reverb,
         cabinet: cabinetSim,

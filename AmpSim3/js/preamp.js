@@ -4,9 +4,7 @@ class PreAmp {
 		// Model not used here but can be used to adjust
 		// the values according to model/brand
 		this.ampName = ampName;
-		this.context = context;
-        // Channel booster
-        this.boost = new Boost(context);
+		this.context = context;        
         // To handle distortion
         this.DRAWER_CANVAS_SIZE = 100;
         this.distoDrawer1 = new CurveDrawer("distoDrawerCanvas1");
@@ -19,17 +17,13 @@ class PreAmp {
         this.currentWSCurve = this.wsFactory.distorsionCurves[this.currentDistoName](this.currentK);
         this.k = [2, 2, 2, 2]; // array of k initial values
         this.od = [];
-        this.distoTypes = ['asymetric', 'standard'];
-        // To handle gains
-        this.preampStage1Gain = this.context.createGain();
-        this.preampStage2Gain = this.context.createGain();
-        // To handle filters
-        this.lowShelf1 = this.context.createBiquadFilter();
-        this.lowShelf2 = this.context.createBiquadFilter();
-        this.lowShelf3 = this.context.createBiquadFilter();
-        this.highPass1 = this.context.createBiquadFilter();        
+        this.distoTypes = ['asymetric', 'standard'];   
 		this.bezierPoints = [{x: 0, y: 100},{x: 52, y: 96},{x: 50, y: 0},{x: 100, y: 0}];
 	}
+
+    createBoost() {
+        this.boost = new Boost(this.context);
+    }
 
     createDisto(type) {
         switch (type) {
@@ -51,19 +45,22 @@ class PreAmp {
     createGain(type) {
         switch (type) {
             case "stage1" :
+                this.preampStage1Gain = this.context.createGain();
                 this.preampStage1Gain.gain.value = 1.0;
                 break;
             case "stage2" :
+                this.preampStage2Gain = this.context.createGain();   
                 this.preampStage2Gain.gain.value = 1.0;
                 break;
         }
 
     }
 
-    createFilter(type) {
+    createFilter(type) {  
         switch (type) {
             case "lowshelf1" :
                 // Low shelf cut -6db at 720Hz
+                this.lowShelf1 = this.context.createBiquadFilter();
                 this.lowShelf1.type = "lowshelf";
                 this.lowShelf1.frequency.value = 720;
                 this.lowShelf1.gain.value = -6;
@@ -72,12 +69,14 @@ class PreAmp {
                 // Low shelf cut variable wired to volume knob
                 // if vol = 50%, then filter at -6db, 320Hz
                 // shoud go from -4db to -6db for +/- fatness
+                this.lowShelf2 = this.context.createBiquadFilter();
                 this.lowShelf2.type = "lowshelf";    
                 this.lowShelf2.frequency.value = 320;
                 this.lowShelf2.gain.value = -5;
                 break;
             case "lowshelf3" :
                 // lowshelf cut -6db 720Hz
+                this.lowShelf3 = this.context.createBiquadFilter();
                 this.lowShelf3.type = "lowshelf";    
                 this.lowShelf3.frequency.value = 720;
                 this.lowShelf3.gain.value = -6;
@@ -85,6 +84,7 @@ class PreAmp {
             case "highpass1" :
                 // HighPass at 7-8 Hz, rectify the signal that got a DC value due
                 // to the possible asymetric transfer function
+                this.highPass1 = this.context.createBiquadFilter();
                 this.highPass1.type = "highpass";    
                 this.highPass1.frequency.value = 6;
                 this.highPass1.Q.value = 0.7071;
@@ -128,6 +128,12 @@ class PreAmp {
 			//makeDistortionCurve(k[numDisto]);
 			//od[numDisto].curve = makeDistortionCurve(sliderValue);
 		}
+
+        var maxPosVal1 = Math.max(logToPos(this.k[2]), logToPos(this.k[3]));
+        var maxPosVal2 = Math.max(logToPos(this.k[0]), logToPos(this.k[1]));
+        var maxPosVal = Math.max(maxPosVal1, maxPosVal2);
+        //var maxPosVal = Math.max(logToPos(k[2]), logToPos(k[3]));
+        this.currentK = parseFloat(maxPosVal).toFixed(1);
 
         // redraw curves
         this.drawCurrentDistos();

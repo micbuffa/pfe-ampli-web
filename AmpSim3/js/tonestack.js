@@ -5,10 +5,6 @@ class ToneStack {
 		// the values according to model/brand
 		this.ampName = ampName;
 		this.context = context;
-		this.bassFilter = undefined;
-		this.midFilter = undefined;
-		this.trebleFilter = undefined;
-		this.presenceFilter = undefined;
 	}
 
 	createFilter(type) {
