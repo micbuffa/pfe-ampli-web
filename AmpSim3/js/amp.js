@@ -1,50 +1,8 @@
 // INITS
 var audioPlayer, input2;
-var demoSampleURLs = [
-  "assets/audio/Guitar_DI_Track.mp3",
-  "assets/audio/LasseMagoDI.mp3",
-  "assets/audio/RawPRRI.mp3",
-  "assets/audio/Di-Guitar.mp3",
-  "assets/audio/NarcosynthesisDI.mp3",
-  "assets/audio/BlackSabbathNIB_rythmDI.mp3",
-  "assets/audio/BlackSabbathNIBLead_DI.mp3",
-  "assets/audio/BasketCase Greenday riff DI.mp3",
-  "assets/audio/InBloomNirvanaRiff1DI.mp3",
-  "assets/audio/Muse1Solo.mp3",
-  "assets/audio/Muse2Rythm.mp3"
-];
-
-function gotStream() {
-    // Create an AudioNode from the stream.
-    audioPlayer = document.getElementById('player');
-    try {
-        // if ShadowDOMPolyfill is defined, then we are using the Polymer
-        // WebComponent polyfill that wraps the HTML audio
-        // element into something that cannot be used with
-        // createMediaElementSource. We use ShadowDOMPolyfill.unwrap(...)
-        // to get the "real" HTML audio element
-        audioPlayer = ShadowDOMPolyfill.unwrap(audioPlayer);
-    } catch(e) {
-        console.log("ShadowDOMPolyfill undefined, running native Web Component code");
-    }
-    
-    if(input2 === undefined) {
-        input2 = audioContext.createMediaElementSource(audioPlayer);
-    }
-
-    var input = audioContext.createMediaStreamSource(window.stream);
-    audioInput = convertToMono(input);
-
-    createAmp(audioContext, audioInput, input2, "JCM800");
-    console.log('--- AMP CREATED ---')
-}
-
-var amp;
-var ampView;
-var ampCtrl;
+var amp, ampView, ampCtrl;
 var analyzerAtInput, analyzerAtOutput;
-var convolverSlider;
-var convolverCabinetSlider;
+var convolverSlider, convolverCabinetSlider;
 var guitarInput;
 
 // Create the amp
@@ -63,14 +21,13 @@ function createAmp(context, input1, input2, ampName) {
     // set default preset
     ampCtrl.setDefaultPreset();
 
-    // build graph
-    analyzerAtInput = context.createAnalyser();
-    amp.input.connect(analyzerAtInput);
-
     // connect audio player to amp for previewing presets
     input2.connect(amp.input);
 
-    // output, add an analyser at the end
+    // add an analyzer at the start
+    analyzerAtInput = context.createAnalyser();
+    amp.input.connect(analyzerAtInput);
+    // add an analyser at the end
     analyzerAtOutput = context.createAnalyser();
     amp.output.connect(analyzerAtOutput);
     analyzerAtOutput.connect(context.destination);
@@ -86,6 +43,8 @@ function Amp(context, ampName) {
     var preamp = new PreAmp(ampName, context);
     var tonestack = new ToneStack(ampName, context);
     var eq = new Equalizer(context);
+    var cabinetSim = new Convolver(context, cabinetImpulses, "cabinetImpulses");
+    var reverb = new Convolver(context, reverbImpulses, "reverbImpulses");
 
     // Main input and output and bypass
     var input = context.createGain();
@@ -169,22 +128,8 @@ function Amp(context, ampName) {
     bypassEQg.gain.value = 0; // by defaut EQ is in
     var inputEQ = context.createGain();
 
-    var cabinetSim, reverb;
     // Master volume
     var masterVolume = context.createGain();
-
-    /*reverb = new Reverb(context, function () {
-        console.log("reverb created");
-
-        cabinetSim = new CabinetSimulator(context, function () {
-            console.log("cabinet sim created");
-
-            doAllConnections();
-        });
-    });*/
-
-    reverb = new Convolver(context, reverbImpulses, "reverbImpulses");
-    cabinetSim = new Convolver(context, cabinetImpulses, "cabinetImpulses");
 
     doAllConnections();
 
@@ -386,36 +331,3 @@ function Amp(context, ampName) {
         bypassEQAmp: bypassEQAmp
     };
 }
-
-var reverbImpulses = [
-    {
-        name: "Fender Hot Rod",
-        url: "assets/impulses/reverb/cardiod-rear-levelled.wav"
-    },
-    {
-        name: "PCM 90 clean plate",
-        url: "assets/impulses/reverb/pcm90cleanplate.wav"
-    },
-    {
-        name: "Scala de Milan",
-        url: "assets/impulses/reverb/ScalaMilanOperaHall.wav"
-    }
-];
-var cabinetImpulses = [
-    {
-        name: "Marshall 1960, axis",
-        url: "assets/impulses/cabinet/Marshall1960.wav"
-    },    
-    {
-        name: "Vintage Marshall 1",
-        url: "assets/impulses/cabinet/Block%20Inside.wav"
-    },
-    {
-        name: "Vox Custom Bright 4x12 M930 Axis 1",
-        url: "assets/impulses/cabinet/voxCustomBrightM930OnAxis1.wav"
-    },
-    {
-        name: "Fender Champ, axis",
-        url: "assets/impulses/cabinet/FenderChampAxisStereo.wav"
-    }
-];

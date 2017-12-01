@@ -14,8 +14,53 @@ function convertToMono(input) {
     return merger;
 }
 
-var lpInputFilter = null;
+var audioInputSelect;
+var audioOutputSelect;
+var selectors;
 
+function startWithFirefoxComaptibility() {
+    var constraints = { 
+       audio: {
+            echoCancellation: false, mozNoiseSuppression: false, mozAutoGainControl: false  
+       } 
+   };
+
+    navigator.mediaDevices.getUserMedia(constraints)
+            .then(function (stream) {
+                window.stream = stream; // make stream available to console
+                // Refresh button list in case labels have become available
+            })
+            .then(gotStream);
+}
+
+function gotStream() {
+    // Create an AudioNode from the stream.
+    audioPlayer = document.getElementById('player');
+    try {
+        // if ShadowDOMPolyfill is defined, then we are using the Polymer
+        // WebComponent polyfill that wraps the HTML audio
+        // element into something that cannot be used with
+        // createMediaElementSource. We use ShadowDOMPolyfill.unwrap(...)
+        // to get the "real" HTML audio element
+        audioPlayer = ShadowDOMPolyfill.unwrap(audioPlayer);
+    } catch(e) {
+        console.log("ShadowDOMPolyfill undefined, running native Web Component code");
+    }
+    
+    if(input2 === undefined) {
+        input2 = audioContext.createMediaElementSource(audioPlayer);
+    }
+
+    var input = audioContext.createMediaStreamSource(window.stream);
+    audioInput = convertToMono(input);
+
+    createAmp(audioContext, audioInput, input2, "JCM800");
+    console.log('--- AMP CREATED ---')
+}
+
+// Not used in current version
+
+var lpInputFilter = null;
 // this is ONLY because we have massive feedback without filtering out
 // the top end in live speaker scenarios.
 function createLPInputFilter() {
@@ -23,7 +68,6 @@ function createLPInputFilter() {
     lpInputFilter.frequency.value = 2048;
     return lpInputFilter;
 }
-
 
 var useFeedbackReduction = true;
 function initAudio() {
@@ -55,27 +99,6 @@ function initAudio() {
                 });
     }
 }
-
-var audioInputSelect;
-var audioOutputSelect;
-var selectors;
-
-function startWithFirefoxComaptibility() {
-    var constraints = { 
-       audio: {
-            echoCancellation: false, mozNoiseSuppression: false, mozAutoGainControl: false  
-       } 
-   };
-
-    navigator.mediaDevices.getUserMedia(constraints)
-            .then(function (stream) {
-                window.stream = stream; // make stream available to console
-                // Refresh button list in case labels have become available
-            })
-            .then(gotStream);
-}
-
-// Not used currently
 
 function start() {
     audioInputSelect = document.querySelector('select#audioSource');
