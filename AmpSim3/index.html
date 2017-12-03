@@ -232,7 +232,7 @@
 
         <script type="text/javascript">
             // Change distortion on mouse move in Canvas distoDrawer 1
-            var canvas1, flag1, rect1, label1, kValue1;
+            var canvas1, flag1, rect1, label1, kValue1, angle1;
             canvas1 = document.querySelector('#distoDrawerCanvas1');
             label1 = document.querySelector('#k1label');
             kValue1 = document.querySelector('#k0');
@@ -255,9 +255,26 @@
                         } else if (newK > 10) {
                             newK = 10;
                         }
+
+                        // Bezier
+                        if(amp.preamp.distoTypes[0] == "bezier")
+                        {
+                            var pos = evt.clientX - canvas1.offsetLeft - rect1.left;
+                            if(pos<50)
+                            {
+                                //amp.preamp.changeBiasP2(Math.min(100,100-(pos*2)));
+                                //amp.preamp.changeBiasP1(0);
+                            }
+                            else
+                            {
+                                //amp.preamp.changeBiasP1(Math.min(100,(pos*2)-100));
+                                //amp.preamp.changeBiasP2(0);
+                            }
+                            amp.preamp.changeK(newK);
+                        }
+                                                
                         ampCtrl.changeDistorsionValues(newK, 0, 0);
                         amp.preamp.highlightValues(label1, kValue1);
-                        console.log(amp.preamp.distoTypes[0]);
                     }
                 }
 
@@ -272,11 +289,12 @@
             }, false);
 
             // Change distortion on mouse move in Canvas distoDrawer 2
-            var canvas2, flag2, rect2, label2, kValue2;
+            var canvas2, flag2, rect2, label2, kValue2, angle2;
             canvas2 = document.querySelector('#distoDrawerCanvas2');
             label2 = document.querySelector('#k2label');
             kValue2 = document.querySelector('#k1');
             rect2 = canvas2.getBoundingClientRect();
+
             canvas2.addEventListener('mousedown', function(evt) {
                 //console.log("Curve2 editing starting")
                 let initKVal = amp.preamp.getDistorsionValue(1);
@@ -295,8 +313,16 @@
                         } else if (newK > 10) {
                             newK = 10;
                         }
+
+                        // Bezier
+                        if(amp.preamp.distoTypes[1] == "bezier")
+                        {
+
+                        }
+                        
                         ampCtrl.changeDistorsionValues(newK, 1, 0);
                         amp.preamp.highlightValues(label2, kValue2);
+                        
                     }
                 }
 

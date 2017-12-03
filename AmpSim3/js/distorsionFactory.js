@@ -285,10 +285,10 @@ function WaveShapers() {
     } 
 
     function getBezierCurve(bezierPoints) {
-	   var p0 = bezierPoints[0];
-	   var p1 = bezierPoints[1];
-	   var p2 = bezierPoints[2];
-	   var p3 = bezierPoints[3];
+	   var p0 = amp.preamp.bezierPoints[0];
+	   var p1 = amp.preamp.bezierPoints[1];
+	   var p2 = amp.preamp.bezierPoints[2];
+	   var p3 = amp.preamp.bezierPoints[3];
 	   
        var n_samples = 44100,
        accuracy = 1/n_samples,

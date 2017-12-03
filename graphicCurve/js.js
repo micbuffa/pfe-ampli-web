@@ -369,13 +369,14 @@ function getLinearPartAngle() {
 
     if(oldAngle !== undefined) {
         if(angle === oldAngle) {
-            console.log("angle radians = " + angle + " en deg " + 180*angle/Math.PI);
+            //console.log("angle radians = " + angle + " en deg " + 180*angle/Math.PI);
 
           return angle;
         }
     } 
     oldAngle = angle;
   }
+  return angle;
 }
 
 function returnCurve() {
