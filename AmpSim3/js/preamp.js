@@ -143,6 +143,8 @@ class PreAmp {
         this.drawCurrentDistos();
     }
 
+    // Bezier curve computation for BIAS point
+
     returnCurve() {
        var p0 = this.bezierPoints[0];
        var p1 = this.bezierPoints[1];
@@ -166,7 +168,7 @@ class PreAmp {
       console.log("nb points = " + curve.length);
       var midPointIndex = Math.abs(curve.length/2);
       
-      for(var i = 0; i < curve.length; i+=100) {
+      for (var i = 0; i < curve.length; i+=100) {
         var p1X = map(i, 0, curve.length, -1, 1);
         var p1Y = curve[i];
         var p2X = map(i+1, 0, curve.length, -1, 1);
@@ -180,14 +182,13 @@ class PreAmp {
         var angle = Math.atan2(dy, dx);
         
        // console.log(angle + " / " + oldAngle)
-        if(this.oldAngle !== undefined) {
-            if(angle === this.oldAngle) {
+        if (this.oldAngle !== undefined) {
+            if (angle === this.oldAngle) {
                 console.log("angle radians = " + angle + " en deg " + 180*angle/Math.PI);
 
               return angle;
             }
-        } 
-        console.log("lol");
+        }
         this.oldAngle = angle;
       }
       return angle;
@@ -230,7 +231,7 @@ class PreAmp {
       this.bezierPoints[1].y = this.initialP1.y - incY; 
     }
 
-    changeK(val) {
+    changeCtrlPoint(val) {
       val = parseFloat(val);
       var k1 = map(val, 0, 10, 100, 0);
       this.changeBiasX(k1);

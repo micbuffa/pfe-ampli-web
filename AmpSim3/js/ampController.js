@@ -14,7 +14,7 @@ class AmpController {
 	// Distortions
 
     changeDistorsionValues(sliderValue, numDisto, point) {
-        // update processing values
+		// update processing values
         this.amp.preamp.changeDistorsionValuesPA(sliderValue, numDisto, point);
         // update view
         this.ampViewer.changeDistoLabels(sliderValue, numDisto);

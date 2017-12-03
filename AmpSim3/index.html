@@ -257,20 +257,16 @@
                         }
 
                         // Bezier
-                        if(amp.preamp.distoTypes[0] == "bezier")
-                        {
+                        if (amp.preamp.distoTypes[0] == "bezier") {
                             var pos = evt.clientX - canvas1.offsetLeft - rect1.left;
-                            if(pos<50)
-                            {
+                            if (pos<50) {
                                 //amp.preamp.changeBiasP2(Math.min(100,100-(pos*2)));
                                 //amp.preamp.changeBiasP1(0);
-                            }
-                            else
-                            {
+                            } else {
                                 //amp.preamp.changeBiasP1(Math.min(100,(pos*2)-100));
                                 //amp.preamp.changeBiasP2(0);
                             }
-                            amp.preamp.changeK(newK);
+                            amp.preamp.changeCtrlPoint(newK);
                         }
                                                 
                         ampCtrl.changeDistorsionValues(newK, 0, 0);
@@ -315,8 +311,7 @@
                         }
 
                         // Bezier
-                        if(amp.preamp.distoTypes[1] == "bezier")
-                        {
+                        if (amp.preamp.distoTypes[1] == "bezier") {
 
                         }
                         

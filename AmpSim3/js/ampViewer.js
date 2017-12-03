@@ -26,7 +26,7 @@ class AmpViewer {
         slider.value = parseFloat(sliderValue).toFixed(1);
 
         var knob = document.querySelector("#Knob3");
-        knob.setValue(sliderValue, false);
+        knob.setValue(this.amp.preamp.currentK, false);
     }
 
     // View change for preamp gains
