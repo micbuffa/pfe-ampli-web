@@ -7,6 +7,8 @@ class AmpController {
 		this.presets = amp.presets;
 	}
 
+	// ------- Amp related handlers -------
+
 	//
 	// Preamp handlers
 	//
@@ -390,6 +392,12 @@ class AmpController {
     changeOutputGainValue(sliderVal) {
         this.amp.output.gain.value = parseFloat(sliderVal)/10;
         //console.log("changeOutputGainValue value = " + output.gain.value);
+    }
+
+    // ------- Webpage related handlers -------
+
+    controlsInfoDisplay() {
+    	this.ampViewer.changeInfoDisplay();
     }
 
 }

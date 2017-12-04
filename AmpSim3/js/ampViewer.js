@@ -9,7 +9,11 @@ class AmpViewer {
         this.menuPresets = document.querySelector("#QFPresetMenu2");
         this.menuReverb = document.querySelector("#reverbImpulses");
         this.menuCabinet = document.querySelector("#cabinetImpulses");
+        this.controlsInfoBtn = document.querySelector("#controlsInfoBtn")
+        this.controlsInfo = document.querySelector("#controlsInfo");
 	}
+
+	// ------- Amp related handlers -------
 
 	// 
 	// View modifications
@@ -369,6 +373,20 @@ class AmpViewer {
 
 		    requestAnimationFrame(visualize);
 		}
+	}
+
+	// ------- Webpage related handlers -------
+
+	changeInfoDisplay() {
+		if (this.controlsInfo.style.display == "none") {
+			this.controlsInfo.setAttribute('style', 'display:block;');
+			window.scrollTo(0, document.body.scrollHeight);
+			this.controlsInfoBtn.innerHTML = "Hide Controls"
+		} else {
+			this.controlsInfo.setAttribute('style', 'display:none;');
+			this.controlsInfoBtn.innerHTML = "Display Controls"
+		}
+
 	}
 
 }
