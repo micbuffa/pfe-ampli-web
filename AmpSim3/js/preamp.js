@@ -100,8 +100,7 @@ class PreAmp {
     //
     // Distortion-related functions
     //
-	
-    changeDistorsionValuesPA(sliderValue, numDisto, point) {
+    changeDistorsionValuesPA(sliderValue, numDisto, bezier) {
         // sliderValue is in [0, 10] range, adjust to [0, 1500] range  
         var value = 150 * parseFloat(sliderValue);
         var minp = 0;
@@ -117,21 +116,19 @@ class PreAmp {
         value = Math.exp(minv + scale * (value - minp));
         // end of logarithmic adjustment
 
-		if (this.distoTypes[numDisto] == "bezier") {
-			// point equal x value
-			this.changeBezier(point);
-			this.od[numDisto].curve = this.wsFactory.distorsionCurves[this.distoTypes[numDisto]](this.bezierPoints);
-			this.currentWSCurve = this.od[numDisto].curve;
-		} else {
-			this.k[numDisto] = value;
-			//console.log("k = " + value + " pos = " + logToPos(value));
-			//console.log("distoTypes = " + distoTypes[numDisto]);
-			this.od[numDisto].curve = this.wsFactory.distorsionCurves[this.distoTypes[numDisto]](this.k[numDisto]); //makeDistortionCurve(k[numDisto]);
-			this.currentWSCurve = this.od[numDisto].curve;
-			//od[numDisto].curve = makeDistortionCurve(sliderValue);
-			//makeDistortionCurve(k[numDisto]);
-			//od[numDisto].curve = makeDistortionCurve(sliderValue);
-		}
+        if (this.distoTypes[numDisto] == "bezier") {
+            this.od[numDisto].curve = this.wsFactory.distorsionCurves[this.distoTypes[numDisto]](this.bezierPoints);
+            this.currentWSCurve = this.od[numDisto].curve;
+        } else {
+            this.k[numDisto] = value;
+            //console.log("k = " + value + " pos = " + logToPos(value));
+            //console.log("distoTypes = " + distoTypes[numDisto]);
+            this.od[numDisto].curve = this.wsFactory.distorsionCurves[this.distoTypes[numDisto]](this.k[numDisto]); //makeDistortionCurve(k[numDisto]);
+            this.currentWSCurve = this.od[numDisto].curve;
+            //od[numDisto].curve = makeDistortionCurve(sliderValue);
+            //makeDistortionCurve(k[numDisto]);
+            //od[numDisto].curve = makeDistortionCurve(sliderValue);
+        }
 
         var maxPosVal1 = Math.max(logToPos(this.k[2]), logToPos(this.k[3]));
         var maxPosVal2 = Math.max(logToPos(this.k[0]), logToPos(this.k[1]));
@@ -143,7 +140,13 @@ class PreAmp {
         this.drawCurrentDistos();
     }
 
-    // Bezier curve computation for BIAS point
+    // Just update and redraw
+    changeBezierValuesPA(sliderValue, numDisto, bezier) {
+        this.od[numDisto].curve = this.wsFactory.distorsionCurves[this.distoTypes[numDisto]](this.bezierPoints);
+        this.currentWSCurve = this.od[numDisto].curve;
+        // redraw curves
+        this.drawCurrentDistos();
+    }
 
     returnCurve() {
        var p0 = this.bezierPoints[0];
@@ -168,7 +171,7 @@ class PreAmp {
       console.log("nb points = " + curve.length);
       var midPointIndex = Math.abs(curve.length/2);
       
-      for (var i = 0; i < curve.length; i+=100) {
+      for(var i = 0; i < curve.length; i+=100) {
         var p1X = map(i, 0, curve.length, -1, 1);
         var p1Y = curve[i];
         var p2X = map(i+1, 0, curve.length, -1, 1);
@@ -182,13 +185,14 @@ class PreAmp {
         var angle = Math.atan2(dy, dx);
         
        // console.log(angle + " / " + oldAngle)
-        if (this.oldAngle !== undefined) {
-            if (angle === this.oldAngle) {
+        if(this.oldAngle !== undefined) {
+            if(angle === this.oldAngle) {
                 console.log("angle radians = " + angle + " en deg " + 180*angle/Math.PI);
 
               return angle;
             }
-        }
+        } 
+        console.log("lol");
         this.oldAngle = angle;
       }
       return angle;
@@ -231,7 +235,7 @@ class PreAmp {
       this.bezierPoints[1].y = this.initialP1.y - incY; 
     }
 
-    changeCtrlPoint(val) {
+    changeK(val) {
       val = parseFloat(val);
       var k1 = map(val, 0, 10, 100, 0);
       this.changeBiasX(k1);
@@ -250,15 +254,7 @@ class PreAmp {
         this.bezierPoints[1].y = val;
         this.initialP1.y = val;
     }
-	
-	changeBezier(point) {
-		if(point != undefined) {
-			this.bezierPoints[0].y += point;
-			this.bezierPoints[1].y += point;
-			this.bezierPoints[2].y += point;
-			this.bezierPoints[3].y += point;
-		}
-	}
+
 
     // Returns an array of distorsions values in [0, 10] range
     getDistorsionValue(numChannel) {

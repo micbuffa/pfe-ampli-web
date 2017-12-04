@@ -22,6 +22,17 @@ class AmpController {
         this.ampViewer.changeDistoLabels(sliderValue, numDisto);
     }
 
+     // Bezier
+    changeBezierValues(sliderValue, numDisto, point) {
+        if(amp.preamp.distoTypes[numDisto] == "bezier")
+        {
+             // update processing values
+             this.amp.preamp.changeBezierValuesPA(sliderValue, numDisto, point);
+             // update view
+             this.ampViewer.changeBezierLabels(sliderValue, numDisto);
+        }
+    }
+
     changeDisto1Type(sliderVal) {
         this.amp.preamp.changeDisto1TypePA(sliderVal);
         this.changeDrive(this.amp.preamp.currentK);

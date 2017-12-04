@@ -141,6 +141,19 @@
                         <input id="K2slider" type="range" value="4" step="0.1" min="0" max="10" oninput="ampCtrl.changeDistorsionValues(this.value, 1);"></input>
                         <output id="k1">4</output>
                     </div>
+
+                    <p>Bézier : Bias level</p>
+                    <div class="controls">
+                        <label id="bias1label">bias 1</label>
+                        <input id="bias1slider" type="range" value="4" step="0.1" min="0" max="10" oninput="ampCtrl.changeBezierValues(this.value, 0,0);amp.preamp.changeK(this.value);"></input>
+                        <output id="bias0">4</output>
+                    </div>
+
+                    <div class="controls">
+                        <label id="bias2label">bias 2</label>
+                        <input id="bias2slider" type="range" value="4" step="0.1" min="0" max="10" oninput="ampCtrl.changeBezierValues(this.value, 1,0);amp.preamp.changeK(this.value);"></input>
+                        <output id="bias1">4</output>
+                    </div>
                    <p>
                     <div class="onoffswitch">
                         <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch"  onclick="ampCtrl.changeOversampling(this);">

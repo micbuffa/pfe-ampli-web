@@ -20,7 +20,6 @@ class AmpViewer {
 	//
 
 	// View change for distortions
-
     changeDistoLabels(sliderValue, numDisto) {
         // update output labels
         var output = document.querySelector("#k" + numDisto);
@@ -32,7 +31,19 @@ class AmpViewer {
         slider.value = parseFloat(sliderValue).toFixed(1);
 
         var knob = document.querySelector("#Knob3");
-        knob.setValue(this.amp.preamp.currentK, false);
+        knob.setValue(sliderValue, false);
+    }
+
+    // View change for bezier curves
+     changeBezierLabels(sliderValue, numDisto) {
+        // update output labels
+        var output = document.querySelector("#bias" + numDisto);
+        output.value = parseFloat(sliderValue).toFixed(1);
+
+        // update sliders
+        var numSlider = numDisto + 1;
+        var slider = document.querySelector("#bias" + numSlider + "slider");
+        slider.value = parseFloat(sliderValue).toFixed(1);
     }
 
     // View change for preamp gains
