@@ -16,6 +16,8 @@ function createAmp(context, input1, input2, ampName) {
     ampView.createDistoMenus();
     // create preset menu
     ampView.createPresetMenu();
+    // create impulses menu
+    ampView.createIRMenus();
 
     ampCtrl = new AmpController(amp, ampView);
     // set default preset
@@ -43,8 +45,8 @@ function Amp(context, ampName) {
     var preamp = new PreAmp(ampName, context);
     var tonestack = new ToneStack(ampName, context);
     var eq = new Equalizer(context);
-    var cabinetSim = new Convolver(context, cabinetImpulses, "cabinetImpulses");
-    var reverb = new Convolver(context, reverbImpulses, "reverbImpulses");
+    var cabinetSim = new Convolver(context, cabinetImpulses);
+    var reverb = new Convolver(context, reverbImpulses);
 
     // Main input and output and bypass
     var input = context.createGain();
@@ -253,19 +255,11 @@ function Amp(context, ampName) {
         reverb.setGain(value);
     }
 
-    function changeReverbImpulse(name) {
-        reverb.loadImpulseByName(name);
-    }
-
     function changeRoomAmp(sliderVal) {
         // slider val in [0, 10] range, adjust to [0, 1]
         console.log('change room');
         var value = parseFloat(sliderVal) / 10;
         cabinetSim.setGain(value);
-    }
-
-    function changeCabinetSimImpulse(name) {
-        cabinetSim.loadImpulseByName(name);
     }
 
     function initPresets() {
@@ -327,8 +321,6 @@ function Amp(context, ampName) {
 
         changeMasterVolumeAmp: changeMasterVolumeAmp,
         changeReverbGainAmp: changeReverbGainAmp,
-        changeReverbImpulse: changeReverbImpulse,
-        changeCabinetSimImpulse: changeCabinetSimImpulse,
         changeRoomAmp: changeRoomAmp,
         bypassAmp: bypassAmp,
         bypassEQAmp: bypassEQAmp

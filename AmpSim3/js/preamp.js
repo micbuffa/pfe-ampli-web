@@ -19,8 +19,8 @@ class PreAmp {
         this.od = [];
         this.distoTypes = ['asymetric', 'standard'];   
 		this.bezierPoints = [{x: 0, y: 100},{x: 50, y: 100},{x: 50, y: 0},{x: 100, y: 0}];
-        this.angle= 2.1963;
-        this.oldAngle= undefined;
+        this.angle = 2.1963;
+        this.oldAngle = undefined;
         this.initialP1 = {x: 50, y: 100};
         this.initialP2 = {x: 50, y: 0};
 	}
@@ -288,7 +288,7 @@ class PreAmp {
 			distoDrawer.drawControlPoint(biasPoint);
 			distoDrawer.drawControlPoint(p1);
 			distoDrawer.drawControlPoint(p2);
-			distoDrawer.drawLine(p1, p2);
+			//distoDrawer.drawLine(p1, p2);
 		}
         drawCurve(distoDrawer, c);
 

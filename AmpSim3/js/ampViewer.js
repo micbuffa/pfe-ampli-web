@@ -7,6 +7,8 @@ class AmpViewer {
         this.menuDisto1 = document.querySelector("#distorsionMenu1");
         this.menuDisto2 = document.querySelector("#distorsionMenu2");
         this.menuPresets = document.querySelector("#QFPresetMenu2");
+        this.menuReverb = document.querySelector("#reverbImpulses");
+        this.menuCabinet = document.querySelector("#cabinetImpulses");
 	}
 
 	// 
@@ -275,6 +277,41 @@ class AmpViewer {
 	}
 
 	//
+    // Display convolver menus
+    //
+
+    createIRMenus() {
+    	this.buildMenuReverb();
+    	this.buildMenuCabinet();
+    }
+
+    buildMenuReverb(type) {
+	    this.amp.reverb.IRs.forEach((impulse, index) => {
+            var option = document.createElement("option");
+            option.value = index;
+            option.text = impulse.name;
+            this.menuReverb.appendChild(option);
+        });
+    }
+
+    buildMenuCabinet(type) {
+        this.amp.cabinet.IRs.forEach((impulse, index) => {
+            var option = document.createElement("option");
+            option.value = index;
+            option.text = impulse.name;
+            this.menuCabinet.appendChild(option);
+        });
+    }
+
+    updateReverbName(name) {
+    	this.menuReverb.selectedIndex = name;
+    }
+
+    updateCabinetName(name) {
+    	this.menuCabinet.selectedIndex = name;
+    }
+
+	//
 	// Display disto menus
 	//
 
@@ -285,7 +322,6 @@ class AmpViewer {
 
     // Build a drop down menu with all distorsion names
     buildDistoMenu1() {
-    	this.menuDisto1.value = this.amp.preamp.distoTypes[0];
         for(var p in this.amp.preamp.wsFactory.distorsionCurves) {
             var option = document.createElement("option");
             option.value = p;
@@ -296,7 +332,6 @@ class AmpViewer {
 
     // Build a drop down menu with all distorsion names
     buildDistoMenu2() {
-    	this.menuDisto2.value = this.amp.preamp.distoTypes[1];
         for(var p in this.amp.preamp.wsFactory.distorsionCurves) {
             var option = document.createElement("option");
             option.value = p;

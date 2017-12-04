@@ -215,10 +215,10 @@ class AmpController {
         this.changeMasterVolume(p.MV);
 
         this.changeReverbGain(p.RG);
-        this.amp.changeReverbImpulse(p.RN);
+        this.changeReverbImpulseFromPreset(p.RN);
 
         this.changeRoom(p.CG);
-        this.amp.changeCabinetSimImpulse(p.CN);
+        this.changeCabinetImpulseFromPreset(p.CN);
 
         this.changeEQValues(p.EQ);
 	}
@@ -234,6 +234,28 @@ class AmpController {
 	changeGain(sliderVal, numFilter) {
         this.amp.eq.changeGainEQ(sliderVal, numFilter);
         this.ampViewer.updateEQSlider(sliderVal, numFilter);        
+    }
+
+    // Convolver handlers
+
+    changeReverbImpulse(val) {
+    	this.amp.reverb.loadImpulseFromMenu(val);
+    	this.ampViewer.updateReverbName(val);
+    }
+
+    changeReverbImpulseFromPreset(name) {
+    	this.amp.reverb.loadImpulseByName(name);
+    	this.ampViewer.updateReverbName(name);
+    }
+
+    changeCabinetImpulse(val) {
+    	this.amp.cabinet.loadImpulseFromMenu(val);
+    	this.ampViewer.updateCabinetName(val);
+    }
+
+    changeCabinetImpulseFromPreset(name) {
+    	this.amp.cabinet.loadImpulseByName(name);
+    	this.ampViewer.updateCabinetName(name);
     }
 
 	// Boost handler

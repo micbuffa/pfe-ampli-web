@@ -1,4 +1,4 @@
-// ------- CONVOLVER, used for both reverb and cabinet simulation -------------------
+// ------- CONVOLVER, used for both reverb and cabinet simulation -------
 function Convolver(context, impulses, menuId) {
     var convolverNode, convolverGain, directGain;
     // create source and gain node
@@ -6,7 +6,6 @@ function Convolver(context, impulses, menuId) {
     var outputGain = context.createGain();
     var decodedImpulse;
 
-    var menuIRs;
     var IRs = impulses;
 
     var currentImpulse = IRs[0];
@@ -21,7 +20,6 @@ function Convolver(context, impulses, menuId) {
     directGain = context.createGain();
     directGain.gain.value = 1;
 
-    buildIRsMenu(menuId);
     buildAudioGraphConvolver();
     setGain(0.2);
     loadImpulseByUrl(defaultImpulseURL);
@@ -32,24 +30,23 @@ function Convolver(context, impulses, menuId) {
         const samples = Promise.all([loadSample(context,url)]).then(setImpulse);
     }
 
-    function loadImpulseByName(name) {
-        if(name === undefined) {
+    function loadImpulseByName(name, type) {
+        if (name === undefined) {
             name = IRs[0].name;
             console.log("loadImpulseByName: name undefined, loading default impulse " + name);
         }
 
-        var url="none";
+        var url = "none";
         // get url corresponding to name
-        for(var i=0; i < IRs.length; i++) {
-            if(IRs[i].name === name) {
+        for (var i=0; i < IRs.length; i++) {
+            if (IRs[i].name === name) {
                 url = IRs[i].url;
                 currentImpulse = IRs[i];
-                menuIRs.value = i;
                 break;
             }
         }
 
-        if(url === "none") {
+        if (url === "none") {
             console.log("ERROR loading reverb impulse name = " + name);
         } else {
             console.log("loadImpulseByName loading " + currentImpulse.name);
@@ -57,9 +54,9 @@ function Convolver(context, impulses, menuId) {
         }
     }
 
-    function loadImpulseFromMenu() {
-        var url = IRs[menuIRs.value].url;
-        currentImpulse = IRs[menuIRs.value];
+    function loadImpulseFromMenu(val) {
+        var url = IRs[val].url;
+        currentImpulse = IRs[val];
         console.log("loadImpulseFromMenu loading " + currentImpulse.name);
         loadImpulseByUrl(url);
     }
@@ -99,28 +96,17 @@ function Convolver(context, impulses, menuId) {
         return currentImpulse.name;
     }
 
-    function buildIRsMenu(menuId) {
-        menuIRs = document.querySelector("#" + menuId);
-
-        IRs.forEach(function (impulse, index) {
-            var option = document.createElement("option");
-            option.value = index;
-            option.text = impulse.name;
-            menuIRs.appendChild(option);
-        });
-
-        menuIRs.oninput = loadImpulseFromMenu;
-    }
-
     //--------------------------------------
     // API : exposed methods and properties
     // -------------------------------------
     return {
         input: inputGain,
         output: outputGain,
+        IRs: IRs, 
         setGain: setGain,
         getGain: getGain,
         getName: getName,
-        loadImpulseByName: loadImpulseByName
+        loadImpulseByName: loadImpulseByName,
+        loadImpulseFromMenu: loadImpulseFromMenu
     };
 }
