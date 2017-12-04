@@ -137,6 +137,20 @@
                                 <span class="onoffswitch-switch"></span>
                             </label>
                         </div>
+
+                        <p>BEZIER : Bias level</p>
+                        <div class="controls">
+                            <label id="bias1label">Bias 1</label>
+                            <input id="bias1slider" type="range" value="10" step="0.1" min="0" max="10" oninput="ampCtrl.changeBezierValues(this.value, 0,0); amp.preamp.changeBias(this.value);"></input>
+                            <output id="bias0">10</output>
+                        </div>
+
+                        <div class="controls">
+                            <label id="bias2label">Bias 2</label>
+                            <input id="bias2slider" type="range" value="10" step="0.1" min="0" max="10" oninput="ampCtrl.changeBezierValues(this.value, 1,0); amp.preamp.changeBias(this.value);"></input>
+                            <output id="bias1">10</output>
+                        </div>
+
                     </div>
 
                     <p><b>DRIVE</b> : distorsion levels</p>
@@ -230,106 +244,6 @@
         <button type="button" id="controlsInfoBtn" onclick="ampCtrl.controlsInfoDisplay()">Display controls</button>
 
         <script type="text/javascript">
-            // Change distortion on mouse move in Canvas distoDrawer 1
-            var canvas1, flag1, rect1, label1, kValue1, angle1;
-            canvas1 = document.querySelector('#distoDrawerCanvas1');
-            label1 = document.querySelector('#k1label');
-            kValue1 = document.querySelector('#k0');
-            rect1 = canvas1.getBoundingClientRect();
-            canvas1.addEventListener('mousedown', function(evt) {
-                //console.log("Curve1 editing starting")
-                let initKVal = amp.preamp.getDistorsionValue(0);
-                let initMouseVal = ((evt.clientX  - rect1.left) / 10).toFixed(1);
-                flag1 = 1;
-
-                document.addEventListener('mousemove', mouseMove1, false);
-                document.addEventListener('mouseup', mouseUp1, false);
-
-                function mouseMove1(evt) {
-                    if (flag1 > 0) {
-                        let shift = ((evt.clientX  - rect1.left) / 10).toFixed(1) - initMouseVal;
-                        let newK = parseFloat(initKVal) + parseFloat(shift);
-                        if (newK < 0) {
-                            newK = 0;
-                        } else if (newK > 10) {
-                            newK = 10;
-                        }
-
-                        // Bezier
-                        if (amp.preamp.distoTypes[0] == "bezier") {
-                            var pos = evt.clientX - canvas1.offsetLeft - rect1.left;
-                            if (pos<50) {
-                                //amp.preamp.changeBiasP2(Math.min(100,100-(pos*2)));
-                                //amp.preamp.changeBiasP1(0);
-                            } else {
-                                //amp.preamp.changeBiasP1(Math.min(100,(pos*2)-100));
-                                //amp.preamp.changeBiasP2(0);
-                            }
-                            amp.preamp.changeCtrlPoint(newK);
-                        }
-                                                
-                        ampCtrl.changeDistorsionValues(newK, 0, 0);
-                        amp.preamp.highlightValues(label1, kValue1);
-                    }
-                }
-
-                function mouseUp1() {
-                    //console.log("Curve1 editing finished")
-                    flag1 = 0;
-                    amp.preamp.hideValues(label1, kValue1);
-                    document.removeEventListener('mousemove', mouseMove1, false);
-                    document.removeEventListener('mouseup', mouseUp1, false);
-                }
-
-            }, false);
-
-            // Change distortion on mouse move in Canvas distoDrawer 2
-            var canvas2, flag2, rect2, label2, kValue2, angle2;
-            canvas2 = document.querySelector('#distoDrawerCanvas2');
-            label2 = document.querySelector('#k2label');
-            kValue2 = document.querySelector('#k1');
-            rect2 = canvas2.getBoundingClientRect();
-
-            canvas2.addEventListener('mousedown', function(evt) {
-                //console.log("Curve2 editing starting")
-                let initKVal = amp.preamp.getDistorsionValue(1);
-                let initMouseVal = ((evt.clientX  - rect2.left) / 10).toFixed(1);
-                flag2 = 1;
-
-                document.addEventListener('mousemove', mouseMove2, false);
-                document.addEventListener('mouseup', mouseUp2, false);
-
-                function mouseMove2(evt) {
-                    if (flag2 > 0) { 
-                        let shift = ((evt.clientX  - rect2.left) / 10).toFixed(1) - initMouseVal;
-                        let newK = parseFloat(initKVal) + parseFloat(shift);
-                        if (newK < 0) {
-                            newK = 0;
-                        } else if (newK > 10) {
-                            newK = 10;
-                        }
-
-                        // Bezier
-                        if (amp.preamp.distoTypes[1] == "bezier") {
-
-                        }
-                        
-                        ampCtrl.changeDistorsionValues(newK, 1, 0);
-                        amp.preamp.highlightValues(label2, kValue2);
-                        
-                    }
-                }
-
-                function mouseUp2() {
-                    //console.log("Curve2 editing finished")
-                    flag2 = 0;
-                    amp.preamp.hideValues(label2, kValue2);
-                    document.removeEventListener('mousemove', mouseMove2, false);
-                    document.removeEventListener('mouseup', mouseUp2, false);
-                }
-
-            }, false);
-
             // Binding avec le vrai ampli
             // Volume
             var volumeOutputPreAmp = document.querySelector("#Knob1");
