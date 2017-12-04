@@ -234,7 +234,7 @@ class PreAmp {
       this.bezierPoints[1].y = this.initialP1.y - incY; 
     }
 
-    changeK(val) {
+    changeBias(val) {
       val = parseFloat(val);
       var k1 = map(val, 0, 10, 100, 0);
       this.changeBiasX(k1);
