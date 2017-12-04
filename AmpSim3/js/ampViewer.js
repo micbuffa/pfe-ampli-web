@@ -303,12 +303,12 @@ class AmpViewer {
         });
     }
 
-    updateReverbName(name) {
-    	this.menuReverb.selectedIndex = name;
+    updateReverbName(index) {
+    	this.menuReverb.selectedIndex = index;
     }
 
-    updateCabinetName(name) {
-    	this.menuCabinet.selectedIndex = name;
+    updateCabinetName(index) {
+    	this.menuCabinet.selectedIndex = index;
     }
 
 	//

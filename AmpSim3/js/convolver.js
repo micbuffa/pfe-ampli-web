@@ -23,35 +23,10 @@ function Convolver(context, impulses, menuId) {
     buildAudioGraphConvolver();
     setGain(0.2);
     loadImpulseByUrl(defaultImpulseURL);
-    
 
     function loadImpulseByUrl(url) {
         // Load default impulse
         const samples = Promise.all([loadSample(context,url)]).then(setImpulse);
-    }
-
-    function loadImpulseByName(name, type) {
-        if (name === undefined) {
-            name = IRs[0].name;
-            console.log("loadImpulseByName: name undefined, loading default impulse " + name);
-        }
-
-        var url = "none";
-        // get url corresponding to name
-        for (var i=0; i < IRs.length; i++) {
-            if (IRs[i].name === name) {
-                url = IRs[i].url;
-                currentImpulse = IRs[i];
-                break;
-            }
-        }
-
-        if (url === "none") {
-            console.log("ERROR loading reverb impulse name = " + name);
-        } else {
-            console.log("loadImpulseByName loading " + currentImpulse.name);
-            loadImpulseByUrl(url);
-        }
     }
 
     function loadImpulseFromMenu(val) {
@@ -59,6 +34,22 @@ function Convolver(context, impulses, menuId) {
         currentImpulse = IRs[val];
         console.log("loadImpulseFromMenu loading " + currentImpulse.name);
         loadImpulseByUrl(url);
+    }
+
+    function getImpulseUrlAndIndex(name) {
+        var url = "none";
+        var impulseIndex;
+        // get url corresponding to name
+        for (var i = 0; i < IRs.length; i++) {
+            if (IRs[i].name === name) {
+                url = IRs[i].url;
+                currentImpulse = IRs[i];
+                impulseIndex = i;
+                break;
+            }
+        }
+
+        return [url, impulseIndex];
     }
 
     function setImpulse(param) {
@@ -106,7 +97,8 @@ function Convolver(context, impulses, menuId) {
         setGain: setGain,
         getGain: getGain,
         getName: getName,
-        loadImpulseByName: loadImpulseByName,
-        loadImpulseFromMenu: loadImpulseFromMenu
+        loadImpulseFromMenu: loadImpulseFromMenu,
+        loadImpulseByUrl: loadImpulseByUrl,
+        getImpulseUrlAndIndex: getImpulseUrlAndIndex
     };
 }

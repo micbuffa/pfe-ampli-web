@@ -240,22 +240,44 @@ class AmpController {
 
     changeReverbImpulse(val) {
     	this.amp.reverb.loadImpulseFromMenu(val);
-    	this.ampViewer.updateReverbName(val);
     }
 
     changeReverbImpulseFromPreset(name) {
-    	this.amp.reverb.loadImpulseByName(name);
-    	this.ampViewer.updateReverbName(name);
+       if (name === undefined) {
+            name = this.amp.reverb.IRs[0].name;
+            console.log("loadImpulseByName: name undefined, loading default impulse " + name);
+        }
+
+        let result = this.amp.reverb.getImpulseUrlAndIndex(name);
+
+        if (result[0] === "none") {
+            console.log("ERROR loading reverb impulse name = " + name);
+        } else {
+            console.log("loadImpulseByName loading " + name);
+        	this.amp.reverb.loadImpulseByUrl(result[0]);
+        	this.ampViewer.updateReverbName(result[1]);
+        }
     }
 
     changeCabinetImpulse(val) {
     	this.amp.cabinet.loadImpulseFromMenu(val);
-    	this.ampViewer.updateCabinetName(val);
     }
 
     changeCabinetImpulseFromPreset(name) {
-    	this.amp.cabinet.loadImpulseByName(name);
-    	this.ampViewer.updateCabinetName(name);
+       if (name === undefined) {
+            name = this.amp.cabinet.IRs[0].name;
+            console.log("loadImpulseByName: name undefined, loading default impulse " + name);
+        }
+
+        let result = this.amp.cabinet.getImpulseUrlAndIndex(name);
+
+        if (result[0] === "none") {
+            console.log("ERROR loading reverb impulse name = " + name);
+        } else {
+            console.log("loadImpulseByName loading " + name);
+        	this.amp.cabinet.loadImpulseByUrl(result[0]);
+        	this.ampViewer.updateCabinetName(result[1]);
+        }
     }
 
 	// Boost handler
