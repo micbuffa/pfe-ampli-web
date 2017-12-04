@@ -15,21 +15,20 @@ class AmpController {
 
 	// Distortions
 
-    changeDistorsionValues(sliderValue, numDisto, point) {
+    changeDistorsionValues(sliderValue, numDisto) {
 		// update processing values
-        this.amp.preamp.changeDistorsionValuesPA(sliderValue, numDisto, point);
+        this.amp.preamp.changeDistorsionValuesPA(sliderValue, numDisto);
         // update view
         this.ampViewer.changeDistoLabels(sliderValue, numDisto);
     }
 
      // Bezier
     changeBezierValues(sliderValue, numDisto, point) {
-        if(amp.preamp.distoTypes[numDisto] == "bezier")
-        {
-             // update processing values
-             this.amp.preamp.changeBezierValuesPA(sliderValue, numDisto, point);
-             // update view
-             this.ampViewer.changeBezierLabels(sliderValue, numDisto);
+        if (amp.preamp.distoTypes[numDisto] == "bezier") {
+	        // update processing values
+	        this.amp.preamp.changeBezierValuesPA(sliderValue, numDisto, point);
+	        // update view
+	        this.ampViewer.changeBezierLabels(sliderValue, numDisto);
         }
     }
 

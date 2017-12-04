@@ -100,7 +100,7 @@ class PreAmp {
     //
     // Distortion-related functions
     //
-    changeDistorsionValuesPA(sliderValue, numDisto, bezier) {
+    changeDistorsionValuesPA(sliderValue, numDisto) {
         // sliderValue is in [0, 10] range, adjust to [0, 1500] range  
         var value = 150 * parseFloat(sliderValue);
         var minp = 0;
@@ -171,7 +171,7 @@ class PreAmp {
       console.log("nb points = " + curve.length);
       var midPointIndex = Math.abs(curve.length/2);
       
-      for(var i = 0; i < curve.length; i+=100) {
+      for (var i = 0; i < curve.length; i+=100) {
         var p1X = map(i, 0, curve.length, -1, 1);
         var p1Y = curve[i];
         var p2X = map(i+1, 0, curve.length, -1, 1);
@@ -185,14 +185,13 @@ class PreAmp {
         var angle = Math.atan2(dy, dx);
         
        // console.log(angle + " / " + oldAngle)
-        if(this.oldAngle !== undefined) {
-            if(angle === this.oldAngle) {
+        if (this.oldAngle !== undefined) {
+            if (angle === this.oldAngle) {
                 console.log("angle radians = " + angle + " en deg " + 180*angle/Math.PI);
 
-              return angle;
+                return angle;
             }
-        } 
-        console.log("lol");
+        }
         this.oldAngle = angle;
       }
       return angle;

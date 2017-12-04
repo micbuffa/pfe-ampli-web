@@ -142,19 +142,19 @@
                         <output id="k1">4</output>
                     </div>
 
-                    <p>Bézier : Bias level</p>
+                    <p>BEZIER : Bias level</p>
                     <div class="controls">
-                        <label id="bias1label">bias 1</label>
-                        <input id="bias1slider" type="range" value="4" step="0.1" min="0" max="10" oninput="ampCtrl.changeBezierValues(this.value, 0,0);amp.preamp.changeK(this.value);"></input>
-                        <output id="bias0">4</output>
+                        <label id="bias1label">Bias 1</label>
+                        <input id="bias1slider" type="range" value="10" step="0.1" min="0" max="10" oninput="ampCtrl.changeBezierValues(this.value, 0,0); amp.preamp.changeK(this.value);"></input>
+                        <output id="bias0">10</output>
                     </div>
 
                     <div class="controls">
-                        <label id="bias2label">bias 2</label>
-                        <input id="bias2slider" type="range" value="4" step="0.1" min="0" max="10" oninput="ampCtrl.changeBezierValues(this.value, 1,0);amp.preamp.changeK(this.value);"></input>
-                        <output id="bias1">4</output>
+                        <label id="bias2label">Bias 2</label>
+                        <input id="bias2slider" type="range" value="10" step="0.1" min="0" max="10" oninput="ampCtrl.changeBezierValues(this.value, 1,0); amp.preamp.changeK(this.value);"></input>
+                        <output id="bias1">10</output>
                     </div>
-                   <p>
+                    <p>
                     <div class="onoffswitch">
                         <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch"  onclick="ampCtrl.changeOversampling(this);">
                         <label class="onoffswitch-label" for="myonoffswitch">
@@ -276,7 +276,7 @@
                                 //amp.preamp.changeBiasP1(Math.min(100,(pos*2)-100));
                                 //amp.preamp.changeBiasP2(0);
                             }
-                            amp.preamp.changeCtrlPoint(newK);
+                            //amp.preamp.changeCtrlPoint(newK);
                         }
                                                 
                         ampCtrl.changeDistorsionValues(newK, 0, 0);
