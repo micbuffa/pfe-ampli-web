@@ -22,6 +22,7 @@ function Convolver(context, impulses, menuId) {
 
     buildAudioGraphConvolver();
     setGain(0.2);
+    // Necessary ? done in setPreset
     loadImpulseByUrl(defaultImpulseURL);
 
     function loadImpulseByUrl(url) {

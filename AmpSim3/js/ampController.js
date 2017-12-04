@@ -272,7 +272,7 @@ class AmpController {
         let result = this.amp.cabinet.getImpulseUrlAndIndex(name);
 
         if (result[0] === "none") {
-            console.log("ERROR loading reverb impulse name = " + name);
+            console.log("ERROR loading cabinet impulse name = " + name);
         } else {
             console.log("loadImpulseByName loading " + name);
         	this.amp.cabinet.loadImpulseByUrl(result[0]);
