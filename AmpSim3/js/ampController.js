@@ -92,7 +92,7 @@ class AmpController {
                     }
 
                     // Bezier
-                    if(amp.preamp.distoTypes[0] == "bezier") {
+                    if (amp.preamp.distoTypes[0] == "bezier") {
                         var pos = evt.clientX - canvas1.offsetLeft - rect1.left;
                         if (pos<50) {
                             //amp.preamp.changeBiasP2(Math.min(100,100-(pos*2)));
