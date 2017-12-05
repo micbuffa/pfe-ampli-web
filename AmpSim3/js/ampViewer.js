@@ -9,8 +9,10 @@ class AmpViewer {
         this.menuPresets = document.querySelector("#QFPresetMenu2");
         this.menuReverb = document.querySelector("#reverbImpulses");
         this.menuCabinet = document.querySelector("#cabinetImpulses");
-        this.controlsInfoBtn = document.querySelector("#controlsInfoBtn")
+        this.controlsInfoBtn = document.querySelector("#controlsInfoBtn");
         this.controlsInfo = document.querySelector("#controlsInfo");
+        this.equalizerBtn = document.querySelector("#equalizerToggle");
+        this.equalizer = document.querySelector("#eqContainer");
 	}
 
 	// ------- Amp related handlers -------
@@ -397,7 +399,16 @@ class AmpViewer {
 			this.controlsInfo.setAttribute('style', 'display:none;');
 			this.controlsInfoBtn.innerHTML = "Display Controls"
 		}
+	}
 
+	changeEqDisplay() {
+		if (this.equalizer.style.display == "none") {
+			this.equalizer.setAttribute('style', 'display:block;');
+			this.equalizerBtn.innerHTML = "Hide Equalizer"
+		} else {
+			this.equalizer.setAttribute('style', 'display:none;');
+			this.equalizerBtn.innerHTML = "Display Equalizer"
+		}
 	}
 
 }

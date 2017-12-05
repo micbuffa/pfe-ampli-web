@@ -511,4 +511,8 @@ class AmpController {
     	this.ampViewer.changeInfoDisplay();
     }
 
+    eqDisplay() {
+    	this.ampViewer.changeEqDisplay();
+    }
+
 }

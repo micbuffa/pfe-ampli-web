@@ -49,8 +49,6 @@
             <section style="flex: 1;">
 
                 <div class="eq">
-                    <h2>Settings</h2>
-
                     <p>Press play to preview presets</p>
                     <audio id="player" controls  loop>
                         <source src="assets/audio/BasketCase Greenday riff DI.mp3">
@@ -153,6 +151,8 @@
 
                     </div>
 
+                    <h2><u>Amp Settings</u></h2>
+
                     <p><b>DRIVE</b> : distorsion levels</p>
                     <div class="controls">
                         <label id="k1label">K1</label>
@@ -167,14 +167,14 @@
                     </div>
 
                     <p>
-                        <label for="convolverCabinetSlider">Cabinet Sim (Dry/Wet)</label>
-                        <input type="range" min="0" max="10" step="0.1" value="7.5" id="convolverCabinetSlider" oninput="ampCtrl.changeRoom(this.value);"/>
-                        <output id="cabinetGainOutput">2</output>
-
-                    <p>
                         <b>CABINET IMPULSE : </b><br></br>
                         <select id="cabinetImpulses" oninput="ampCtrl.changeCabinetImpulse(this.value);">
                         </select>
+
+                    <p>
+                        <label for="convolverCabinetSlider">Cabinet Sim (Dry/Wet)</label>
+                        <input type="range" min="0" max="10" step="0.1" value="7.5" id="convolverCabinetSlider" oninput="ampCtrl.changeRoom(this.value);"/>
+                        <output id="cabinetGainOutput">2</output>
                 </div>
                 <!-- end amp jsbin -->
 
@@ -204,14 +204,16 @@
                         </select>
                         <webaudio-knob id="Knob8"     midilearn="true" style="position:absolute;left:525px;top:54px" src="img/Prophet.png" value="5" min="0" max="10" step="0.1" diameter="69" sprites="99" tooltip="Presence"></webaudio-knob>
                     </div>
-                    <div id="eqSliders" style="display: none;">
-                        <webaudio-slider id="slider1"   midilearn="true" Units="Db" style="position:absolute;left:731px;top:64px" src="img/vsliderbody.png" knobsrc="img/vsliderknob.png" value="0" min="-12" max="12" step="1" basewidth="24" height="128" knobwidth="24" knobheight="24" ditchLength="100" tooltip="Slider1"></webaudio-slider>
-                        <webaudio-slider id="slider2"   midilearn="true" Units="Db" style="position:absolute;left:774px;top:64px" src="img/vsliderbody.png" knobsrc="img/vsliderknob.png" value="0" min="-12" max="12" step="1" width="24" height="128" knobwidth="24" knobheight="24" ditchLength="100"  tooltip="Slider2"></webaudio-slider>
-                        <webaudio-slider id="slider3"   midilearn="true" Units="Db" style="position:absolute;left:819px;top:64px" src="img/vsliderbody.png" knobsrc="img/vsliderknob.png" value="0" min="-12" max="12" step="1" width="24" height="128" knobwidth="24" knobheight="24" ditchLength="100" tooltip="Slider3"></webaudio-slider>
-                        <webaudio-slider id="slider4"   midilearn="true" Units="Db" style="position:absolute;left:865px;top:64px" src="img/vsliderbody.png" knobsrc="img/vsliderknob.png" value="0" min="-12" max="12" step="1" width="24" height="128" knobwidth="24" knobheight="24" ditchLength="100" units="%" tooltip="Slider4"></webaudio-slider>
-                        <webaudio-slider id="slider5"   midilearn="true" Units="Db" style="position:absolute;left:908px;top:64px" src="img/vsliderbody.png" knobsrc="img/vsliderknob.png" value="0" min="-12" max="12" step="1" width="24" height="128" knobwidth="24" knobheight="24" ditchLength="100" tooltip="Slider5"></webaudio-slider>
-                        <webaudio-slider id="slider6"   midilearn="true" Units="Db" style="position:absolute;left:951px;top:64px" src="img/vsliderbody.png" knobsrc="img/vsliderknob.png" value="0" min="-12" max="12"" step="1" width="24" height="128" knobwidth="24" knobheight="24" ditchLength="100" units="%" tooltip="Slider6"></webaudio-slider>      
-                        <webaudio-switch id="switch2"   midilearn="true" style="position:absolute;left:1033px;top:140px" src="img/switch_toggle.png" value="0" height="45" width="45" tooltip="Switch-B"></webaudio-switch>
+                    <div id="eqContainer" style="display:none">
+                        <div id="eqSliders" style="position:absolute;left:704px;background-image:url('img/uservieweq.png');width:365px;height:192px;padding:0px;">
+                            <webaudio-slider id="slider1"   midilearn="true" Units="Db" style="position:absolute;left:68px;top:27px" src="img/vsliderbody.png" knobsrc="img/vsliderknob.png" value="0" min="-12" max="12" step="1" basewidth="24" height="128" knobwidth="24" knobheight="24" ditchLength="100" tooltip="Slider1"></webaudio-slider>
+                            <webaudio-slider id="slider2"   midilearn="true" Units="Db" style="position:absolute;left:111.5px;top:27px" src="img/vsliderbody.png" knobsrc="img/vsliderknob.png" value="0" min="-12" max="12" step="1" width="24" height="128" knobwidth="24" knobheight="24" ditchLength="100"  tooltip="Slider2"></webaudio-slider>
+                            <webaudio-slider id="slider3"   midilearn="true" Units="Db" style="position:absolute;left:157px;top:27px" src="img/vsliderbody.png" knobsrc="img/vsliderknob.png" value="0" min="-12" max="12" step="1" width="24" height="128" knobwidth="24" knobheight="24" ditchLength="100" tooltip="Slider3"></webaudio-slider>
+                            <webaudio-slider id="slider4"   midilearn="true" Units="Db" style="position:absolute;left:202px;top:27px" src="img/vsliderbody.png" knobsrc="img/vsliderknob.png" value="0" min="-12" max="12" step="1" width="24" height="128" knobwidth="24" knobheight="24" ditchLength="100" units="%" tooltip="Slider4"></webaudio-slider>
+                            <webaudio-slider id="slider5"   midilearn="true" Units="Db" style="position:absolute;left:245px;top:26px" src="img/vsliderbody.png" knobsrc="img/vsliderknob.png" value="0" min="-12" max="12" step="1" width="24" height="128" knobwidth="24" knobheight="24" ditchLength="100" tooltip="Slider5"></webaudio-slider>
+                            <webaudio-slider id="slider6"   midilearn="true" Units="Db" style="position:absolute;left:288px;top:26px" src="img/vsliderbody.png" knobsrc="img/vsliderknob.png" value="0" min="-12" max="12"" step="1" width="24" height="128" knobwidth="24" knobheight="24" ditchLength="100" units="%" tooltip="Slider6"></webaudio-slider>      
+                            <webaudio-switch id="switch2"   midilearn="true" style="position:absolute;left:-64px;top:110px" src="img/switch_toggle.png" value="0" height="45" width="45" tooltip="Switch-B"></webaudio-switch>
+                        </div>
                     </div>
                     <webaudio-switch id="switch1"    midilearn="true" style="position:absolute;left:640px;top:35px" src="img/switch_toggle.png" value="0" height="45" width="45" tooltip="Switch-A"></webaudio-switch>
                     <webaudio-switch id="led" style="position:absolute;left:651px;top:90px" src="img/led_23_red.png" value="1" height="23" width="23" tooltip="Switch-B"></webaudio-switch>
@@ -226,6 +228,8 @@
                     <div style="color:white; position:absolute;left:763px;top:405px;display:none;">Output Gain</div>
                     <label for="QFPresetMenu2" style="color:white; position:absolute;left:420px;top:197px">Presets :</label>
                     <select id="QFPresetMenu2" style="position:absolute;left:490px;top:196px" onchange="ampCtrl.setPreset()"></select>
+                    <button id="settingsToggle" style="position:absolute;left:0px;top:228px;width:352px;">Display advanced settings</button>
+                    <button id="equalizerToggle" style="position:absolute;left:352px;top:228px;width:352px;" onclick="ampCtrl.eqDisplay()">Display Equalizer</button>
 
                     <p><div style="color:white; position:absolute;left:100px;top:385px;display:none;">
                         <canvas id="distoDrawerCanvas1" title="Click and maintain to change distortion value" style="margin-right:10px;left-margin:10px;" width="100" height="100"></canvas>
