@@ -94,7 +94,7 @@ class AmpController {
                     else
                     {
                         shift1 = ((evt.clientX  - rect1.left) / 10).toFixed(1) - initMouseVal;
-                        newK1 = parseFloat(initKVal) + parseFloat(shift);
+                        newK1 = parseFloat(initKVal) + parseFloat(shift1);
                     }
 
                     // Define newK
@@ -171,7 +171,7 @@ class AmpController {
                     } else if (newK2 > 10) {
                         newK2 = 10;
                     }
-                    
+
                     // Bezier or other curve
                     if (amp.preamp.distoTypes[1] == "bezier") {
 
