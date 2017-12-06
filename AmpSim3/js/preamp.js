@@ -19,7 +19,7 @@ class PreAmp {
         this.biasValue = [7.8, 7.8, 7.8, 7.8]; // array of bias initial values
         this.od = [];
         this.distoTypes = ['asymetric', 'standard'];   
-		this.bezierPoints = [{x: 0, y: 100},{x: 50, y: 100},{x: 50, y: 0},{x: 100, y: 0}];
+		this.bezierPoints = [[{x: 0, y: 100},{x: 50, y: 100},{x: 50, y: 0},{x: 100, y: 0}], [{x: 0, y: 100},{x: 50, y: 100},{x: 50, y: 0},{x: 100, y: 0}]];
         this.angle = 2.1963;
         this.oldAngle = undefined;
         this.initialP1 = {x: 50, y: 100};
@@ -118,7 +118,7 @@ class PreAmp {
         // end of logarithmic adjustment
 
         if (this.distoTypes[numDisto] == "bezier") {
-            this.od[numDisto].curve = this.wsFactory.distorsionCurves[this.distoTypes[numDisto]](this.bezierPoints);
+            this.od[numDisto].curve = this.wsFactory.distorsionCurves[this.distoTypes[numDisto]](this.bezierPoints, numDisto);
             this.currentWSCurve = this.od[numDisto].curve;
         } else {
             this.k[numDisto] = value;
@@ -143,21 +143,21 @@ class PreAmp {
 
     // Just update and redraw
     changeBezierValuesPA(sliderValue, numDisto, bezier) {
-        this.od[numDisto].curve = this.wsFactory.distorsionCurves[this.distoTypes[numDisto]](this.bezierPoints);
+        this.od[numDisto].curve = this.wsFactory.distorsionCurves[this.distoTypes[numDisto]](this.bezierPoints, numDisto);
         this.currentWSCurve = this.od[numDisto].curve;
         // update bias value of channel
         this.biasValue[numDisto] = sliderValue;
         // update curve bias value
-        this.changeBiasPA(sliderValue);
+        this.changeBiasPA(sliderValue, numDisto);
         // redraw curves
         this.drawCurrentDistos();
     }
 
-    returnCurve() {
-       var p0 = this.bezierPoints[0];
-       var p1 = this.bezierPoints[1];
-       var p2 = this.bezierPoints[2];
-       var p3 = this.bezierPoints[3];
+    returnCurve(numCurve) {
+       var p0 = this.bezierPoints[numCurve][0];
+       var p1 = this.bezierPoints[numCurve][1];
+       var p2 = this.bezierPoints[numCurve][2];
+       var p3 = this.bezierPoints[numCurve][3];
        var n_samples = 44100;
        var accuracy = 1/n_samples,
        curve = new Float32Array(n_samples),
@@ -219,43 +219,43 @@ class PreAmp {
         return {x: x, y: y};
     }
 
-    changeBiasP2(val) {
+    changeBiasP2(val, numCurve) {
         val = parseFloat(val);
         // On ne déplace que P2 le long de la pente donnée par angle
         // (angle de la partie linéaire)
         var incX = val*Math.cos(this.angle);
         var incY = val*Math.sin(this.angle);
-        this.bezierPoints[2].x = this.initialP2.x + incX;
-        this.bezierPoints[2].y = this.initialP2.y + incY; 
+        this.bezierPoints[numCurve][2].x = this.initialP2.x + incX;
+        this.bezierPoints[numCurve][2].y = this.initialP2.y + incY; 
     }
 
-    changeBiasP1(val) {
+    changeBiasP1(val, numCurve) {
         val = parseFloat(val);
         // On ne déplace que P1 le long de la pente donnée par angle
         // (angle de la partie linéaire)
         var incX = val*Math.cos(this.angle);
         var incY = val*Math.sin(this.angle);
-        this.bezierPoints[1].x = this.initialP1.x - incX;
-        this.bezierPoints[1].y = this.initialP1.y - incY; 
+        this.bezierPoints[numCurve][1].x = this.initialP1.x - incX;
+        this.bezierPoints[numCurve][1].y = this.initialP1.y - incY; 
     }
 
-    changeBiasPA(val) {
+    changeBiasPA(val, numCurve) {
         val = parseFloat(val);
         var k1 = map(val, 0, 10, 100, 0);
-        this.changeBiasX(k1);
+        this.changeBiasX(k1, numCurve);
         var k2 = map(val, 0, 10, 0, 100);
-        this.changeBiasY(k2);
+        this.changeBiasY(k2, numCurve);
     }
 
-    changeBiasX(val) {
+    changeBiasX(val, numCurve) {
         val = parseFloat(val);
-        this.bezierPoints[2].y = val;
+        this.bezierPoints[numCurve][2].y = val;
         this.initialP2.y = val;
     } 
 
-    changeBiasY(val) {
+    changeBiasY(val, numCurve) {
         val = parseFloat(val);
-        this.bezierPoints[1].y = val;
+        this.bezierPoints[numCurve][1].y = val;
         this.initialP1.y = val;
     }
 
@@ -283,8 +283,8 @@ class PreAmp {
         distoDrawer.clear();
 		// Draw control points and line only for bezier curve.
 		if(this.distoTypes[curveNumber] == "bezier") {
-			var p1 = this.bezierPoints[1];
-			var	p2 = this.bezierPoints[2];
+			var p1 = this.bezierPoints[curveNumber][1];
+			var	p2 = this.bezierPoints[curveNumber][2];
 			// bias point
   			var biasPoint = {
 				x: (p1.x + p2.x) / 2,

@@ -67,9 +67,11 @@ class AmpController {
 
     setCurveHandlers() {
     	// Change distortion on mouse move in Canvas distoDrawer 1
-        var canvas1, flag1, rect1, label1, kValue1, angle1, shift1, newK1;
+        var canvas1, flag1, rect1, label1, kValue1,  bias1label, bias1value, angle1, shift1, newK1;
         canvas1 = document.querySelector('#distoDrawerCanvas1');
         label1 = document.querySelector('#k1label');
+        bias1label = document.querySelector('#bias1label');
+        bias1value = document.querySelector('#bias0');
         kValue1 = document.querySelector('#k0');
         rect1 = canvas1.getBoundingClientRect();
         canvas1.addEventListener('mousedown', (evt) => {
@@ -111,8 +113,9 @@ class AmpController {
                             //amp.preamp.changeBiasP2(0);
                         }
 
-                        amp.preamp.changeBiasPA(newK1);
+                        amp.preamp.changeBiasPA(newK1, 0);
                         ampCtrl.changeBezierValues(newK1, 0, 0);
+                        amp.preamp.highlightValues(bias1label, bias1value);
                     } else {
                         amp.preamp.highlightValues(label1, kValue1);
                         ampCtrl.changeDistorsionValues(newK1, 0);
@@ -123,7 +126,13 @@ class AmpController {
             function mouseUp1() {
                 //console.log("Curve1 editing finished")
                 flag1 = 0;
-                amp.preamp.hideValues(label1, kValue1);
+                if (amp.preamp.distoTypes[0] == "bezier") {
+                    amp.preamp.hideValues(bias1label, bias1value);
+                }
+                else
+                {
+                    amp.preamp.hideValues(label1, kValue1);
+                }
                 document.removeEventListener('mousemove', mouseMove1, false);
                 document.removeEventListener('mouseup', mouseUp1, false);
             }
@@ -131,9 +140,11 @@ class AmpController {
         }, false);
 
         // Change distortion on mouse move in Canvas distoDrawer 2
-        var canvas2, flag2, rect2, label2, kValue2, angle2, shift2, newK2;
+        var canvas2, flag2, rect2, label2, kValue2, bias2label, bias2value, angle2, shift2, newK2;
         canvas2 = document.querySelector('#distoDrawerCanvas2');
         label2 = document.querySelector('#k2label');
+        bias2label = document.querySelector('#bias2label');
+        bias2value = document.querySelector('#bias1');
         kValue2 = document.querySelector('#k1');
         rect2 = canvas2.getBoundingClientRect();
 
@@ -165,12 +176,23 @@ class AmpController {
                         newK2 = 10;
                     }
 
-                    // Bezier or other curve
+                     // Bezier or other curve
                     if (amp.preamp.distoTypes[1] == "bezier") {
+                        var pos = evt.clientX - canvas2.offsetLeft - rect2.left;
+                        if (pos<50) {
+                            //amp.preamp.changeBiasP2(Math.min(100,100-(pos*2)));
+                            //amp.preamp.changeBiasP1(0);
+                        } else {
+                            //amp.preamp.changeBiasP1(Math.min(100,(pos*2)-100));
+                            //amp.preamp.changeBiasP2(0);
+                        }
 
+                        amp.preamp.changeBiasPA(newK2, 1);
+                        ampCtrl.changeBezierValues(newK2, 1, 0);
+                        amp.preamp.highlightValues(bias2label, bias2value);
                     } else {
-                        ampCtrl.changeDistorsionValues(newK2, 1, 0);
                         amp.preamp.highlightValues(label2, kValue2);
+                        ampCtrl.changeDistorsionValues(newK2, 1);
                     }
                 }
             }
@@ -178,7 +200,13 @@ class AmpController {
             function mouseUp2() {
                 //console.log("Curve2 editing finished")
                 flag2 = 0;
-                amp.preamp.hideValues(label2, kValue2);
+                if (amp.preamp.distoTypes[1] == "bezier") {
+                    amp.preamp.hideValues(bias2label, bias2value);
+                }
+                else
+                {
+                    amp.preamp.hideValues(label2, kValue2);
+                }
                 document.removeEventListener('mousemove', mouseMove2, false);
                 document.removeEventListener('mouseup', mouseUp2, false);
             }

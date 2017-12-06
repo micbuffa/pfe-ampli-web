@@ -52,8 +52,8 @@ function WaveShapers() {
         };
         
         // classic curve from WebAudio specification
-        distorsionCurves.bezier = function (bezierPoints) {
-            var c = getBezierCurve(bezierPoints);
+        distorsionCurves.bezier = function (bezierPoints, numDisto) {
+            var c = getBezierCurve(bezierPoints, numDisto);
             return c;
         };
 
@@ -284,11 +284,11 @@ function WaveShapers() {
         return {x: x, y: y};
     } 
 
-    function getBezierCurve(bezierPoints) {
-	   var p0 = amp.preamp.bezierPoints[0];
-	   var p1 = amp.preamp.bezierPoints[1];
-	   var p2 = amp.preamp.bezierPoints[2];
-	   var p3 = amp.preamp.bezierPoints[3];
+    function getBezierCurve(bezierPoints, numCurve) {
+	   var p0 = amp.preamp.bezierPoints[numCurve][0];
+	   var p1 = amp.preamp.bezierPoints[numCurve][1];
+	   var p2 = amp.preamp.bezierPoints[numCurve][2];
+	   var p3 = amp.preamp.bezierPoints[numCurve][3];
 	   
        var n_samples = 44100,
        accuracy = 1/n_samples,
