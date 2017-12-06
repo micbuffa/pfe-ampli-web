@@ -16,6 +16,7 @@ class PreAmp {
         this.currentK = 2; // global K, max of the other two
         this.currentWSCurve = this.wsFactory.distorsionCurves[this.currentDistoName](this.currentK);
         this.k = [2, 2, 2, 2]; // array of k initial values
+        this.biasValue = [7.8, 7.8, 7.8, 7.8]; // array of bias initial values
         this.od = [];
         this.distoTypes = ['asymetric', 'standard'];   
 		this.bezierPoints = [{x: 0, y: 100},{x: 50, y: 100},{x: 50, y: 0},{x: 100, y: 0}];
@@ -259,6 +260,12 @@ class PreAmp {
     getDistorsionValue(numChannel) {
         var pos = logToPos(this.k[numChannel]);
         return parseFloat(pos).toFixed(1);
+    }
+
+    // Returns an array of bias values in [0, 10] range
+    getBiasValue(numChannel) {
+        var bias = this.biasValue[numChannel];
+        return parseFloat(bias).toFixed(1);
     }
 
     drawCurrentDistos() {

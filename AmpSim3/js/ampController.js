@@ -29,6 +29,8 @@ class AmpController {
 	        this.amp.preamp.changeBezierValuesPA(sliderValue, numDisto, point);
 	        // update view
 	        this.ampViewer.changeBezierLabels(sliderValue, numDisto);
+            // update bias value of channel
+            this.amp.preamp.biasValue[numDisto] = sliderValue;
         }
     }
 
@@ -67,7 +69,7 @@ class AmpController {
 
     setBezierHandlers() {
     	// Change distortion on mouse move in Canvas distoDrawer 1
-        var canvas1, flag1, rect1, label1, kValue1, angle1;
+        var canvas1, flag1, rect1, label1, kValue1, angle1, shift1, newK1;
         canvas1 = document.querySelector('#distoDrawerCanvas1');
         label1 = document.querySelector('#k1label');
         kValue1 = document.querySelector('#k0');
@@ -75,6 +77,7 @@ class AmpController {
         canvas1.addEventListener('mousedown', (evt) => {
             //console.log("Curve1 editing starting")
             let initKVal = this.amp.preamp.getDistorsionValue(0);
+            let initBiasVal = this.amp.preamp.getBiasValue(0);
             let initMouseVal = ((evt.clientX  - rect1.left) / 10).toFixed(1);
             flag1 = 1;
 
@@ -83,29 +86,41 @@ class AmpController {
 
             function mouseMove1(evt) {
                 if (flag1 > 0) {
-                    let shift = ((evt.clientX  - rect1.left) / 10).toFixed(1) - initMouseVal;
-                    let newK = parseFloat(initKVal) + parseFloat(shift);
-                    if (newK < 0) {
-                        newK = 0;
-                    } else if (newK > 10) {
-                        newK = 10;
+                    // Set bias or k value for starting newK.
+                    if (amp.preamp.distoTypes[0] == "bezier") {
+                        shift1 = ((evt.clientX  - rect1.left) / 10).toFixed(1) - initMouseVal;
+                        newK1 = parseFloat(initBiasVal) + parseFloat(shift1);
+                    }
+                    else
+                    {
+                        shift1 = ((evt.clientX  - rect1.left) / 10).toFixed(1) - initMouseVal;
+                        newK1 = parseFloat(initKVal) + parseFloat(shift);
                     }
 
-                    // Bezier
+                    // Define newK
+                    if (newK1 < 0) {
+                        newK1 = 0;
+                    } else if (newK1 > 10) {
+                        newK1 = 10;
+                    }
+
+                    // Bezier or other curve
                     if (amp.preamp.distoTypes[0] == "bezier") {
                         var pos = evt.clientX - canvas1.offsetLeft - rect1.left;
                         if (pos<50) {
                             //amp.preamp.changeBiasP2(Math.min(100,100-(pos*2)));
                             //amp.preamp.changeBiasP1(0);
-                        } else {
+                        } 
+                        else {
                             //amp.preamp.changeBiasP1(Math.min(100,(pos*2)-100));
                             //amp.preamp.changeBiasP2(0);
                         }
-                        amp.preamp.changeBias(newK);
-                        ampCtrl.changeBezierValues(newK, 0, 0);
+
+                        amp.preamp.changeBias(newK1);
+                        ampCtrl.changeBezierValues(newK1, 0, 0);
                     } else {
                         amp.preamp.highlightValues(label1, kValue1);
-                        ampCtrl.changeDistorsionValues(newK, 0);
+                        ampCtrl.changeDistorsionValues(newK1, 0);
                     }
                 }
             }
@@ -121,7 +136,7 @@ class AmpController {
         }, false);
 
         // Change distortion on mouse move in Canvas distoDrawer 2
-        var canvas2, flag2, rect2, label2, kValue2, angle2;
+        var canvas2, flag2, rect2, label2, kValue2, angle2, shift2, newK2;
         canvas2 = document.querySelector('#distoDrawerCanvas2');
         label2 = document.querySelector('#k2label');
         kValue2 = document.querySelector('#k1');
@@ -131,26 +146,37 @@ class AmpController {
             //console.log("Curve2 editing starting")
             let initKVal = this.amp.preamp.getDistorsionValue(1);
             let initMouseVal = ((evt.clientX  - rect2.left) / 10).toFixed(1);
+            let initBiasVal = this.amp.preamp.getBiasValue(1);
             flag2 = 1;
 
             document.addEventListener('mousemove', mouseMove2, false);
             document.addEventListener('mouseup', mouseUp2, false);
 
             function mouseMove2(evt) {
-                if (flag2 > 0) { 
-                    let shift = ((evt.clientX  - rect2.left) / 10).toFixed(1) - initMouseVal;
-                    let newK = parseFloat(initKVal) + parseFloat(shift);
-                    if (newK < 0) {
-                        newK = 0;
-                    } else if (newK > 10) {
-                        newK = 10;
+                if (flag2 > 0) {
+                    // Set bias or k value for starting newK.
+                    if (amp.preamp.distoTypes[0] == "bezier") {
+                        shift2 = ((evt.clientX  - rect2.left) / 10).toFixed(1) - initMouseVal;
+                        newK2 = parseFloat(initBiasVal) + parseFloat(shift2);
+                    }
+                    else
+                    {
+                        shift2 = ((evt.clientX  - rect2.left) / 10).toFixed(1) - initMouseVal;
+                        newK2 = parseFloat(initKVal) + parseFloat(shift2);
                     }
 
-                    // Bezier
+                    // Define newK
+                    if (newK2 < 0) {
+                        newK2 = 0;
+                    } else if (newK2 > 10) {
+                        newK2 = 10;
+                    }
+                    
+                    // Bezier or other curve
                     if (amp.preamp.distoTypes[1] == "bezier") {
 
                     } else {
-                        ampCtrl.changeDistorsionValues(newK, 1, 0);
+                        ampCtrl.changeDistorsionValues(newK2, 1, 0);
                         amp.preamp.highlightValues(label2, kValue2);
                     }
                 }
