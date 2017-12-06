@@ -171,8 +171,8 @@ class PreAmp {
       return curve;
     }
 
-    getLinearPartAngle() {
-      var curve = this.returnCurve();
+    getLinearPartAngle(numCurve) {
+      var curve = this.returnCurve(numCurve);
       console.log("nb points = " + curve.length);
       var midPointIndex = Math.abs(curve.length/2);
       
