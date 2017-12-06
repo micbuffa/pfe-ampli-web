@@ -145,6 +145,10 @@ class PreAmp {
     changeBezierValuesPA(sliderValue, numDisto, bezier) {
         this.od[numDisto].curve = this.wsFactory.distorsionCurves[this.distoTypes[numDisto]](this.bezierPoints);
         this.currentWSCurve = this.od[numDisto].curve;
+        // update bias value of channel
+        this.biasValue[numDisto] = sliderValue;
+        // update curve bias value
+        this.changeBiasPA(sliderValue);
         // redraw curves
         this.drawCurrentDistos();
     }
@@ -213,34 +217,34 @@ class PreAmp {
                   (bY * Math.pow(t, 2)) + (cY * t) + p0.y;
                 
         return {x: x, y: y};
-    } 
+    }
 
     changeBiasP2(val) {
-      val = parseFloat(val);
-      // On ne déplace que P2 le long de la pente donnée par angle
-      // (angle de la partie linéaire)
-      var incX = val*Math.cos(this.angle);
-      var incY = val*Math.sin(this.angle);
-      this.bezierPoints[2].x = this.initialP2.x + incX;
-      this.bezierPoints[2].y = this.initialP2.y + incY; 
+        val = parseFloat(val);
+        // On ne déplace que P2 le long de la pente donnée par angle
+        // (angle de la partie linéaire)
+        var incX = val*Math.cos(this.angle);
+        var incY = val*Math.sin(this.angle);
+        this.bezierPoints[2].x = this.initialP2.x + incX;
+        this.bezierPoints[2].y = this.initialP2.y + incY; 
     }
 
     changeBiasP1(val) {
-      val = parseFloat(val);
-      // On ne déplace que P1 le long de la pente donnée par angle
-      // (angle de la partie linéaire)
-      var incX = val*Math.cos(this.angle);
-      var incY = val*Math.sin(this.angle);
-      this.bezierPoints[1].x = this.initialP1.x - incX;
-      this.bezierPoints[1].y = this.initialP1.y - incY; 
+        val = parseFloat(val);
+        // On ne déplace que P1 le long de la pente donnée par angle
+        // (angle de la partie linéaire)
+        var incX = val*Math.cos(this.angle);
+        var incY = val*Math.sin(this.angle);
+        this.bezierPoints[1].x = this.initialP1.x - incX;
+        this.bezierPoints[1].y = this.initialP1.y - incY; 
     }
 
-    changeBias(val) {
-      val = parseFloat(val);
-      var k1 = map(val, 0, 10, 100, 0);
-      this.changeBiasX(k1);
-      var k2 = map(val, 0, 10, 0, 100);
-      this.changeBiasY(k2);
+    changeBiasPA(val) {
+        val = parseFloat(val);
+        var k1 = map(val, 0, 10, 100, 0);
+        this.changeBiasX(k1);
+        var k2 = map(val, 0, 10, 0, 100);
+        this.changeBiasY(k2);
     }
 
     changeBiasX(val) {
@@ -254,7 +258,6 @@ class PreAmp {
         this.bezierPoints[1].y = val;
         this.initialP1.y = val;
     }
-
 
     // Returns an array of distorsions values in [0, 10] range
     getDistorsionValue(numChannel) {

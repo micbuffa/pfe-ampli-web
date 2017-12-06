@@ -29,8 +29,6 @@ class AmpController {
 	        this.amp.preamp.changeBezierValuesPA(sliderValue, numDisto, point);
 	        // update view
 	        this.ampViewer.changeBezierLabels(sliderValue, numDisto);
-            // update bias value of channel
-            this.amp.preamp.biasValue[numDisto] = sliderValue;
         }
     }
 
@@ -67,7 +65,7 @@ class AmpController {
       }
     }
 
-    setBezierHandlers() {
+    setCurveHandlers() {
     	// Change distortion on mouse move in Canvas distoDrawer 1
         var canvas1, flag1, rect1, label1, kValue1, angle1, shift1, newK1;
         canvas1 = document.querySelector('#distoDrawerCanvas1');
@@ -90,9 +88,7 @@ class AmpController {
                     if (amp.preamp.distoTypes[0] == "bezier") {
                         shift1 = ((evt.clientX  - rect1.left) / 10).toFixed(1) - initMouseVal;
                         newK1 = parseFloat(initBiasVal) + parseFloat(shift1);
-                    }
-                    else
-                    {
+                    } else {
                         shift1 = ((evt.clientX  - rect1.left) / 10).toFixed(1) - initMouseVal;
                         newK1 = parseFloat(initKVal) + parseFloat(shift1);
                     }
@@ -110,13 +106,12 @@ class AmpController {
                         if (pos<50) {
                             //amp.preamp.changeBiasP2(Math.min(100,100-(pos*2)));
                             //amp.preamp.changeBiasP1(0);
-                        } 
-                        else {
+                        } else {
                             //amp.preamp.changeBiasP1(Math.min(100,(pos*2)-100));
                             //amp.preamp.changeBiasP2(0);
                         }
 
-                        amp.preamp.changeBias(newK1);
+                        amp.preamp.changeBiasPA(newK1);
                         ampCtrl.changeBezierValues(newK1, 0, 0);
                     } else {
                         amp.preamp.highlightValues(label1, kValue1);
@@ -158,9 +153,7 @@ class AmpController {
                     if (amp.preamp.distoTypes[0] == "bezier") {
                         shift2 = ((evt.clientX  - rect2.left) / 10).toFixed(1) - initMouseVal;
                         newK2 = parseFloat(initBiasVal) + parseFloat(shift2);
-                    }
-                    else
-                    {
+                    } else {
                         shift2 = ((evt.clientX  - rect2.left) / 10).toFixed(1) - initMouseVal;
                         newK2 = parseFloat(initKVal) + parseFloat(shift2);
                     }

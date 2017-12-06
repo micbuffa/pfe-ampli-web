@@ -145,13 +145,13 @@
                     <p>BEZIER : Bias level</p>
                     <div class="controls">
                         <label id="bias1label">Bias 1</label>
-                        <input id="bias1slider" type="range" value="10" step="0.1" min="0" max="10" oninput="ampCtrl.changeBezierValues(this.value, 0,0); amp.preamp.changeBias(this.value);"></input>
+                        <input id="bias1slider" type="range" value="10" step="0.1" min="0" max="10" oninput="ampCtrl.changeBezierValues(this.value, 0);"></input>
                         <output id="bias0">10</output>
                     </div>
 
                     <div class="controls">
                         <label id="bias2label">Bias 2</label>
-                        <input id="bias2slider" type="range" value="10" step="0.1" min="0" max="10" oninput="ampCtrl.changeBezierValues(this.value, 1,0); amp.preamp.changeBias(this.value);"></input>
+                        <input id="bias2slider" type="range" value="10" step="0.1" min="0" max="10" oninput="ampCtrl.changeBezierValues(this.value, 1);"></input>
                         <output id="bias1">10</output>
                     </div>
                     <p>

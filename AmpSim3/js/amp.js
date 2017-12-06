@@ -23,7 +23,7 @@ function createAmp(context, input1, input2, ampName) {
     // set default preset
     ampCtrl.setDefaultPreset();
     // enable bezier listeners
-    ampCtrl.setBezierHandlers();
+    ampCtrl.setCurveHandlers();
 
     // connect audio player to amp for previewing presets
     input2.connect(amp.input);
