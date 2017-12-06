@@ -13,6 +13,8 @@ class AmpViewer {
         this.controlsInfo = document.querySelector("#controlsInfo");
         this.equalizerBtn = document.querySelector("#equalizerToggle");
         this.equalizer = document.querySelector("#eqContainer");
+        this.settingsBtn = document.querySelector("#settingsToggle");
+        this.settings = document.querySelector("#settingsContainer");
 	}
 
 	// ------- Amp related handlers -------
@@ -408,6 +410,16 @@ class AmpViewer {
 		} else {
 			this.equalizer.setAttribute('style', 'display:none;');
 			this.equalizerBtn.innerHTML = "Display Equalizer"
+		}
+	}
+
+	changeSettingsDisplay() {
+			if (this.settings.style.display == "none") {
+			this.settings.setAttribute('style', 'display:block;');
+			this.settingsBtn.innerHTML = "Hide extra settings"
+		} else {
+			this.settings.setAttribute('style', 'display:none;');
+			this.settingsBtn.innerHTML = "Display extra settings"
 		}
 	}
 

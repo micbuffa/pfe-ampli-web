@@ -23,10 +23,10 @@ class AmpController {
     }
 
     // Bezier
-    changeBezierValues(sliderValue, numDisto, point) {
+    changeBezierValues(sliderValue, numDisto) {
         if (amp.preamp.distoTypes[numDisto] == "bezier") {
 	        // update processing values
-	        this.amp.preamp.changeBezierValuesPA(sliderValue, numDisto, point);
+	        this.amp.preamp.changeBezierValuesPA(sliderValue, numDisto);
 	        // update view
 	        this.ampViewer.changeBezierLabels(sliderValue, numDisto);
         }
@@ -67,7 +67,7 @@ class AmpController {
 
     setCurveHandlers() {
     	// Change distortion on mouse move in Canvas distoDrawer 1
-        var canvas1, flag1, rect1, label1, kValue1,  bias1label, bias1value, angle1, shift1, newK1;
+        var canvas1, flag1, rect1, label1, kValue1, bias1label, bias1value, angle1, shift1, newK1;
         canvas1 = document.querySelector('#distoDrawerCanvas1');
         label1 = document.querySelector('#k1label');
         bias1label = document.querySelector('#bias1label');
@@ -128,9 +128,7 @@ class AmpController {
                 flag1 = 0;
                 if (amp.preamp.distoTypes[0] == "bezier") {
                     amp.preamp.hideValues(bias1label, bias1value);
-                }
-                else
-                {
+                } else {
                     amp.preamp.hideValues(label1, kValue1);
                 }
                 document.removeEventListener('mousemove', mouseMove1, false);
@@ -176,7 +174,7 @@ class AmpController {
                         newK2 = 10;
                     }
 
-                     // Bezier or other curve
+                    // Bezier or other curve
                     if (amp.preamp.distoTypes[1] == "bezier") {
                         var pos = evt.clientX - canvas2.offsetLeft - rect2.left;
                         if (pos<50) {
@@ -202,9 +200,7 @@ class AmpController {
                 flag2 = 0;
                 if (amp.preamp.distoTypes[1] == "bezier") {
                     amp.preamp.hideValues(bias2label, bias2value);
-                }
-                else
-                {
+                } else {
                     amp.preamp.hideValues(label2, kValue2);
                 }
                 document.removeEventListener('mousemove', mouseMove2, false);
@@ -560,6 +556,10 @@ class AmpController {
 
     eqDisplay() {
     	this.ampViewer.changeEqDisplay();
+    }
+
+    settingsDisplay() {
+    	this.ampViewer.changeSettingsDisplay();
     }
 
 }
