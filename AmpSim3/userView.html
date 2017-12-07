@@ -24,7 +24,7 @@
     <link rel="import" href="./bower_componentsv2/polymer/polymer.html">
     <link rel="import" href="./webcomponents/webaudio-controls.html">
         <link  rel="stylesheet" charset="UTF-8" href="css/translateelement.css">
-        <link  rel="stylesheet" charset="UTF-8" href="css/amp.css">
+        <link  rel="stylesheet" charset="UTF-8" href="css/ampUserView.css">
 
         <style type="text/css">
             table {
@@ -45,7 +45,7 @@
         <p>The preamp is close to the one from the famous Marshall JCM 800 guitar amp.</p>
         <p>Multiple views are possible : <a href="index.html">Debug</a> - <b>User (current)</b></p>
         
-        <article style="display: flex; flex-direction: row; width:100%">
+        <article style="display: flex; flex-direction: row;">
             <section style="flex: 1;">
 
                 <div class="eq">
@@ -176,13 +176,21 @@
                         <label for="convolverCabinetSlider">Cabinet Sim (Dry/Wet)</label>
                         <input type="range" min="0" max="10" step="0.1" value="7.5" id="convolverCabinetSlider" oninput="ampCtrl.changeRoom(this.value);"/>
                         <output id="cabinetGainOutput">2</output>
-                </div>
-                <!-- end amp jsbin -->
 
+
+
+                </div>
+
+
+                <!-- div class="events" id="events" style="background:rgba(128,128,255,0.5);overflow:scroll"></div -->
+                <button type="button" id="controlsInfoBtn" class="buttonControls"  onclick="ampCtrl.controlsInfoDisplay()">Display controls</button>
+
+                <!-- end amp jsbin -->
             </section>
+
             <section style="flex: 4; order: 1;">
-                <button id="settingsToggle" style="position:absolute;left:424px;top:278px;width:352px;" onclick="ampCtrl.settingsDisplay()">Display extra settings</button>
-                <button id="equalizerToggle" style="position:absolute;left:776px;top:278px;width:352px;" onclick="ampCtrl.eqDisplay()">Display Equalizer</button>
+                <button id="settingsToggle" class="buttonControls" style="position:absolute;left:424px;top:278px;width:352px;" onclick="ampCtrl.settingsDisplay()">Display extra settings</button>
+                <button id="equalizerToggle" class="buttonControls" style="margin-left:15px;position:absolute;left:776px;top:278px;width:352px;" onclick="ampCtrl.eqDisplay()">Display Equalizer</button>
                 <div class="ampGUI" style="position:relative;background-image: url('img/userviewmain.png');width:704px;height:228px;padding:0px;">
                     <div>
                         <webaudio-knob id="Knob1"   midilearn="true" step="0.1"  style="position:absolute;left:32px;top:54px" src="img/Prophet.png" value="7"  min="0" max="10" diameter="69" sprites="99" tooltip="Volume" ></webaudio-knob>
@@ -212,8 +220,11 @@
                             <webaudio-switch id="switch2"   midilearn="true" style="position:absolute;left:-64px;top:110px" src="img/switch_toggle.png" value="0" height="45" width="45" tooltip="Switch-B"></webaudio-switch>
                         </div>
                     </div>
+
                     <webaudio-switch id="switch1"    midilearn="true" style="position:absolute;left:640px;top:35px" src="img/switch_toggle.png" value="0" height="45" width="45" tooltip="Switch-A"></webaudio-switch>
                     <webaudio-switch id="led" style="position:absolute;left:651px;top:90px" src="img/led_23_red.png" value="1" height="23" width="23" tooltip="Switch-B"></webaudio-switch>
+
+
                     <button  style="position:absolute;left:570px;top:270px;display:none;" type="button" onclick="ampCtrl.printCurrentAmpValues()">Show current settings in console</button>
                     <button  id="toggleGuitarIn" style="position:absolute;left:30px;top:195px" class="pulse"  type="button" onclick="ampCtrl.toggleGuitarInput(event)">Guitar input: <span style='color:red;'>NOT ACTIVATED</span>, click to toggle on/off!</button>
 
@@ -224,7 +235,7 @@
                     <select id="QFPresetMenu2" style="position:absolute;left:490px;top:196px" onchange="ampCtrl.setPreset()"></select>
 
                     <div id="settingsContainer" style="display:none;">
-                        <div id="moreSettings" style="position:absolute;left:0px;top:229px;background-color:black;width:704px;height:110px;padding:0px;">
+                        <div id="moreSettings">
                             <div style="color:white; position:absolute;left:35px;top:15px;">Input Gain</div>
                             <webaudio-knob id="Knob9" midilearn="true" style="position:absolute;left:44px;top:40px;" src="img/Prophet.png" value="1" default="1" min="0" max="10" step="0.1" diameter="49" sprites="99" tooltip="InputGain"></webaudio-knob>
 
@@ -253,10 +264,9 @@
                         <canvas id="signalDrawerCanvas2" width="100" height="100"></canvas>
                     </div>
             </section>
-        </article>
 
-        <!-- div class="events" id="events" style="background:rgba(128,128,255,0.5);overflow:scroll"></div -->
-        <button type="button" id="controlsInfoBtn" onclick="ampCtrl.controlsInfoDisplay()">Display controls</button>
+
+        </article>
 
         <script type="text/javascript">
             // Binding avec le vrai ampli
