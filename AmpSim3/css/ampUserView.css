@@ -5,7 +5,7 @@ article {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  background-image:url('https://cdn.pixabay.com/photo/2014/04/05/11/39/rain-316580_960_720.jpg');
+  background-image:url('../img/background-article.jpg');
   display: flex;
   flex-direction: column;
   justify-content: space-around;
