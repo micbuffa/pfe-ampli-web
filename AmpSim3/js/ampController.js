@@ -5,6 +5,7 @@ class AmpController {
 		this.ampViewer = ampViewer;
 		this.guitarPluggedIn = false;
 		this.presets = amp.presets;
+		this.normalBuild = true;
 	}
 
 	// ------- Amp related handlers -------
@@ -560,6 +561,16 @@ class AmpController {
 
     settingsDisplay() {
     	this.ampViewer.changeSettingsDisplay();
+    }
+
+    // ------- Experimentation handlers -------
+
+    switchPATS() {
+    	this.normalBuild = !this.normalBuild;
+
+    	this.amp.changeGraph(this.normalBuild);
+
+    	this.ampViewer.switchPATS(this.normalBuild);
     }
 
 }

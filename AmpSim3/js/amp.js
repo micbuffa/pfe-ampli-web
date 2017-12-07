@@ -165,19 +165,15 @@ function Amp(context, ampName) {
         // the very beginning of the amp route
         inputGain.connect(preamp.boost.input);
 
-        // JCM 800 like...
+        // JCM 800 preamp
         preamp.boost.output.connect(preamp.lowShelf1);
         preamp.lowShelf1.connect(preamp.lowShelf2);
         preamp.lowShelf2.connect(preamp.preampStage1Gain);
         preamp.preampStage1Gain.connect(preamp.od[0]);
         preamp.od[0].connect(preamp.highPass1);
         preamp.highPass1.connect(preamp.lowShelf3);
-
         preamp.lowShelf3.connect(preamp.preampStage2Gain);
         preamp.preampStage2Gain.connect(preamp.od[1])
-
-        // end of preamp
-
         preamp.od[1].connect(outputGain);
 
         // tonestack
@@ -201,7 +197,6 @@ function Amp(context, ampName) {
         inputEQ.connect(eq.input);
         eq.output.connect(masterVolume);
         masterVolume.connect(reverb.input);
-
         reverb.output.connect(cabinetSim.input);
         cabinetSim.output.connect(output);
         //eq.output.connect(output);
@@ -209,6 +204,32 @@ function Amp(context, ampName) {
 
         // byPass route
         byPass.connect(output);
+    }
+
+    function changeGraph(normal) {
+        if (normal) {
+            // disconnection phase of TS before PA 
+            preamp.boost.output.disconnect(tonestack.trebleFilter);
+            tonestack.presenceFilter.disconnect(preamp.lowShelf1);
+            outputGain.disconnect(eqlocut);
+            
+            // reconnection phase, PA before TS
+            preamp.boost.output.connect(preamp.lowShelf1);
+            outputGain.connect(tonestack.trebleFilter);
+            tonestack.presenceFilter.connect(eqlocut);
+             
+        } else {
+            // disconnection phase of PA before TS
+            preamp.boost.output.disconnect(preamp.lowShelf1);
+            outputGain.disconnect(tonestack.trebleFilter);
+            tonestack.presenceFilter.disconnect(eqlocut);
+
+            // reconnection phase, TS before PA
+            preamp.boost.output.connect(tonestack.trebleFilter);
+            tonestack.presenceFilter.connect(preamp.lowShelf1);
+            outputGain.connect(eqlocut);   
+        }
+        
     }
 
     function changeOversamplingAmp(cb) {
@@ -325,6 +346,8 @@ function Amp(context, ampName) {
         changeReverbGainAmp: changeReverbGainAmp,
         changeRoomAmp: changeRoomAmp,
         bypassAmp: bypassAmp,
-        bypassEQAmp: bypassEQAmp
+        bypassEQAmp: bypassEQAmp,
+
+        changeGraph: changeGraph
     };
 }

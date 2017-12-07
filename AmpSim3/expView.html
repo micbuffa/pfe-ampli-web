@@ -43,7 +43,7 @@
         <p>Videos with explanations on YouTube: <a href="https://www.youtube.com/watch?v=5q5jRh4qV_w" target="_blank">video1</a> and <a href="https://www.youtube.com/watch?v=7bf3Dgl-qGc" target="_blank">video2</a>. <a href="https://github.com/micbuffa/WebAudio-Guitar-Amplifier-Simulator-3" target="_blank">You may visit the GitHub repo.</a></p>
         <p><b>You need Google Chrome, FireFox Nightly or Opera (the app should support soon other browsers) + don't forget to set the default input in your OS preferences. If you plugged a guitar in, then press the pulsing button in the middle of the Amp to activate it. <br>Otherwise you can try the amp with the audio player on the left, press play and use the preset menu or the buttons/sliders.</b></p>
         <p>The preamp is close to the one from the famous Marshall JCM 800 guitar amp.</p>
-        <p>Multiple views are possible : <b>Dev (current)</b> - <a href="userView.html">User</a> - <a href="expView.html">Experimental</a></p>
+        <p>Multiple views are possible : <a href="index.html">Dev</a> - <a href="userView.html">User</a> - <b>Experimental (current)</b></p>
         
         <article style="display: flex; flex-direction: row; width:100%">
             <section style="flex: 1;">
@@ -177,7 +177,7 @@
 
             </section>
             <section style="flex: 4; order: 1;">
-                <div class="ampGUI" style="position:relative;background-image: url('img/imageprincipalefinienew.png');width:1127px;height:545px;padding:0px;">
+                <div class="ampGUI" style="position:relative;background-image: url('img/expview.png');width:1127px;height:545px;padding:0px;">
                     <div>
                         <webaudio-knob id="Knob1"   midilearn="true" step="0.1"  style="position:absolute;left:66px;top:90px" src="img/Prophet.png" value="7"  min="0" max="10" diameter="69" sprites="99" tooltip="Volume" ></webaudio-knob>
                         <webaudio-knob id="Knob2"    midilearn="true" step="0.1" style="position:absolute;left:136px;top:90px" src="img/Prophet.png" value="2" min="0" max="10" diameter="69" sprites="99" tooltip="Master"></webaudio-knob>
@@ -233,6 +233,15 @@
                     <div style="color:white; position:absolute;left:340px;top:385px">
                         <canvas id="distoDrawerCanvas2" title="Click and maintain to change distortion value" style="margin-right:10px;left-margin:10px;" width="100" height="100"></canvas>
                         <canvas id="signalDrawerCanvas2" width="100" height="100"></canvas>
+                    </div>
+
+                    <div id="experimentalSettings" style="position:absolute;left:0px;top:570px;width:1127px;height:200px;border:1px solid;">
+                        <div style="position:absolute;left:20px;top:0px;"><h3>Experimental settings</h2></div>
+
+                        <button style="position:absolute;left:20px;top:60px;width:200px;" type="button" onclick="ampCtrl.switchPATS()">Switch Preamp and Tonestack</button>
+                        <div id="switchDisplay" style="color:white; position:absolute;left:250px;top:60px;color:black;">Currently : Preamp before Tonestack</div>
+
+                        <div style="color:white; position:absolute;left:250px;top:110px;color:black;">Preamp : 2 Paires de lampes (WS)</div>
                     </div>
             </section>
         </article>
