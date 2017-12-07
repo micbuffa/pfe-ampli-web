@@ -19,26 +19,15 @@
         <script src="js/utils.js"></script>
         <script src="js/distorsionFactory.js"></script>
         <script src="js/curveDrawer.js"></script>
-
-    <script src="./bower_componentsv2/webcomponentsjs/webcomponents-lite.min.js"></script>
-    <link rel="import" href="./bower_componentsv2/polymer/polymer.html">
-    <link rel="import" href="./webcomponents/webaudio-controls.html">
+        
+        <script src="./bower_componentsv2/webcomponentsjs/webcomponents-lite.min.js"></script>
+        <link rel="import" href="./bower_componentsv2/polymer/polymer.html">
+        <link rel="import" href="./webcomponents/webaudio-controls.html">
         <link  rel="stylesheet" charset="UTF-8" href="css/translateelement.css">
         <link  rel="stylesheet" charset="UTF-8" href="css/ampUserView.css">
-
-        <style type="text/css">
-            table {
-                border: 1px solid #666;
-            }
-            table td {
-                border: 1px solid #bbb;
-            }
-        </style>
     </head>
     <body style="background-color:#eee;">
         <h1>Guitar Amp Simulation using WebAudio</a></h1>
- 
-
         <p>Author: Michel Buffa (@micbuffa), GUI with the help of Mahdi Wartani, big thanks to LePou for giving me so many hints too.</p>
         <p>Videos with explanations on YouTube: <a href="https://www.youtube.com/watch?v=5q5jRh4qV_w" target="_blank">video1</a> and <a href="https://www.youtube.com/watch?v=7bf3Dgl-qGc" target="_blank">video2</a>. <a href="https://github.com/micbuffa/WebAudio-Guitar-Amplifier-Simulator-3" target="_blank">You may visit the GitHub repo.</a></p>
         <p><b>You need Google Chrome, FireFox Nightly or Opera (the app should support soon other browsers) + don't forget to set the default input in your OS preferences. If you plugged a guitar in, then press the pulsing button in the middle of the Amp to activate it. <br>Otherwise you can try the amp with the audio player on the left, press play and use the preset menu or the buttons/sliders.</b></p>
@@ -181,10 +170,6 @@
 
                 </div>
 
-
-                <!-- div class="events" id="events" style="background:rgba(128,128,255,0.5);overflow:scroll"></div -->
-                <button type="button" id="controlsInfoBtn" class="buttonControls"  onclick="ampCtrl.controlsInfoDisplay()">Display controls</button>
-
                 <!-- end amp jsbin -->
             </section>
 
@@ -268,142 +253,145 @@
 
         </article>
 
-        <script type="text/javascript">
-            // Binding avec le vrai ampli
-            // Volume
-            var volumeOutputPreAmp = document.querySelector("#Knob1");
-            volumeOutputPreAmp.addEventListener("change", function (evt) {
-                if(ampCtrl !== undefined)
-                    ampCtrl.changeOutputGain(evt.target.value);
-            });
+            <!-- div class="events" id="events" style="background:rgba(128,128,255,0.5);overflow:scroll"></div> -->
+            <button type="button" id="controlsInfoBtn" class="buttonControls"  onclick="ampCtrl.controlsInfoDisplay();">Display controls
+            </button>
 
-            // Master Volume
-            var masterVolume = document.querySelector("#Knob2");
-            masterVolume.addEventListener("change", function (evt) {
-                if(ampCtrl !== undefined)
-                    ampCtrl.changeMasterVolume(evt.target.value);
-            });
-
-            // Drive
-            var drive = document.querySelector("#Knob3");
-            drive.addEventListener("change", function (evt) {
-                if(ampCtrl !== undefined)
-                    ampCtrl.changeDrive(evt.target.value);
-            });
-
-            // Bass
-            var bass = document.querySelector("#Knob4");
-            bass.addEventListener("change", function (evt) {
-                if(ampCtrl !== undefined)
-                    ampCtrl.changeBassFilterValue(evt.target.value);
-            });
-
-            // Middle
-            var mid = document.querySelector("#Knob5");
-            mid.addEventListener("change", function (evt) {
-                if(ampCtrl !== undefined)
-                    ampCtrl.changeMidFilterValue(evt.target.value);
-            });
-
-            // Treble
-            var treble = document.querySelector("#Knob6");
-            treble.addEventListener("change", function (evt) {
-                if(ampCtrl !== undefined)
-                    ampCtrl.changeTrebleFilterValue(evt.target.value);
-            });
-
-            // Reverb
-            var reverb = document.querySelector("#Knob7");
-            reverb.addEventListener("change", function (evt) {
-                if(ampCtrl !== undefined)
-                    ampCtrl.changeReverbGain(evt.target.value);
-            });
-
-            // Presence 
-            var presence = document.querySelector("#Knob8");
-            presence.addEventListener("change", function (evt) {
-                if(ampCtrl !== undefined)
-                    ampCtrl.changePresenceFilterValue(evt.target.value);
-            });
-
-            // input gain
-            var inputGain = document.querySelector("#Knob9");
-            inputGain.addEventListener("change", function (evt) {
-                if(ampCtrl !== undefined)
-                    ampCtrl.changeInputGainValue(evt.target.value);
-            });
-
-            // output gain
-            var outputGain = document.querySelector("#Knob10");
-            outputGain.addEventListener("change", function (evt) {
-                if(ampCtrl !== undefined)
-                    ampCtrl.changeOutputGainValue(evt.target.value);
-            });
-
-            // Equalizer
-            for (var i = 1; i < 7; i++) {
-                createListenerForEQ(i);
-            }
-
-            function createListenerForEQ(i) {
-                var eq = document.querySelector("#slider" + i);
-                eq.addEventListener("change", function (evt) {
+            <script type="text/javascript">
+                // Binding avec le vrai ampli
+                // Volume
+                var volumeOutputPreAmp = document.querySelector("#Knob1");
+                volumeOutputPreAmp.addEventListener("change", function (evt) {
                     if(ampCtrl !== undefined)
-                        ampCtrl.changeGain(evt.target.value, i - 1);
+                        ampCtrl.changeOutputGain(evt.target.value);
                 });
-            }
 
-            // On / Off switch
-            var onOff = document.querySelector("#switch1");
-            onOff.addEventListener("change", function (evt) {
-                if(ampCtrl === undefined) return;
-                
-                var state = {};
-                if (evt.target.value == 1) {
-                    state.checked = false;
-                } else {
-                    state.checked = true;
+                // Master Volume
+                var masterVolume = document.querySelector("#Knob2");
+                masterVolume.addEventListener("change", function (evt) {
+                    if(ampCtrl !== undefined)
+                        ampCtrl.changeMasterVolume(evt.target.value);
+                });
+
+                // Drive
+                var drive = document.querySelector("#Knob3");
+                drive.addEventListener("change", function (evt) {
+                    if(ampCtrl !== undefined)
+                        ampCtrl.changeDrive(evt.target.value);
+                });
+
+                // Bass
+                var bass = document.querySelector("#Knob4");
+                bass.addEventListener("change", function (evt) {
+                    if(ampCtrl !== undefined)
+                        ampCtrl.changeBassFilterValue(evt.target.value);
+                });
+
+                // Middle
+                var mid = document.querySelector("#Knob5");
+                mid.addEventListener("change", function (evt) {
+                    if(ampCtrl !== undefined)
+                        ampCtrl.changeMidFilterValue(evt.target.value);
+                });
+
+                // Treble
+                var treble = document.querySelector("#Knob6");
+                treble.addEventListener("change", function (evt) {
+                    if(ampCtrl !== undefined)
+                        ampCtrl.changeTrebleFilterValue(evt.target.value);
+                });
+
+                // Reverb
+                var reverb = document.querySelector("#Knob7");
+                reverb.addEventListener("change", function (evt) {
+                    if(ampCtrl !== undefined)
+                        ampCtrl.changeReverbGain(evt.target.value);
+                });
+
+                // Presence 
+                var presence = document.querySelector("#Knob8");
+                presence.addEventListener("change", function (evt) {
+                    if(ampCtrl !== undefined)
+                        ampCtrl.changePresenceFilterValue(evt.target.value);
+                });
+
+                // input gain
+                var inputGain = document.querySelector("#Knob9");
+                inputGain.addEventListener("change", function (evt) {
+                    if(ampCtrl !== undefined)
+                        ampCtrl.changeInputGainValue(evt.target.value);
+                });
+
+                // output gain
+                var outputGain = document.querySelector("#Knob10");
+                outputGain.addEventListener("change", function (evt) {
+                    if(ampCtrl !== undefined)
+                        ampCtrl.changeOutputGainValue(evt.target.value);
+                });
+
+                // Equalizer
+                for (var i = 1; i < 7; i++) {
+                    createListenerForEQ(i);
                 }
-                ampCtrl.bypass(state);
-            });
 
-            // EQ on/off switch
-            var eqOnOff = document.querySelector("#switch2");
-            eqOnOff.addEventListener("change", function (evt) {
-                var state = {};
-                if (evt.target.value == 1) {
-                    state.checked = false;
-                } else {
-                    state.checked = true;
+                function createListenerForEQ(i) {
+                    var eq = document.querySelector("#slider" + i);
+                    eq.addEventListener("change", function (evt) {
+                        if(ampCtrl !== undefined)
+                            ampCtrl.changeGain(evt.target.value, i - 1);
+                    });
                 }
-                ampCtrl.bypassEQ(state);
-            });
 
-            var boostOnOff = document.querySelector("#toggleBoost");
-            boostOnOff.addEventListener("change", function (evt) {
-                var state = {};
-                if (evt.target.value == 1) {
-                    state.checked = false;
-                } else {
-                    state.checked = true;
-                }
-                ampCtrl.boostOnOff(state);
-            });
+                // On / Off switch
+                var onOff = document.querySelector("#switch1");
+                onOff.addEventListener("change", function (evt) {
+                    if(ampCtrl === undefined) return;
+                    
+                    var state = {};
+                    if (evt.target.value == 1) {
+                        state.checked = false;
+                    } else {
+                        state.checked = true;
+                    }
+                    ampCtrl.bypass(state);
+                });
 
-        </script>
+                // EQ on/off switch
+                var eqOnOff = document.querySelector("#switch2");
+                eqOnOff.addEventListener("change", function (evt) {
+                    var state = {};
+                    if (evt.target.value == 1) {
+                        state.checked = false;
+                    } else {
+                        state.checked = true;
+                    }
+                    ampCtrl.bypassEQ(state);
+                });
 
-        <div id="controlsInfo" style="display:none;">
-            <table>
-                <tr><th>Operation</th><th>Component</th><th>Description</th></tr>
-                <tr><td><b>Click</b></td><td>Switch/Param</td><td>toggle / activate the switch or focus the param</td></tr>
-                <tr><td><b>Drag</b></td><td>Knob/Slider</td><td>up/right to increase value / down/left to decrease value</td></tr>
-                <tr><td><b>Shift+Drag</b></td><td>Knob/Slider</td><td>fine control</td></tr>
-                <tr><td><b>Ctrl+Click/Command+Click</b></td><td>Knob/Slider/Switch</td><td>set to default value</td></tr>
-                <tr><td><b>Edit with Keyboard</b></td><td>Param</td><td>edit the value directly</td></tr>
-                <tr><td><b>MouseWheel</b></td><td>Knob/Slider</td><td>rotate upward to increase value / downward to decrease value</td></tr>
-                <tr><td><b>Shift+MouseWheel</b></td><td>Knob/Slider</td><td>fine control</td></tr>
-            </table>
-        </div>
+                var boostOnOff = document.querySelector("#toggleBoost");
+                boostOnOff.addEventListener("change", function (evt) {
+                    var state = {};
+                    if (evt.target.value == 1) {
+                        state.checked = false;
+                    } else {
+                        state.checked = true;
+                    }
+                    ampCtrl.boostOnOff(state);
+                });
 
+            </script>
+
+            <div id="controlsInfo" style="display:none;">
+                <table id="tableControlsInfo">
+                    <tr><th>Operation</th><th>Component</th><th>Description</th></tr>
+                    <tr><td><b>Click</b></td><td>Switch/Param</td><td>toggle / activate the switch or focus the param</td></tr>
+                    <tr><td><b>Drag</b></td><td>Knob/Slider</td><td>up/right to increase value / down/left to decrease value</td></tr>
+                    <tr><td><b>Shift+Drag</b></td><td>Knob/Slider</td><td>fine control</td></tr>
+                    <tr><td><b>Ctrl+Click/Command+Click</b></td><td>Knob/Slider/Switch</td><td>set to default value</td></tr>
+                    <tr><td><b>Edit with Keyboard</b></td><td>Param</td><td>edit the value directly</td></tr>
+                    <tr><td><b>MouseWheel</b></td><td>Knob/Slider</td><td>rotate upward to increase value / downward to decrease value</td></tr>
+                    <tr><td><b>Shift+MouseWheel</b></td><td>Knob/Slider</td><td>fine control</td></tr>
+                </table>
+            </div>
     </body>
 </html>
