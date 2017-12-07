@@ -423,4 +423,16 @@ class AmpViewer {
 		}
 	}
 
+	// ------- Experimentation handlers -------
+
+	switchPATS(normal) {
+		var display = document.querySelector("#switchDisplay");
+
+		if (normal) {
+			display.innerHTML = "Currently : Preamp before Tonestack";
+		} else {
+			display.innerHTML = "Currently : Tonestack before Preamp";
+		}
+	}
+
 }
