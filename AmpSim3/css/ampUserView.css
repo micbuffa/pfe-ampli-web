@@ -1,16 +1,35 @@
-article {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  width:91%;
-  background-image:url('../img/background-article.jpg');
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
+@media (max-width:1600px) {
+	article {
+	  width:100%;
+	  -webkit-touch-callout: none;
+	  -webkit-user-select: none;
+	  -khtml-user-select: none;
+	  -moz-user-select: none;
+	  -ms-user-select: none;
+	  user-select: none;
+	  background-image:url('../img/background-article.jpg');
+	  display: flex;
+	  flex-direction: column;
+	  justify-content: space-around;
+	  align-items: center;
+	}
+}
+
+@media (min-width:1600px) {
+	article {
+	  width:90%;
+	  -webkit-touch-callout: none;
+	  -webkit-user-select: none;
+	  -khtml-user-select: none;
+	  -moz-user-select: none;
+	  -ms-user-select: none;
+	  user-select: none;
+	  background-image:url('../img/background-article.jpg');
+	  display: flex;
+	  flex-direction: column;
+	  justify-content: space-around;
+	  align-items: center;
+	}
 }
 
 #moreSettings
@@ -27,7 +46,7 @@ article {
 {
   padding: 10px 15px 11px !important;
   font-size: 18px !important;
-  background-color: rgba(189,193,196,1);
+  background-color: rgb(176, 216, 241);
   font-weight: bold;
   float:left;
   color: black;
@@ -50,7 +69,7 @@ article {
 #tableControlsInfo
 {
    border:1px solid black;
-   background-color: rgba(189,193,196,1);
+   background-color: rgb(176, 216, 241);
    box-shadow: 5px 5px 5px grey;
   -moz-box-shadow: 5px 5px 5px grey;
   -webkit-box-shadow: 5px 5px 5px grey;
@@ -120,7 +139,7 @@ div audio {
   margin: 32px;
   border:1px solid;
   border-radius:15px;
-  background-color: rgba(189,193,196,1);;
+  background-color: rgb(176, 216, 241);
   padding:10px;
   width:300px;
   box-shadow: 5px 5px 5px grey;
