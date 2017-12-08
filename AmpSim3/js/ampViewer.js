@@ -6,6 +6,7 @@ class AmpViewer {
         // Distortion menus
         this.menuDisto1 = document.querySelector("#distorsionMenu1");
         this.menuDisto2 = document.querySelector("#distorsionMenu2");
+        this.menuDisto3 = document.querySelector("#distorsionMenu3");
         this.menuPresets = document.querySelector("#QFPresetMenu2");
         this.menuReverb = document.querySelector("#reverbImpulses");
         this.menuCabinet = document.querySelector("#cabinetImpulses");
@@ -337,6 +338,9 @@ class AmpViewer {
 	createDistoMenus() {
 		this.buildDistoMenu1();
     	this.buildDistoMenu2();
+    	if (this.menuDisto3 != undefined) {
+    		this.buildDistoMenu3();
+    	}
 	}
 
     // Build a drop down menu with all distorsion names
@@ -356,6 +360,16 @@ class AmpViewer {
             option.value = p;
             option.text = p;
             this.menuDisto2.appendChild(option);    
+        }
+    }
+
+	// Build a drop down menu with all distorsion names
+    buildDistoMenu3() {
+        for(var p in this.amp.preamp.wsFactory.distorsionCurves) {
+            var option = document.createElement("option");
+            option.value = p;
+            option.text = p;
+            this.menuDisto3.appendChild(option);    
         }
     }
 
@@ -429,9 +443,9 @@ class AmpViewer {
 		var display = document.querySelector("#switchDisplay");
 
 		if (normal) {
-			display.innerHTML = "Currently : Preamp before Tonestack";
+			display.innerHTML = "Preamp position : before Tonestack";
 		} else {
-			display.innerHTML = "Currently : Tonestack before Preamp";
+			display.innerHTML = "Preamp position : after Tonestack";
 		}
 	}
 

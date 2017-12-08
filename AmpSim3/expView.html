@@ -184,15 +184,13 @@
                          <!-- boost button -->
                         <label style="color:white;position:absolute;left:70px;top:64px">Clean / Disto : </label>
                         <!--
-                        <webaudio-switch style="color:white; position:absolute;left:225px;top:58px" id="toggleBoost" value="0" src="img/led.png" tooltip="Toggle clean/disto channel"></webaudio-switch>
-                      -->
-                       <webaudio-switch   midilearn="true" style="color:white; position:absolute;left:170px;top:58px" id="toggleBoost" value="0" src="img/boostSwitch.png" tooltip="Toggle clean/disto channel"></webaudio-switch>
+                        <webaudio-switch style="color:white;position:absolute;left:225px;top:58px" id="toggleBoost" value="0" src="img/led.png" tooltip="Toggle clean/disto channel"></webaudio-switch>
+                        -->
+                        <webaudio-switch   midilearn="true" style="color:white;position:absolute;left:170px;top:58px" id="toggleBoost" value="0" src="img/boostSwitch.png" tooltip="Toggle clean/disto channel"></webaudio-switch>
                         <!-- drive knob -->
                         <webaudio-knob id="Knob3"     midilearn="true" style="position:absolute;left:207px;top:90px" src="img/Prophet.png" value="0" step="0.1" min="0" max="10" diameter="69" sprites="99" tooltip="Drive"></webaudio-knob>
-                        <select style="position:absolute;left:155px;top:356px"  id="distorsionMenu1" onchange="ampCtrl.changeDisto1Type(this.value);">
-                        </select>
-                        <select style="position:absolute;left:393px;top:356px"  id="distorsionMenu2" onchange="ampCtrl.changeDisto2Type(this.value);">
-                        </select>
+                        <select style="position:absolute;left:155px;top:356px"  id="distorsionMenu1" onchange="ampCtrl.changeDisto1Type(this.value);"></select>
+                        <select style="position:absolute;left:393px;top:356px"  id="distorsionMenu2" onchange="ampCtrl.changeDisto2Type(this.value);"></select>
                         <webaudio-knob id="Knob4"     midilearn="true" style="position:absolute;left:275px;top:90px" src="img/Prophet.png" value="5" min="0" max="10" step="0.1" diameter="69" sprites="99" tooltip="Bass"></webaudio-knob>
                         <webaudio-knob id="Knob5"     midilearn="true" style="position:absolute;left:345px;top:90px" src="img/Prophet.png" value="5" min="0" max="10" step="0.1" diameter="69" sprites="99" tooltip="Middle"></webaudio-knob>
                         <webaudio-knob id="Knob6"     midilearn="true" style="position:absolute;left:415px;top:90px" src="img/Prophet.png" value="5" min="0" max="10" step="0.1" diameter="69" sprites="99" tooltip="Treble"></webaudio-knob>
@@ -215,22 +213,22 @@
                     <webaudio-knob id="Knob9"     midilearn="true" style="position:absolute;left:570px;top:350px" src="img/Prophet.png" value="1" default="1" min="0" max="10" step="0.1" diameter="49" sprites="99" tooltip="InputGain"></webaudio-knob>
 
                     <canvas id="inputSignalCanvas" style="position:absolute;left:630px;top:350px" width=150 height=50></canvas>
-                    <div style="color:white; position:absolute;left:560px;top:405px">Input Gain
+                    <div style="color:white;position:absolute;left:560px;top:405px">Input Gain
                     </div>
                     <webaudio-knob id="Knob10"     midilearn="true" style="position:absolute;left:780px;top:350px" src="img/Prophet.png" value="5" default="5" min="0" max="10" step="0.1" diameter="49" sprites="99" tooltip="OutputGain"></webaudio-knob>
                     <canvas id="outputSignalCanvas" style="position:absolute;left:830px;top:350px" width=150 height=50></canvas>
-                    <div style="color:white; position:absolute;left:763px;top:405px">Output Gain
+                    <div style="color:white;position:absolute;left:763px;top:405px">Output Gain
                     </div>
-                    <label for="QFPresetMenu2" style="color:white; position:absolute;left:790px;top:270px">Presets :</label>
+                    <label for="QFPresetMenu2" style="color:white;position:absolute;left:790px;top:270px">Presets :</label>
                     <select id="QFPresetMenu2" style="position:absolute;left:850px;top:270px" onchange="ampCtrl.setPreset()"></select>
 
-                    <p><div style="color:white; position:absolute;left:100px;top:385px">
+                    <p><div style="color:white;position:absolute;left:100px;top:385px">
                         <canvas id="distoDrawerCanvas1" title="Click and maintain to change distortion value" style="margin-right:10px;left-margin:10px;" width="100" height="100"></canvas>
                         <canvas id="signalDrawerCanvas1" width="100" height="100"></canvas>
                     </div>
-                    <div style="color:white; position:absolute;left:100px;top:495px">Transfer function and distorded signal example...
+                    <div style="color:white;position:absolute;left:100px;top:495px">Transfer function and distorded signal example...
                     </div>
-                    <div style="color:white; position:absolute;left:340px;top:385px">
+                    <div style="color:white;position:absolute;left:340px;top:385px">
                         <canvas id="distoDrawerCanvas2" title="Click and maintain to change distortion value" style="margin-right:10px;left-margin:10px;" width="100" height="100"></canvas>
                         <canvas id="signalDrawerCanvas2" width="100" height="100"></canvas>
                     </div>
@@ -238,10 +236,18 @@
                     <div id="experimentalSettings" style="position:absolute;left:0px;top:570px;width:1127px;height:200px;border:1px solid;">
                         <div style="position:absolute;left:20px;top:0px;"><h3>Experimental settings</h2></div>
 
-                        <button style="position:absolute;left:20px;top:60px;width:200px;" type="button" onclick="ampCtrl.switchPATS()">Switch Preamp and Tonestack</button>
-                        <div id="switchDisplay" style="color:white; position:absolute;left:250px;top:60px;color:black;">Currently : Preamp before Tonestack</div>
+                        <div id="switchDisplay" style="position:absolute;left:20px;top:60px;"><u>Preamp position : before Tonestack</u></div>
+                        <button style="position:absolute;left:270px;top:60px;width:300px;" type="button" onclick="ampCtrl.switchPATS()">Switch Preamp and Tonestack</button>
 
-                        <div style="color:white; position:absolute;left:250px;top:110px;color:black;">Preamp : 2 Paires de lampes (WS)</div>
+                        <div style="position:absolute;left:20px;top:100px;"><u>Preamp : 2 WS (Pairs of lamps)</u></div>
+                        <div style="position:absolute;left:270px;top:100px;">Add new stage with : distortion function = </div>
+                        <select style="position:absolute;left:550px;top:100px" id="distorsionMenu3"></select>
+                        <div style="position:absolute;left:675px;top:100px;">and lowshelf frequency = </div>
+                        <input id="lsfreq" style="position:absolute;left:850px;top:99px;width:50px" type="text">
+                        <div style="position:absolute;left:910px;top:100px;">Hz</div>
+
+                        <button style="position:absolute;left:270px;top:130px;width:300px;" type="submit" onclick="ampCtrl.addPreampLamp();">Add the above preamp stage (WS + HP + LS)</button>
+                        <button style="position:absolute;left:270px;top:160px;width:300px;" type="button" onclick="">Remove last preamp stage</button>
                     </div>
             </section>
         </article>

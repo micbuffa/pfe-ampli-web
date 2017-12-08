@@ -573,4 +573,12 @@ class AmpController {
     	this.ampViewer.switchPATS(this.normalBuild);
     }
 
+    addPreampLamp() {
+    	var type, freq;
+    	type = document.querySelector("#distorsionMenu3");
+    	freq = document.querySelector("#lsfreq");
+
+    	console.log(type.value, freq.value)
+    }
+
 }
