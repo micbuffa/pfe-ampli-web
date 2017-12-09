@@ -8,12 +8,11 @@
 	  -moz-user-select: none;
 	  -ms-user-select: none;
 	  user-select: none;
-
 	  background-image:url('../img/userViewAmpli.jpg');
     z-index:100;
     background-repeat: no-repeat;
-    background-position: 415px 120px;
-
+    background-position: 400px 90px;
+    padding-bottom:50px;
 	  display: flex;
 	  flex-direction: column;
 	  justify-content: space-around;
@@ -30,13 +29,11 @@
 	  -moz-user-select: none;
 	  -ms-user-select: none;
 	  user-select: none;
-	  
     background-image:url('../img/userViewAmpli.jpg');
     z-index:100;
     background-repeat: no-repeat;
-    background-position: 415px 120px;
-
-    
+    background-position: 400px 90px;
+    padding-bottom:50px;
 	  display: flex;
 	  flex-direction: column;
 	  justify-content: space-around;
