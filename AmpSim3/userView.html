@@ -33,225 +33,228 @@
         <p><b>You need Google Chrome, FireFox Nightly or Opera (the app should support soon other browsers) + don't forget to set the default input in your OS preferences. If you plugged a guitar in, then press the pulsing button in the middle of the Amp to activate it. <br>Otherwise you can try the amp with the audio player on the left, press play and use the preset menu or the buttons/sliders.</b></p>
         <p>The preamp is close to the one from the famous Marshall JCM 800 guitar amp.<br />
 		Multiple views are possible : <a href="index.html">Dev</a> - <b>User (current)</b> - <a href="expView.html">Experimental</a></p>
-        
-        <article style="display: flex; flex-direction: row;">
-            <section style="flex: 1;">
 
-                <div class="eq">
-                    <p>Press play to preview presets</p>
-                    <audio id="player" controls  loop>
-                        <source src="assets/audio/BasketCase Greenday riff DI.mp3">
-                        <source src="assets/audio/BasketCase Greenday riff DI.ogg">
-                        Your browser does not support the audio tag.
-                    </audio>
-                    <div id="demoSample">Choose a demo sample: 
-                        <select id="demoSampleMenu" onchange="ampCtrl.changeDemoSample(this.value);">
-                          <option value="0">Metal riff 1</option>
-                          <option value="1">Metal riff 2</option>
-                          <!-- <option value="2">Blues solo 1</option> -->
-                          <option value="3">Cool rythm</option>
-                          <option value="4">Trash metal</option>
-                          <option value="5">Black Sabbath Rythm</option>
-                          <option value="6">Black Sabbath Solo</option>
-                          <option value="7">Basketcase Riff</option>
-                          <option value="8">In Bloom riff</option>
-                          <option value="9">Muse solo</option>
-                          <option value="10">Muse rythm</option>
-                          <!-- <option value="11">Simple guitar riff</option> -->
-                        </select>
+        <div id="fond">
+            <article style="display: flex; flex-direction: row;">
+               
+                <section style="flex: 1;">
+
+                    <div class="eq">
+                        <p>Press play to preview presets</p>
+                        <audio id="player" controls  loop>
+                            <source src="assets/audio/BasketCase Greenday riff DI.mp3">
+                            <source src="assets/audio/BasketCase Greenday riff DI.ogg">
+                            Your browser does not support the audio tag.
+                        </audio>
+                        <div id="demoSample">Choose a demo sample: 
+                            <select id="demoSampleMenu" onchange="ampCtrl.changeDemoSample(this.value);">
+                              <option value="0">Metal riff 1</option>
+                              <option value="1">Metal riff 2</option>
+                              <!-- <option value="2">Blues solo 1</option> -->
+                              <option value="3">Cool rythm</option>
+                              <option value="4">Trash metal</option>
+                              <option value="5">Black Sabbath Rythm</option>
+                              <option value="6">Black Sabbath Solo</option>
+                              <option value="7">Basketcase Riff</option>
+                              <option value="8">In Bloom riff</option>
+                              <option value="9">Muse solo</option>
+                              <option value="10">Muse rythm</option>
+                              <!-- <option value="11">Simple guitar riff</option> -->
+                            </select>
+                        </div>
+                        <div id="advancedControls" style="display:none">
+                            <p>Preamp internals</p>
+                            <div class="controls">
+                                <label>lowShelf1 Freq</label>
+                                <input id="lowShelf1FreqSlider" type="range" value="720" step="1" min="500" max="1000" oninput="ampCtrl.changeLowShelf1FrequencyValue(this.value, 0);"></input>
+                                <output id="lowShelf1Freq">720 Hz</output>
+                            </div>
+                            <div class="controls">
+                                <label>lowShelf1 Gain</label>
+                                <input id="lowShelf1GainSlider" type="range" value="-6" step="0.1" min="-10" max="0" oninput="ampCtrl.changeLowShelf1GainValue(this.value, 0);"></input>
+                                <output id="lowShelf1Gain">-6 dB</output>
+                            </div>
+                            <div class="controls">
+                                <label>lowShelf2 Freq</label>
+                                <input id="lowShelf2FreqSlider" type="range" value="320" step="1" min="300" max="400" oninput="ampCtrl.changeLowShelf2FrequencyValue(this.value, 0);"></input>
+                                <output id="lowShelf2Freq">320 Hz</output>
+                            </div>
+                            <div class="controls">
+                                <label>lowShelf2 Gain</label>
+                                <input id="lowShelf2GainSlider" type="range" value="-6" step="0.1" min="-12" max="10" oninput="ampCtrl.changeLowShelf2GainValue(this.value, 0);"></input>
+                                <output id="lowShelf2Gain">-5 dB</output>
+                            </div>
+
+                            <div class="controls">
+                                <label>Stage 1 Gain</label>
+                                <input id="preampStage1GainSlider" type="range" value="0.1" step="0.01" min="0" max="10" oninput="ampCtrl.changePreampStage1GainValue(this.value, 0);"></input>
+                                <output id="preampStage1Gain">1</output>
+                            </div>
+
+                            <div class="controls">
+                                <label>HighPass1 freq</label>
+                                <input id="highPass1FreqSlider" type="range" value="6" step="1" min="5" max="7" oninput="ampCtrl.changeHighPass1FrequencyValue(this.value, 0);"></input>
+                                <output id="highPass1Freq">6 Hz</output>
+                            </div>
+                            <div class="controls">
+                                <label>HighPass1 Q</label>
+                                <input id="highPass1QSlider" type="range" value="0.7071" step="0.001" min="0" max="5" oninput="ampCtrl.changeHighPass1QValue(this.value, 0);"></input>
+                                <output id="highPass1Q">0.7071</output>
+                            </div>
+
+                            <div class="controls">
+                                <label>lowShelf3 Freq</label>
+                                <input id="lowShelf3FreqSlider" type="range" value="720" step="1" min="300" max="1000" oninput="ampCtrl.changeLowShelf3FrequencyValue(this.value, 0);"></input>
+                                <output id="lowShelf3Freq">720 Hz</output>
+                            </div>
+                            <div class="controls">
+                                <label>lowShelf3 Gain</label>
+                                <input id="lowShelf3GainSlider" type="range" value="-6" step="0.1" min="-10" max="0" oninput="ampCtrl.changeLowShelf3GainValue(this.value, 0);"></input>
+                                <output id="lowShelf3Gain">-6 dB</output>
+                            </div>
+
+                            <div class="controls">
+                                <label>Stage 2 Gain</label>
+                                <input id="preampStage2GainSlider" type="range" value="1" step="0.01" min="0" max="10" oninput="ampCtrl.changePreampStage2GainValue(this.value, 0);"></input>
+                                <output id="preampStage2Gain">1</output>
+                            </div>
+                           <p>
+                            <div class="onoffswitch">
+                                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch"  onclick="ampCtrl.changeOversampling(this);">
+                                <label class="onoffswitch-label" for="myonoffswitch">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                            </div>
+
+                            <p>BEZIER : Bias level</p>
+                            <div class="controls">
+                                <label id="bias1label">Bias 1</label>
+                                <input id="bias1slider" type="range" value="10" step="0.1" min="0" max="10" oninput="ampCtrl.changeBezierValues(this.value, 0,0); amp.preamp.changeBias(this.value);"></input>
+                                <output id="bias0">10</output>
+                            </div>
+
+                            <div class="controls">
+                                <label id="bias2label">Bias 2</label>
+                                <input id="bias2slider" type="range" value="10" step="0.1" min="0" max="10" oninput="ampCtrl.changeBezierValues(this.value, 1,0); amp.preamp.changeBias(this.value);"></input>
+                                <output id="bias1">10</output>
+                            </div>
+                        </div>
                     </div>
-                    <div id="advancedControls" style="display:none">
-                        <p>Preamp internals</p>
+                    <div class="eq">
+
+                        <h2><u>Amp Settings</u></h2>
+
+                        <p><b>DRIVE</b> : distorsion levels</p>
                         <div class="controls">
-                            <label>lowShelf1 Freq</label>
-                            <input id="lowShelf1FreqSlider" type="range" value="720" step="1" min="500" max="1000" oninput="ampCtrl.changeLowShelf1FrequencyValue(this.value, 0);"></input>
-                            <output id="lowShelf1Freq">720 Hz</output>
-                        </div>
-                        <div class="controls">
-                            <label>lowShelf1 Gain</label>
-                            <input id="lowShelf1GainSlider" type="range" value="-6" step="0.1" min="-10" max="0" oninput="ampCtrl.changeLowShelf1GainValue(this.value, 0);"></input>
-                            <output id="lowShelf1Gain">-6 dB</output>
-                        </div>
-                        <div class="controls">
-                            <label>lowShelf2 Freq</label>
-                            <input id="lowShelf2FreqSlider" type="range" value="320" step="1" min="300" max="400" oninput="ampCtrl.changeLowShelf2FrequencyValue(this.value, 0);"></input>
-                            <output id="lowShelf2Freq">320 Hz</output>
-                        </div>
-                        <div class="controls">
-                            <label>lowShelf2 Gain</label>
-                            <input id="lowShelf2GainSlider" type="range" value="-6" step="0.1" min="-12" max="10" oninput="ampCtrl.changeLowShelf2GainValue(this.value, 0);"></input>
-                            <output id="lowShelf2Gain">-5 dB</output>
+                            <label id="k1label">K1</label>
+                            <input id="K1slider" type="range" value="4" step="0.1" min="0" max="10" oninput="ampCtrl.changeDistorsionValues(this.value, 0);"></input>
+                            <output id="k0">4</output>
                         </div>
 
                         <div class="controls">
-                            <label>Stage 1 Gain</label>
-                            <input id="preampStage1GainSlider" type="range" value="0.1" step="0.01" min="0" max="10" oninput="ampCtrl.changePreampStage1GainValue(this.value, 0);"></input>
-                            <output id="preampStage1Gain">1</output>
+                            <label id="k2label">K2</label>
+                            <input id="K2slider" type="range" value="4" step="0.1" min="0" max="10" oninput="ampCtrl.changeDistorsionValues(this.value, 1);"></input>
+                            <output id="k1">4</output>
                         </div>
 
-                        <div class="controls">
-                            <label>HighPass1 freq</label>
-                            <input id="highPass1FreqSlider" type="range" value="6" step="1" min="5" max="7" oninput="ampCtrl.changeHighPass1FrequencyValue(this.value, 0);"></input>
-                            <output id="highPass1Freq">6 Hz</output>
-                        </div>
-                        <div class="controls">
-                            <label>HighPass1 Q</label>
-                            <input id="highPass1QSlider" type="range" value="0.7071" step="0.001" min="0" max="5" oninput="ampCtrl.changeHighPass1QValue(this.value, 0);"></input>
-                            <output id="highPass1Q">0.7071</output>
-                        </div>
+                        <p>
+                            <b>CABINET IMPULSE : </b><br></br>
+                            <select id="cabinetImpulses" oninput="ampCtrl.changeCabinetImpulse(this.value);">
+                            </select>
 
-                        <div class="controls">
-                            <label>lowShelf3 Freq</label>
-                            <input id="lowShelf3FreqSlider" type="range" value="720" step="1" min="300" max="1000" oninput="ampCtrl.changeLowShelf3FrequencyValue(this.value, 0);"></input>
-                            <output id="lowShelf3Freq">720 Hz</output>
-                        </div>
-                        <div class="controls">
-                            <label>lowShelf3 Gain</label>
-                            <input id="lowShelf3GainSlider" type="range" value="-6" step="0.1" min="-10" max="0" oninput="ampCtrl.changeLowShelf3GainValue(this.value, 0);"></input>
-                            <output id="lowShelf3Gain">-6 dB</output>
-                        </div>
+                        <p>
+                            <label for="convolverCabinetSlider">Cabinet Sim (Dry/Wet)</label>
+                            <input type="range" min="0" max="10" step="0.1" value="7.5" id="convolverCabinetSlider" oninput="ampCtrl.changeRoom(this.value);"/>
+                            <output id="cabinetGainOutput">2</output>
 
-                        <div class="controls">
-                            <label>Stage 2 Gain</label>
-                            <input id="preampStage2GainSlider" type="range" value="1" step="0.01" min="0" max="10" oninput="ampCtrl.changePreampStage2GainValue(this.value, 0);"></input>
-                            <output id="preampStage2Gain">1</output>
-                        </div>
-                       <p>
-                        <div class="onoffswitch">
-                            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch"  onclick="ampCtrl.changeOversampling(this);">
-                            <label class="onoffswitch-label" for="myonoffswitch">
-                                <span class="onoffswitch-inner"></span>
-                                <span class="onoffswitch-switch"></span>
-                            </label>
-                        </div>
 
-                        <p>BEZIER : Bias level</p>
-                        <div class="controls">
-                            <label id="bias1label">Bias 1</label>
-                            <input id="bias1slider" type="range" value="10" step="0.1" min="0" max="10" oninput="ampCtrl.changeBezierValues(this.value, 0,0); amp.preamp.changeBias(this.value);"></input>
-                            <output id="bias0">10</output>
-                        </div>
 
-                        <div class="controls">
-                            <label id="bias2label">Bias 2</label>
-                            <input id="bias2slider" type="range" value="10" step="0.1" min="0" max="10" oninput="ampCtrl.changeBezierValues(this.value, 1,0); amp.preamp.changeBias(this.value);"></input>
-                            <output id="bias1">10</output>
-                        </div>
                     </div>
+
+                    <!-- end amp jsbin -->
+                </section>
+
+                <section style="flex: 4; order: 1;">
+                    <button id="settingsToggle" class="buttonControls" style="position:absolute;left:424px;top:278px;width:352px;" onclick="ampCtrl.settingsDisplay()">Display extra settings</button>
+                    <button id="equalizerToggle" class="buttonControls" style="margin-left:15px;position:absolute;left:776px;top:278px;width:352px;" onclick="ampCtrl.eqDisplay()">Display Equalizer</button>
+                    <div class="ampGUI" style="position:relative;background-image: url('img/userviewmain.png');width:704px;height:228px;padding:0px;">
+                        <div>
+                            <webaudio-knob id="Knob1"   midilearn="true" step="0.1"  style="position:absolute;left:32px;top:54px" src="img/Prophet.png" value="7"  min="0" max="10" diameter="69" sprites="99" tooltip="Volume" ></webaudio-knob>
+                            <webaudio-knob id="Knob2"    midilearn="true" step="0.1" style="position:absolute;left:104px;top:54px" src="img/Prophet.png" value="2" min="0" max="10" diameter="69" sprites="99" tooltip="Master"></webaudio-knob>
+                            <!-- boost button -->
+                            <label style="color:white;position:absolute;left:30px;top:24px">Clean / Disto : </label>
+                            <!--
+                            <webaudio-switch style="color:white; position:absolute;left:225px;top:58px" id="toggleBoost" value="0" src="img/led.png" tooltip="Toggle clean/disto channel"></webaudio-switch>
+                            -->
+                            <webaudio-switch   midilearn="true" style="color:white; position:absolute;left:130px;top:20px" id="toggleBoost" value="0" src="img/boostSwitch.png" tooltip="Toggle clean/disto channel"></webaudio-switch>
+                            <!-- drive knob -->
+                            <webaudio-knob id="Knob3"     midilearn="true" style="position:absolute;left:175px;top:54px" src="img/Prophet.png" value="0" step="0.1" min="0" max="10" diameter="69" sprites="99" tooltip="Drive"></webaudio-knob>
+                            <webaudio-knob id="Knob4"     midilearn="true" style="position:absolute;left:243px;top:54px" src="img/Prophet.png" value="5" min="0" max="10" step="0.1" diameter="69" sprites="99" tooltip="Bass"></webaudio-knob>
+                            <webaudio-knob id="Knob5"     midilearn="true" style="position:absolute;left:313px;top:54px" src="img/Prophet.png" value="5" min="0" max="10" step="0.1" diameter="69" sprites="99" tooltip="Middle"></webaudio-knob>
+                            <webaudio-knob id="Knob6"     midilearn="true" style="position:absolute;left:383px;top:54px" src="img/Prophet.png" value="5" min="0" max="10" step="0.1" diameter="69" sprites="99" tooltip="Treble"></webaudio-knob>
+                            <webaudio-knob id="Knob7"     midilearn="true" style="position:absolute;left:454px;top:54px" src="img/Prophet.png" value="2" min="0" max="10" step="0.1" diameter="69" sprites="99" tooltip="Reverb"></webaudio-knob>
+                            <webaudio-knob id="Knob8"     midilearn="true" style="position:absolute;left:525px;top:54px" src="img/Prophet.png" value="5" min="0" max="10" step="0.1" diameter="69" sprites="99" tooltip="Presence"></webaudio-knob>
+                        </div>
+                        <div id="eqContainer" style="display:none">
+                            <div id="eqSliders" style="position:absolute;left:705px;background-image:url('img/uservieweq.png');width:355px;height:177px;padding:0px;">
+                                <webaudio-slider id="slider1"   midilearn="true" Units="Db" style="position:absolute;left:68px;top:27px" src="img/vsliderbody.png" knobsrc="img/vsliderknob.png" value="0" min="-12" max="12" step="1" basewidth="24" height="128" knobwidth="24" knobheight="24" ditchLength="100" tooltip="Slider1"></webaudio-slider>
+                                <webaudio-slider id="slider2"   midilearn="true" Units="Db" style="position:absolute;left:111.5px;top:26px" src="img/vsliderbody.png" knobsrc="img/vsliderknob.png" value="0" min="-12" max="12" step="1" width="24" height="128" knobwidth="24" knobheight="24" ditchLength="100"  tooltip="Slider2"></webaudio-slider>
+                                <webaudio-slider id="slider3"   midilearn="true" Units="Db" style="position:absolute;left:157px;top:26px" src="img/vsliderbody.png" knobsrc="img/vsliderknob.png" value="0" min="-12" max="12" step="1" width="24" height="128" knobwidth="24" knobheight="24" ditchLength="100" tooltip="Slider3"></webaudio-slider>
+                                <webaudio-slider id="slider4"   midilearn="true" Units="Db" style="position:absolute;left:202px;top:26px" src="img/vsliderbody.png" knobsrc="img/vsliderknob.png" value="0" min="-12" max="12" step="1" width="24" height="128" knobwidth="24" knobheight="24" ditchLength="100" units="%" tooltip="Slider4"></webaudio-slider>
+                                <webaudio-slider id="slider5"   midilearn="true" Units="Db" style="position:absolute;left:245px;top:26px" src="img/vsliderbody.png" knobsrc="img/vsliderknob.png" value="0" min="-12" max="12" step="1" width="24" height="128" knobwidth="24" knobheight="24" ditchLength="100" tooltip="Slider5"></webaudio-slider>
+                                <webaudio-slider id="slider6"   midilearn="true" Units="Db" style="position:absolute;left:288px;top:26px" src="img/vsliderbody.png" knobsrc="img/vsliderknob.png" value="0" min="-12" max="12"" step="1" width="24" height="128" knobwidth="24" knobheight="24" ditchLength="100" units="%" tooltip="Slider6"></webaudio-slider>      
+                                <webaudio-switch id="switch2"   midilearn="true" style="position:absolute;left:-64px;top:110px" src="img/switch_toggle.png" value="0" height="45" width="45" tooltip="Switch-B"></webaudio-switch>
+                            </div>
+                        </div>
+
+                        <webaudio-switch id="switch1"    midilearn="true" style="position:absolute;left:640px;top:35px" src="img/switch_toggle.png" value="0" height="45" width="45" tooltip="Switch-A"></webaudio-switch>
+                        <webaudio-switch id="led" style="position:absolute;left:651px;top:90px" src="img/led_23_red.png" value="1" height="23" width="23" tooltip="Switch-B"></webaudio-switch>
+
+
+                        <button  style="position:absolute;left:570px;top:270px;display:none;" type="button" onclick="ampCtrl.printCurrentAmpValues()">Show current settings in console</button>
+                        <button  id="toggleGuitarIn" style="position:absolute;left:30px;top:195px" class="pulse"  type="button" onclick="ampCtrl.toggleGuitarInput(event)">Guitar input: <span style='color:red;'>NOT ACTIVATED</span>, click to toggle on/off!</button>
+
+                        <canvas id="inputSignalCanvas" style="position:absolute;left:630px;top:350px;display:none;" width=150 height=50></canvas>
+                        <canvas id="outputSignalCanvas" style="position:absolute;left:830px;top:350px;display:none;" width=150 height=50></canvas>
+
+                        <label for="QFPresetMenu2" style="color:white; position:absolute;left:420px;top:197px">Presets :</label>
+                        <select id="QFPresetMenu2" style="position:absolute;left:490px;top:196px" onchange="ampCtrl.setPreset()"></select>
+
+                        <div id="settingsContainer" style="display:none;">
+                            <div id="moreSettings">
+                                <div style="color:white; position:absolute;left:35px;top:15px;">Input Gain</div>
+                                <webaudio-knob id="Knob9" midilearn="true" style="position:absolute;left:44px;top:40px;" src="img/Prophet.png" value="1" default="1" min="0" max="10" step="0.1" diameter="49" sprites="99" tooltip="InputGain"></webaudio-knob>
+
+                                <div style="color:white; position:absolute;left:156px;top:15px;">Distortion 1</div>
+                                <select style="position:absolute;left:136px;top:51px;" id="distorsionMenu1" onchange="ampCtrl.changeDisto1Type(this.value);"></select>
+
+                                <div style="color:white; position:absolute;left:296px;top:15px;">Distortion 2</div>
+                                <select style="position:absolute;left:276px;top:51px;" id="distorsionMenu2" onchange="ampCtrl.changeDisto2Type(this.value);"></select>
+
+                                <div style="color:white; position:absolute;left:459px;top:15px;">Reverb</div>
+                                <select style="position:absolute;left:416px;top:51px;" id="reverbImpulses" oninput="ampCtrl.changeReverbImpulse(this.value);"></select>
+
+                                <div style="color:white; position:absolute;left:584px;top:15px;">Output Gain</div>
+                                <webaudio-knob id="Knob10" midilearn="true" style="position:absolute;left:600px;top:40px;" src="img/Prophet.png" value="5" default="5" min="0" max="10" step="0.1" diameter="49" sprites="99" tooltip="OutputGain"></webaudio-knob>
+                            </div>
+                        </div>
+
+                        <p><div style="color:white; position:absolute;left:100px;top:385px;display:none;">
+                            <canvas id="distoDrawerCanvas1" title="Click and maintain to change distortion value" style="margin-right:10px;left-margin:10px;" width="100" height="100"></canvas>
+                            <canvas id="signalDrawerCanvas1" width="100" height="100"></canvas>
+                        </div>
+                        <div style="color:white; position:absolute;left:100px;top:495px;display:none;">Transfer function and distorded signal example...
+                        </div>
+                        <div style="color:white; position:absolute;left:340px;top:385px;display:none;">
+                            <canvas id="distoDrawerCanvas2" title="Click and maintain to change distortion value" style="margin-right:10px;left-margin:10px;" width="100" height="100"></canvas>
+                            <canvas id="signalDrawerCanvas2" width="100" height="100"></canvas>
+                        </div>
+                </section>
                 </div>
-                <div class="eq">
 
-                    <h2><u>Amp Settings</u></h2>
-
-                    <p><b>DRIVE</b> : distorsion levels</p>
-                    <div class="controls">
-                        <label id="k1label">K1</label>
-                        <input id="K1slider" type="range" value="4" step="0.1" min="0" max="10" oninput="ampCtrl.changeDistorsionValues(this.value, 0);"></input>
-                        <output id="k0">4</output>
-                    </div>
-
-                    <div class="controls">
-                        <label id="k2label">K2</label>
-                        <input id="K2slider" type="range" value="4" step="0.1" min="0" max="10" oninput="ampCtrl.changeDistorsionValues(this.value, 1);"></input>
-                        <output id="k1">4</output>
-                    </div>
-
-                    <p>
-                        <b>CABINET IMPULSE : </b><br></br>
-                        <select id="cabinetImpulses" oninput="ampCtrl.changeCabinetImpulse(this.value);">
-                        </select>
-
-                    <p>
-                        <label for="convolverCabinetSlider">Cabinet Sim (Dry/Wet)</label>
-                        <input type="range" min="0" max="10" step="0.1" value="7.5" id="convolverCabinetSlider" oninput="ampCtrl.changeRoom(this.value);"/>
-                        <output id="cabinetGainOutput">2</output>
-
-
-
-                </div>
-
-                <!-- end amp jsbin -->
-            </section>
-
-            <section style="flex: 4; order: 1;">
-                <button id="settingsToggle" class="buttonControls" style="position:absolute;left:424px;top:278px;width:352px;" onclick="ampCtrl.settingsDisplay()">Display extra settings</button>
-                <button id="equalizerToggle" class="buttonControls" style="margin-left:15px;position:absolute;left:776px;top:278px;width:352px;" onclick="ampCtrl.eqDisplay()">Display Equalizer</button>
-                <div class="ampGUI" style="position:relative;background-image: url('img/userviewmain.png');width:704px;height:228px;padding:0px;">
-                    <div>
-                        <webaudio-knob id="Knob1"   midilearn="true" step="0.1"  style="position:absolute;left:32px;top:54px" src="img/Prophet.png" value="7"  min="0" max="10" diameter="69" sprites="99" tooltip="Volume" ></webaudio-knob>
-                        <webaudio-knob id="Knob2"    midilearn="true" step="0.1" style="position:absolute;left:104px;top:54px" src="img/Prophet.png" value="2" min="0" max="10" diameter="69" sprites="99" tooltip="Master"></webaudio-knob>
-                        <!-- boost button -->
-                        <label style="color:white;position:absolute;left:30px;top:24px">Clean / Disto : </label>
-                        <!--
-                        <webaudio-switch style="color:white; position:absolute;left:225px;top:58px" id="toggleBoost" value="0" src="img/led.png" tooltip="Toggle clean/disto channel"></webaudio-switch>
-                        -->
-                        <webaudio-switch   midilearn="true" style="color:white; position:absolute;left:130px;top:20px" id="toggleBoost" value="0" src="img/boostSwitch.png" tooltip="Toggle clean/disto channel"></webaudio-switch>
-                        <!-- drive knob -->
-                        <webaudio-knob id="Knob3"     midilearn="true" style="position:absolute;left:175px;top:54px" src="img/Prophet.png" value="0" step="0.1" min="0" max="10" diameter="69" sprites="99" tooltip="Drive"></webaudio-knob>
-                        <webaudio-knob id="Knob4"     midilearn="true" style="position:absolute;left:243px;top:54px" src="img/Prophet.png" value="5" min="0" max="10" step="0.1" diameter="69" sprites="99" tooltip="Bass"></webaudio-knob>
-                        <webaudio-knob id="Knob5"     midilearn="true" style="position:absolute;left:313px;top:54px" src="img/Prophet.png" value="5" min="0" max="10" step="0.1" diameter="69" sprites="99" tooltip="Middle"></webaudio-knob>
-                        <webaudio-knob id="Knob6"     midilearn="true" style="position:absolute;left:383px;top:54px" src="img/Prophet.png" value="5" min="0" max="10" step="0.1" diameter="69" sprites="99" tooltip="Treble"></webaudio-knob>
-                        <webaudio-knob id="Knob7"     midilearn="true" style="position:absolute;left:454px;top:54px" src="img/Prophet.png" value="2" min="0" max="10" step="0.1" diameter="69" sprites="99" tooltip="Reverb"></webaudio-knob>
-                        <webaudio-knob id="Knob8"     midilearn="true" style="position:absolute;left:525px;top:54px" src="img/Prophet.png" value="5" min="0" max="10" step="0.1" diameter="69" sprites="99" tooltip="Presence"></webaudio-knob>
-                    </div>
-                    <div id="eqContainer" style="display:none">
-                        <div id="eqSliders" style="position:absolute;left:705px;background-image:url('img/uservieweq.png');width:365px;height:188px;padding:0px;">
-                            <webaudio-slider id="slider1"   midilearn="true" Units="Db" style="position:absolute;left:68px;top:27px" src="img/vsliderbody.png" knobsrc="img/vsliderknob.png" value="0" min="-12" max="12" step="1" basewidth="24" height="128" knobwidth="24" knobheight="24" ditchLength="100" tooltip="Slider1"></webaudio-slider>
-                            <webaudio-slider id="slider2"   midilearn="true" Units="Db" style="position:absolute;left:111.5px;top:26px" src="img/vsliderbody.png" knobsrc="img/vsliderknob.png" value="0" min="-12" max="12" step="1" width="24" height="128" knobwidth="24" knobheight="24" ditchLength="100"  tooltip="Slider2"></webaudio-slider>
-                            <webaudio-slider id="slider3"   midilearn="true" Units="Db" style="position:absolute;left:157px;top:26px" src="img/vsliderbody.png" knobsrc="img/vsliderknob.png" value="0" min="-12" max="12" step="1" width="24" height="128" knobwidth="24" knobheight="24" ditchLength="100" tooltip="Slider3"></webaudio-slider>
-                            <webaudio-slider id="slider4"   midilearn="true" Units="Db" style="position:absolute;left:202px;top:26px" src="img/vsliderbody.png" knobsrc="img/vsliderknob.png" value="0" min="-12" max="12" step="1" width="24" height="128" knobwidth="24" knobheight="24" ditchLength="100" units="%" tooltip="Slider4"></webaudio-slider>
-                            <webaudio-slider id="slider5"   midilearn="true" Units="Db" style="position:absolute;left:245px;top:26px" src="img/vsliderbody.png" knobsrc="img/vsliderknob.png" value="0" min="-12" max="12" step="1" width="24" height="128" knobwidth="24" knobheight="24" ditchLength="100" tooltip="Slider5"></webaudio-slider>
-                            <webaudio-slider id="slider6"   midilearn="true" Units="Db" style="position:absolute;left:288px;top:26px" src="img/vsliderbody.png" knobsrc="img/vsliderknob.png" value="0" min="-12" max="12"" step="1" width="24" height="128" knobwidth="24" knobheight="24" ditchLength="100" units="%" tooltip="Slider6"></webaudio-slider>      
-                            <webaudio-switch id="switch2"   midilearn="true" style="position:absolute;left:-64px;top:110px" src="img/switch_toggle.png" value="0" height="45" width="45" tooltip="Switch-B"></webaudio-switch>
-                        </div>
-                    </div>
-
-                    <webaudio-switch id="switch1"    midilearn="true" style="position:absolute;left:640px;top:35px" src="img/switch_toggle.png" value="0" height="45" width="45" tooltip="Switch-A"></webaudio-switch>
-                    <webaudio-switch id="led" style="position:absolute;left:651px;top:90px" src="img/led_23_red.png" value="1" height="23" width="23" tooltip="Switch-B"></webaudio-switch>
-
-
-                    <button  style="position:absolute;left:570px;top:270px;display:none;" type="button" onclick="ampCtrl.printCurrentAmpValues()">Show current settings in console</button>
-                    <button  id="toggleGuitarIn" style="position:absolute;left:30px;top:195px" class="pulse"  type="button" onclick="ampCtrl.toggleGuitarInput(event)">Guitar input: <span style='color:red;'>NOT ACTIVATED</span>, click to toggle on/off!</button>
-
-                    <canvas id="inputSignalCanvas" style="position:absolute;left:630px;top:350px;display:none;" width=150 height=50></canvas>
-                    <canvas id="outputSignalCanvas" style="position:absolute;left:830px;top:350px;display:none;" width=150 height=50></canvas>
-
-                    <label for="QFPresetMenu2" style="color:white; position:absolute;left:420px;top:197px">Presets :</label>
-                    <select id="QFPresetMenu2" style="position:absolute;left:490px;top:196px" onchange="ampCtrl.setPreset()"></select>
-
-                    <div id="settingsContainer" style="display:none;">
-                        <div id="moreSettings">
-                            <div style="color:white; position:absolute;left:35px;top:15px;">Input Gain</div>
-                            <webaudio-knob id="Knob9" midilearn="true" style="position:absolute;left:44px;top:40px;" src="img/Prophet.png" value="1" default="1" min="0" max="10" step="0.1" diameter="49" sprites="99" tooltip="InputGain"></webaudio-knob>
-
-                            <div style="color:white; position:absolute;left:156px;top:15px;">Distortion 1</div>
-                            <select style="position:absolute;left:136px;top:51px;" id="distorsionMenu1" onchange="ampCtrl.changeDisto1Type(this.value);"></select>
-
-                            <div style="color:white; position:absolute;left:296px;top:15px;">Distortion 2</div>
-                            <select style="position:absolute;left:276px;top:51px;" id="distorsionMenu2" onchange="ampCtrl.changeDisto2Type(this.value);"></select>
-
-                            <div style="color:white; position:absolute;left:459px;top:15px;">Reverb</div>
-                            <select style="position:absolute;left:416px;top:51px;" id="reverbImpulses" oninput="ampCtrl.changeReverbImpulse(this.value);"></select>
-
-                            <div style="color:white; position:absolute;left:584px;top:15px;">Output Gain</div>
-                            <webaudio-knob id="Knob10" midilearn="true" style="position:absolute;left:600px;top:40px;" src="img/Prophet.png" value="5" default="5" min="0" max="10" step="0.1" diameter="49" sprites="99" tooltip="OutputGain"></webaudio-knob>
-                        </div>
-                    </div>
-
-                    <p><div style="color:white; position:absolute;left:100px;top:385px;display:none;">
-                        <canvas id="distoDrawerCanvas1" title="Click and maintain to change distortion value" style="margin-right:10px;left-margin:10px;" width="100" height="100"></canvas>
-                        <canvas id="signalDrawerCanvas1" width="100" height="100"></canvas>
-                    </div>
-                    <div style="color:white; position:absolute;left:100px;top:495px;display:none;">Transfer function and distorded signal example...
-                    </div>
-                    <div style="color:white; position:absolute;left:340px;top:385px;display:none;">
-                        <canvas id="distoDrawerCanvas2" title="Click and maintain to change distortion value" style="margin-right:10px;left-margin:10px;" width="100" height="100"></canvas>
-                        <canvas id="signalDrawerCanvas2" width="100" height="100"></canvas>
-                    </div>
-            </section>
-
-
-        </article>
+            </article>
+        </div>
 
             <!-- div class="events" id="events" style="background:rgba(128,128,255,0.5);overflow:scroll"></div> -->
             <button type="button" id="controlsInfoBtn" class="buttonControls"  onclick="ampCtrl.controlsInfoDisplay();">Display controls
