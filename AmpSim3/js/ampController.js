@@ -6,6 +6,7 @@ class AmpController {
 		this.guitarPluggedIn = false;
 		this.presets = amp.presets;
 		this.normalBuild = true;
+		this.nbLampPairs = 2;
 	}
 
 	// ------- Amp related handlers -------
@@ -573,12 +574,16 @@ class AmpController {
     	this.ampViewer.switchPATS(this.normalBuild);
     }
 
-    addPreampLamp() {
+    addPreampLamps() {
     	var type, freq;
     	type = document.querySelector("#distorsionMenu3");
     	freq = document.querySelector("#lsfreq");
 
-    	console.log(type.value, freq.value)
+    	this.amp.preamp.addNewLamps(type.value, freq.value);
+
+    	this.nbLampPairs++;
+
+    	this.ampViewer.updateLampNum(this.nbLampPairs);
     }
 
 }

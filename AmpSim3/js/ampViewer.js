@@ -16,6 +16,8 @@ class AmpViewer {
         this.equalizer = document.querySelector("#eqContainer");
         this.settingsBtn = document.querySelector("#settingsToggle");
         this.settings = document.querySelector("#settingsContainer");
+		this.display = document.querySelector("#switchDisplay");
+        this.lampNum = document.querySelector("#lampNum");
 	}
 
 	// ------- Amp related handlers -------
@@ -366,10 +368,12 @@ class AmpViewer {
 	// Build a drop down menu with all distorsion names
     buildDistoMenu3() {
         for(var p in this.amp.preamp.wsFactory.distorsionCurves) {
-            var option = document.createElement("option");
-            option.value = p;
-            option.text = p;
-            this.menuDisto3.appendChild(option);    
+        	if (p != "bezier") {
+        		var option = document.createElement("option");
+	            option.value = p;
+	            option.text = p;
+	            this.menuDisto3.appendChild(option);
+        	}
         }
     }
 
@@ -440,13 +444,15 @@ class AmpViewer {
 	// ------- Experimentation handlers -------
 
 	switchPATS(normal) {
-		var display = document.querySelector("#switchDisplay");
-
 		if (normal) {
-			display.innerHTML = "Preamp position : before Tonestack";
+			this.display.innerHTML = "<u>Preamp position : before Tonestack</u>";
 		} else {
-			display.innerHTML = "Preamp position : after Tonestack";
+			this.display.innerHTML = "<u>Preamp position : after Tonestack</u>";
 		}
+	}
+
+	updateLampNum(num) {
+		this.lampNum.innerHTML = "<u>Preamp : " + num + " WS (Pairs of lamps)</u>"
 	}
 
 }

@@ -239,14 +239,15 @@
                         <div id="switchDisplay" style="position:absolute;left:20px;top:60px;"><u>Preamp position : before Tonestack</u></div>
                         <button style="position:absolute;left:270px;top:60px;width:300px;" type="button" onclick="ampCtrl.switchPATS()">Switch Preamp and Tonestack</button>
 
-                        <div style="position:absolute;left:20px;top:100px;"><u>Preamp : 2 WS (Pairs of lamps)</u></div>
+                        <div id="lampNum" style="position:absolute;left:20px;top:100px;"><u>Preamp : 2 WS (Pairs of lamps)</u></div>
                         <div style="position:absolute;left:270px;top:100px;">Add new stage with : distortion function = </div>
                         <select style="position:absolute;left:550px;top:100px" id="distorsionMenu3"></select>
                         <div style="position:absolute;left:675px;top:100px;">and lowshelf frequency = </div>
-                        <input id="lsfreq" style="position:absolute;left:850px;top:99px;width:50px" type="text">
+                        <input id="lsfreq" style="position:absolute;left:847px;top:99px;width:50px" type="text">
                         <div style="position:absolute;left:910px;top:100px;">Hz</div>
 
-                        <button style="position:absolute;left:270px;top:130px;width:300px;" type="submit" onclick="ampCtrl.addPreampLamp();">Add the above preamp stage (WS + HP + LS)</button>
+                        <button id="addLamp" style="position:absolute;left:270px;top:130px;width:300px;" type="submit" onclick="ampCtrl.addPreampLamps();" disabled>Add the above preamp stage (WS + HP + LS)
+                        </button>
                         <button style="position:absolute;left:270px;top:160px;width:300px;" type="button" onclick="">Remove last preamp stage</button>
                     </div>
             </section>
@@ -256,6 +257,18 @@
         <button type="button" id="controlsInfoBtn" onclick="ampCtrl.controlsInfoDisplay()">Display controls</button>
 
         <script type="text/javascript">
+            // For the add lamp button to always have a lowshelf frequency
+            var inp = document.querySelector("#lsfreq");
+            var btn = document.querySelector("#addLamp")
+
+            inp.addEventListener('keyup', function () {
+                if (this.value == "") {
+                    btn.disabled = true;
+                } else {
+                    btn.disabled = false;
+                }
+            }, false);
+
             // Binding avec le vrai ampli
             // Volume
             var volumeOutputPreAmp = document.querySelector("#Knob1");

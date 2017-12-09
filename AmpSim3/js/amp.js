@@ -228,8 +228,7 @@ function Amp(context, ampName) {
             preamp.boost.output.connect(tonestack.trebleFilter);
             tonestack.presenceFilter.connect(preamp.lowShelf1);
             outputGain.connect(eqlocut);   
-        }
-        
+        }   
     }
 
     function changeOversamplingAmp(cb) {
@@ -348,6 +347,7 @@ function Amp(context, ampName) {
         bypassAmp: bypassAmp,
         bypassEQAmp: bypassEQAmp,
 
+        outputGain: outputGain,
         changeGraph: changeGraph
     };
 }

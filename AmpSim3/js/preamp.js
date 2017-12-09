@@ -42,6 +42,7 @@ class PreAmp {
                 // Distorsion 2, symetric function to generate even harmonics
                 this.od[1] = this.context.createWaveShaper();
                 this.od[1].curve = this.wsFactory.distorsionCurves[this.distoTypes[1]](0);
+                this.beforeOutputGain = this.od[1];
                 break;
         }
 
@@ -447,6 +448,39 @@ class PreAmp {
         label.style.color="black";
         kvalue.style.fontWeight="normal";
         kvalue.style.color="black";
+    }
+
+    //
+    // Experimental functions
+    //
+
+    addNewLamps(type, freq) {
+        // Creates a new waveshapper
+        var distoNew = this.context.createWaveShaper();
+        distoNew.curve = this.wsFactory.distorsionCurves[type](0);
+
+        // Creates a new highpass
+        var highPassNew = this.context.createBiquadFilter();
+        highPassNew.type = "highpass";    
+        highPassNew.frequency.value = 6;
+        highPassNew.Q.value = 0.7071;
+
+        // Creates a new lowshelf
+        var lowShelfNew  = this.context.createBiquadFilter();
+        lowShelfNew.type = "lowshelf";
+        lowShelfNew.frequency.value = freq;
+        lowShelfNew.gain.value = -6; 
+
+        this.addToGraph(distoNew, highPassNew, lowShelfNew)
+    }
+
+    addToGraph(newWs, newHp, newLs) {
+        this.beforeOutputGain.disconnect(amp.outputGain);
+        this.beforeOutputGain.connect(newWs);
+        newWs.connect(newHp);
+        newHp.connect(newLs);
+        newLs.connect(amp.outputGain);
+        this.beforeOutputGain = newLs;
     }
 
 }
