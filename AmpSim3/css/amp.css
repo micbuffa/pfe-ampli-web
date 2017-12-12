@@ -72,10 +72,10 @@ div.controls label {
 }
 
 div.controls label, div.controls input, output {
-    vertical-align: middle;
-    padding: 0;
-    margin: 0;
-   font-family: "Open Sans",Verdana,Geneva,sans-serif,sans-serif;
+  vertical-align: middle;
+  padding: 0;
+  margin: 0;
+  font-family: "Open Sans",Verdana,Geneva,sans-serif,sans-serif;
   font-size: 12px;
 }
 

@@ -17,7 +17,9 @@ class AmpViewer {
         this.settingsBtn = document.querySelector("#settingsToggle");
         this.settings = document.querySelector("#settingsContainer");
 		this.display = document.querySelector("#switchDisplay");
+		this.addLamp = document.querySelector("#addLamp");
         this.lampNum = document.querySelector("#lampNum");
+        this.advSettings = document.querySelector("#advSettings");
 	}
 
 	// ------- Amp related handlers -------
@@ -28,6 +30,10 @@ class AmpViewer {
 
 	// View change for distortions
     changeDistoLabels(sliderValue, numDisto) {
+    	if (numDisto > 1) {
+    		numDisto = numDisto - 2;
+    	}
+
         // update output labels
         var output = document.querySelector("#k" + numDisto);
         output.value = parseFloat(sliderValue).toFixed(1);
@@ -451,8 +457,40 @@ class AmpViewer {
 		}
 	}
 
-	updateLampNum(num) {
+	updateLamps(num) {
+		// Updates div with lamp number
 		this.lampNum.innerHTML = "<u>Preamp : " + num + " WS (Pairs of lamps)</u>"
+
+		// Adds a slider and its description to control the distortion of the new lamp
+		var newDiv = document.createElement('div');
+		newDiv.className = "controls";
+		this.advSettings.appendChild(newDiv);
+
+		var newLabel = document.createElement('label');
+		newLabel.id = "k" + num + "label";
+		newLabel.innerHTML = "K" + num;
+		newDiv.appendChild(newLabel);
+
+		var newSlider = document.createElement('input');
+	    newSlider.id = "K" + num + "slider";
+	    newSlider.type = 'range';
+	    newSlider.min = 0;
+	    newSlider.max = 10;
+	    newSlider.value = 7.8;
+	    newSlider.step = 0.1;
+	    newSlider.oninput = ampCtrl.changeExtraDistos;
+	    newSlider.style.marginRight = "5px";
+		newDiv.appendChild(newSlider);
+
+		var newOutput = document.createElement('output');
+		newOutput.id = "k" + (num - 1);
+		newOutput.value = 7.8;
+		newDiv.appendChild(newOutput);
+
+		if (num == 5) {
+			this.addLamp.disabled = true;
+		}
+
 	}
 
 }

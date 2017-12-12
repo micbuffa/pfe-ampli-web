@@ -102,6 +102,7 @@ class PreAmp {
     //
     // Distortion-related functions
     //
+
     changeDistorsionValuesPA(sliderValue, numDisto) {
         // sliderValue is in [0, 10] range, adjust to [0, 1500] range  
         var value = 150 * parseFloat(sliderValue);
@@ -454,10 +455,13 @@ class PreAmp {
     // Experimental functions
     //
 
-    addNewLamps(type, freq) {
-        // Creates a new waveshapper
-        var distoNew = this.context.createWaveShaper();
-        distoNew.curve = this.wsFactory.distorsionCurves[type](0);
+    addNewLamps(type, num) {
+        // Creates a new waveshapper 
+        // We store at num + 1 to not interfere with the max drive button algorithm
+        this.od[num + 1] = this.context.createWaveShaper();
+        // 498 is the empirical value for slider = 7.8
+        this.od[num + 1].curve = this.wsFactory.distorsionCurves[type](498.1397311910594);
+        this.distoTypes[num + 1] = type;
 
         // Creates a new highpass
         var highPassNew = this.context.createBiquadFilter();
@@ -468,19 +472,24 @@ class PreAmp {
         // Creates a new lowshelf
         var lowShelfNew  = this.context.createBiquadFilter();
         lowShelfNew.type = "lowshelf";
-        lowShelfNew.frequency.value = freq;
-        lowShelfNew.gain.value = -6; 
+        lowShelfNew.frequency.value = 720;
+        lowShelfNew.gain.value = -6;
 
-        this.addToGraph(distoNew, highPassNew, lowShelfNew)
+        // Creates a control gain at the end
+        var ctrlGain = this.context.createGain();
+        ctrlGain.gain.value = 1.0;
+
+        this.addToGraph(this.od[num + 1], highPassNew, lowShelfNew, ctrlGain)
     }
 
-    addToGraph(newWs, newHp, newLs) {
+    addToGraph(newWs, newHp, newLs, newG) {
         this.beforeOutputGain.disconnect(amp.outputGain);
         this.beforeOutputGain.connect(newWs);
         newWs.connect(newHp);
         newHp.connect(newLs);
-        newLs.connect(amp.outputGain);
-        this.beforeOutputGain = newLs;
+        newLs.connect(newG);
+        newG.connect(amp.outputGain);
+        this.beforeOutputGain = newG;
     }
 
 }

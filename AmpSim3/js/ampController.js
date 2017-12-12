@@ -575,15 +575,19 @@ class AmpController {
     }
 
     addPreampLamps() {
-    	var type, freq;
-    	type = document.querySelector("#distorsionMenu3");
-    	freq = document.querySelector("#lsfreq");
-
-    	this.amp.preamp.addNewLamps(type.value, freq.value);
+    	var type = document.querySelector("#distorsionMenu3");
 
     	this.nbLampPairs++;
 
-    	this.ampViewer.updateLampNum(this.nbLampPairs);
+    	this.amp.preamp.addNewLamps(type.value, this.nbLampPairs);
+
+    	this.ampViewer.updateLamps(this.nbLampPairs);
+    }
+
+    changeExtraDistos(e) {
+    	// Finds the number of the slider
+    	var distoNum = e.target.id.match(/^\d+|\d+\b|\d+(?=\w)/g)[0];
+    	ampCtrl.changeDistorsionValues(e.target.value, parseFloat(distoNum) + 1);
     }
 
 }
