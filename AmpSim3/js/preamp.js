@@ -24,6 +24,7 @@ class PreAmp {
         this.oldAngle = undefined;
         this.initialP1 = {x: 50, y: 100};
         this.initialP2 = {x: 50, y: 0};
+        this.previousNode = [];
 	}
 
     createBoost() {
@@ -489,7 +490,23 @@ class PreAmp {
         newHp.connect(newLs);
         newLs.connect(newG);
         newG.connect(amp.outputGain);
+        this.previousNode.push(this.beforeOutputGain);
         this.beforeOutputGain = newG;
+    }
+
+    removeLastLamp(num) {
+        var previousDisto = 1;
+        // The previous lamp is of index 1 for the first lamp,
+        // but num - 1 for the rest because of the initial array
+        if (num > 2) {
+            previousDisto = num + 1;
+        }
+
+        this.previousNode[this.previousNode.length - 1].disconnect(this.od[num+2]);
+        this.beforeOutputGain.disconnect(amp.outputGain);
+        this.previousNode[this.previousNode.length - 1].connect(amp.outputGain);
+        this.beforeOutputGain = this.previousNode[this.previousNode.length - 1];
+        this.previousNode.pop();
     }
 
 }

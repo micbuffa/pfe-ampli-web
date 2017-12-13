@@ -18,6 +18,7 @@ class AmpViewer {
         this.settings = document.querySelector("#settingsContainer");
 		this.display = document.querySelector("#switchDisplay");
 		this.addLamp = document.querySelector("#addLamp");
+		this.removeLamp = document.querySelector("#removeLamp");
         this.lampNum = document.querySelector("#lampNum");
         this.advSettings = document.querySelector("#advSettings");
 	}
@@ -487,10 +488,30 @@ class AmpViewer {
 		newOutput.value = 7.8;
 		newDiv.appendChild(newOutput);
 
+		this.updateButtonState(num);
+	}
+
+	removeLastLamp(num) {
+		// Updates div with lamp number
+		this.lampNum.innerHTML = "<u>Preamp : " + num + " WS (Pairs of lamps)</u>"
+
+		this.advSettings.removeChild(this.advSettings.lastChild);
+
+		this.updateButtonState(num);
+	}
+
+	updateButtonState(num) {
 		if (num == 5) {
 			this.addLamp.disabled = true;
+		} else {
+			this.addLamp.disabled = false;
 		}
 
+		if (num == 2) {
+			this.removeLamp.disabled = true;
+		} else {
+			this.removeLamp.disabled = false;
+		}
 	}
 
 }

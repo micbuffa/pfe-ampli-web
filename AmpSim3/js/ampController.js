@@ -590,4 +590,12 @@ class AmpController {
     	ampCtrl.changeDistorsionValues(e.target.value, parseFloat(distoNum) + 1);
     }
 
+    removeLastLamp(e) {
+    	this.nbLampPairs--;
+
+    	this.amp.preamp.removeLastLamp(this.nbLampPairs);
+
+    	this.ampViewer.removeLastLamp(this.nbLampPairs);
+    }
+
 }
