@@ -39,6 +39,7 @@ class AmpController {
         this.changeDrive(this.amp.preamp.currentK);
     }
 
+    
     changeDisto1FromPreset(name) {
         this.amp.preamp.changeDisto1TypeFromPreset(name);
         this.ampViewer.updateDisto1Name(name);
@@ -65,6 +66,15 @@ class AmpController {
       for(var i = 0; i < 2; i++) {
             this.changeDistorsionValues(sliderValue, i);
       }
+    }
+
+    changePowerAmpDistoType(sliderVal) {
+        this.amp.powerAmp.changeDistoType(sliderVal);
+    }
+
+    changePowerAmpK(val) {
+        this.amp.powerAmp.changeK(val);
+        this.ampViewer.changePowerAmpDistoLabel(val);
     }
 
     setCurveHandlers() {
@@ -284,11 +294,21 @@ class AmpController {
         this.ampViewer.changeTrebleFilterValueTS(sliderVal);
     }
 
+    /*
     changePresenceFilterValue(sliderVal) {
         this.amp.tonestack.changePresenceFilterValueTS(sliderVal);
         this.ampViewer.changePresenceFilterValueTS(sliderVal);
     }
+*/
 
+//
+// Power Amp handlers
+//
+
+changePresenceFilterValue(sliderVal) {
+    this.amp.powerAmp.changePresenceFilterValue(sliderVal);
+    this.ampViewer.changePresenceFilterValueTS(sliderVal);
+}
     //
     // Amp handlers
     //

@@ -46,6 +46,7 @@ function Amp(context, ampName) {
 
     var preamp = new PreAmp(ampName, context);
     var tonestack = new ToneStack(ampName, context);
+    var powerAmp = new PowerAmp(context);
     var eq = new Equalizer(context);
     var cabinetSim = new Convolver(context, cabinetImpulses);
     var reverb = new Convolver(context, reverbImpulses);
@@ -196,7 +197,10 @@ function Amp(context, ampName) {
         // normal route
         inputEQ.connect(eq.input);
         eq.output.connect(masterVolume);
-        masterVolume.connect(reverb.input);
+
+        masterVolume.connect(powerAmp.input);
+        powerAmp.output.connect(reverb.input);
+        //masterVolume.connect(reverb.input);
         reverb.output.connect(cabinetSim.input);
         cabinetSim.output.connect(output);
         //eq.output.connect(output);
@@ -334,6 +338,7 @@ function Amp(context, ampName) {
         cabinet: cabinetSim,
         tonestack: tonestack,
         preamp: preamp,
+        powerAmp:powerAmp,
         master: masterVolume,
         presets: presets,
         

@@ -9,6 +9,7 @@
         <script src="js/adapter.js"></script>
         <script src="js/initAudio.js"></script>
         <script src="js/visualization.js"></script>
+        <script src="js/powerAmp.js"></script>
         <script src="js/amp.js"></script>
         <script src="js/equalizer.js"></script>
         <script src="js/convolver.js"></script>
@@ -182,13 +183,13 @@
                 <div class="ampGUI" style="position:relative;background-image: url('img/expview.png');width:1127px;height:545px;padding:0px;">
                     <div>
                         <webaudio-knob id="Knob1"   midilearn="true" step="0.1"  style="position:absolute;left:66px;top:90px" src="img/Prophet.png" value="7"  min="0" max="10" diameter="69" sprites="99" tooltip="Volume" ></webaudio-knob>
-                        <webaudio-knob id="Knob2"    midilearn="true" step="0.1" style="position:absolute;left:136px;top:90px" src="img/Prophet.png" value="2" min="0" max="10" diameter="69" sprites="99" tooltip="Master"></webaudio-knob>
+                        <webaudio-knob id="Knob2"    midilearn="true" step="0.1" style="position:absolute;left:136px;top:90px" src="img/Prophet.png" value="2" min="0" max="100" diameter="69" sprites="99" tooltip="Master"></webaudio-knob>
                          <!-- boost button -->
-                        <label style="color:white;position:absolute;left:70px;top:64px">Clean / Disto : </label>
+                        <label style="color:white;position:absolute;left:70px;top:64px">Boost: </label>
                         <!--
                         <webaudio-switch style="color:white;position:absolute;left:225px;top:58px" id="toggleBoost" value="0" src="img/led.png" tooltip="Toggle clean/disto channel"></webaudio-switch>
                         -->
-                        <webaudio-switch   midilearn="true" style="color:white;position:absolute;left:170px;top:58px" id="toggleBoost" value="0" src="img/boostSwitch.png" tooltip="Toggle clean/disto channel"></webaudio-switch>
+                        <webaudio-switch   midilearn="true" style="color:white;position:absolute;left:115px;top:62px" id="toggleBoost" value="0" src="img/boostSwitch.png" tooltip="Toggle clean/disto channel"></webaudio-switch>
                         <!-- drive knob -->
                         <webaudio-knob id="Knob3"     midilearn="true" style="position:absolute;left:207px;top:90px" src="img/Prophet.png" value="0" step="0.1" min="0" max="10" diameter="69" sprites="99" tooltip="Drive"></webaudio-knob>
                         <select style="position:absolute;left:155px;top:356px"  id="distorsionMenu1" onchange="ampCtrl.changeDisto1Type(this.value);"></select>
@@ -206,7 +207,7 @@
                     <webaudio-slider id="slider3"   midilearn="true" Units="Db" style="position:absolute;left:819px;top:64px" src="img/vsliderbody.png" knobsrc="img/vsliderknob.png" value="0" min="-12" max="12" step="1" width="24" height="128" knobwidth="24" knobheight="24" ditchLength="100" tooltip="Slider3"></webaudio-slider>
                     <webaudio-slider id="slider4"   midilearn="true" Units="Db" style="position:absolute;left:865px;top:64px" src="img/vsliderbody.png" knobsrc="img/vsliderknob.png" value="0" min="-12" max="12" step="1" width="24" height="128" knobwidth="24" knobheight="24" ditchLength="100" units="%" tooltip="Slider4"></webaudio-slider>
                     <webaudio-slider id="slider5"   midilearn="true" Units="Db" style="position:absolute;left:908px;top:64px" src="img/vsliderbody.png" knobsrc="img/vsliderknob.png" value="0" min="-12" max="12" step="1" width="24" height="128" knobwidth="24" knobheight="24" ditchLength="100" tooltip="Slider5"></webaudio-slider>
-                    <webaudio-slider id="slider6"   midilearn="true" Units="Db" style="position:absolute;left:951px;top:64px" src="img/vsliderbody.png" knobsrc="img/vsliderknob.png" value="0" min="-12" max="12"" step="1" width="24" height="128" knobwidth="24" knobheight="24" ditchLength="100" units="%" tooltip="Slider6"></webaudio-slider>      
+                    <webaudio-slider id="slider6"   midilearn="true" Units="Db" style="position:absolute;left:951px;top:64px" src="img/vsliderbody.png" knobsrc="img/vsliderknob.png" value="0" min="-12" max="12" step="1" width="24" height="128" knobwidth="24" knobheight="24" ditchLength="100" units="%" tooltip="Slider6"></webaudio-slider>      
                     <webaudio-switch id="switch1"    midilearn="true" style="position:absolute;left:1033px;top:72px" src="img/switch_toggle.png" value="0" height="45" width="45" tooltip="Switch-A Tooltip text test"></webaudio-switch>
                     <webaudio-switch id="led" style="position:absolute;left:1043px;top:125px" src="img/led_23_red.png" value="1" height="23" width="23" tooltip="Switch-B"></webaudio-switch>
                     <webaudio-switch id="switch2"   midilearn="true" style="position:absolute;left:1033px;top:140px" src="img/switch_toggle.png" value="0" height="45" width="45" tooltip="Switch-B"></webaudio-switch>
@@ -235,7 +236,7 @@
                         <canvas id="signalDrawerCanvas2" width="100" height="100"></canvas>
                     </div>
 
-                    <div id="experimentalSettings" style="position:absolute;left:0px;top:570px;width:1127px;height:200px;border:1px solid;">
+                    <div id="experimentalSettings" style="position:absolute;left:0px;top:570px;width:1127px;height:400px;border:1px solid;">
                         <div style="position:absolute;left:20px;top:0px;"><h3>Experimental settings</h2></div>
 
                         <div id="switchDisplay" style="position:absolute;left:20px;top:60px;"><u>Preamp position : before Tonestack</u></div>
@@ -250,6 +251,16 @@
 
                         <button id="addLamp" style="position:absolute;left:270px;top:130px;width:300px;" type="submit" onclick="ampCtrl.addPreampLamps();">Add preamp stage</button>
                         <button id="removeLamp" style="position:absolute;left:270px;top:160px;width:300px;" type="button" onclick="ampCtrl.removeLastLamp()" disabled>Remove last preamp stage</button>
+
+                        <div id="powerAmp" style="position:absolute;left:20px;top:200px;"><u>Power Amp </u></div>
+                        <div style="position:absolute;left:270px;top:200px;">transfert function = </div>
+                        <select style="position:absolute;left:400px;top:200px" id="distorsionMenu4" onchange="ampCtrl.changePowerAmpDistoType(this.value);"></select>
+                        <div class="controls" style="position:absolute;left:255px;top:230px">
+                                <label id="kPAlabel">K4</label>
+                                <input id="KPAslider" type="range" value="8" step="0.1" min="0" max="10" oninput="ampCtrl.changePowerAmpK(this.value);"></input>
+                                <output id="kPA">8</output>
+                            </div>
+        
                     </div>
             </section>
         </article>
@@ -376,7 +387,8 @@
                 } else {
                     state.checked = true;
                 }
-                ampCtrl.boostOnOff(state);
+                //ampCtrl.boostOnOff(state);
+                ampCtrl.switchPATS();
             });
 
         </script>

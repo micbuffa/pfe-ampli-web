@@ -7,6 +7,7 @@ class AmpViewer {
         this.menuDisto1 = document.querySelector("#distorsionMenu1");
         this.menuDisto2 = document.querySelector("#distorsionMenu2");
         this.menuDisto3 = document.querySelector("#distorsionMenu3");
+        this.menuDisto4 = document.querySelector("#distorsionMenu4");
         this.menuPresets = document.querySelector("#QFPresetMenu2");
         this.menuReverb = document.querySelector("#reverbImpulses");
         this.menuCabinet = document.querySelector("#cabinetImpulses");
@@ -46,6 +47,11 @@ class AmpViewer {
 
         var knob = document.querySelector("#Knob3");
         knob.setValue(this.amp.preamp.currentK, false);
+    }
+
+    changePowerAmpDistoLabel(sliderValue) {
+        var output = document.querySelector("#kPA");
+        output.value = parseFloat(sliderValue).toFixed(1);
     }
 
     // View change for bezier curves
@@ -349,6 +355,9 @@ class AmpViewer {
     	this.buildDistoMenu2();
     	if (this.menuDisto3 != undefined) {
     		this.buildDistoMenu3();
+        }
+        if (this.menuDisto4 != undefined) {
+    		this.buildDistoMenu4();
     	}
 	}
 
@@ -383,6 +392,18 @@ class AmpViewer {
         	}
         }
     }
+// Build a drop down menu with all distorsion names
+buildDistoMenu4() {
+    for(var p in this.amp.preamp.wsFactory.distorsionCurves) {
+        if (p != "bezier") {
+            var option = document.createElement("option");
+            option.value = p;
+            option.text = p;
+            this.menuDisto4.appendChild(option);
+        }
+    }
+    this.menuDisto4.selectedIndex = 4;
+}
 
     updateDisto1Name(name) {
     	this.menuDisto1.value = name;
