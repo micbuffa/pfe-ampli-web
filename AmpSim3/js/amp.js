@@ -11,6 +11,7 @@ function createAmp(context, input1, input2, ampName) {
 
     amp = new Amp(context, ampName);
 
+
     ampView = new AmpViewer(amp, ampName);
     // create view disto menus
     ampView.createDistoMenus();
@@ -19,7 +20,11 @@ function createAmp(context, input1, input2, ampName) {
     // create impulses menu
     ampView.createIRMenus();
 
+    //ampView.createGraphicEQ(context);
+
     ampCtrl = new AmpController(amp, ampView);
+    ampCtrl.changePowerAmpDistoType("clean");
+
     // set default preset
     ampCtrl.setDefaultPreset();
     // enable bezier listeners
@@ -165,6 +170,7 @@ function Amp(context, ampName) {
         // boost is not activated, it's just a sort of disto at 
         // the very beginning of the amp route
         inputGain.connect(preamp.boost.input);
+        //inputGain.connect(outputGain);
 
         // JCM 800 preamp
         preamp.boost.output.connect(preamp.lowShelf1);
@@ -272,6 +278,7 @@ function Amp(context, ampName) {
     function changeMasterVolumeAmp(sliderVal) {
         // sliderVal is in [0, 10]
         var value = parseFloat(sliderVal);
+        //value = map(value, 0, 10, 0, 1);
         masterVolume.gain.value = value;
     }
 

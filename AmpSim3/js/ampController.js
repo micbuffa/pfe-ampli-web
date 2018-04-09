@@ -70,12 +70,36 @@ class AmpController {
 
     changePowerAmpDistoType(sliderVal) {
         this.amp.powerAmp.changeDistoType(sliderVal);
+        console.log("changin disto type = " + sliderVal)
+        this.ampViewer.drawCurrentPowerAmpDistoCurve(this.amp.powerAmp.ws.curve);
+    }
+
+    changePopwerAmpNegativeGainValue(val) {
+        this.amp.powerAmp.changeNegativeGainValue(val);
+        this.ampViewer.changePowerAmpNegativeGainLabel(val);
+    }
+
+    changePowerAmpPresenceFreqValue(val) {
+        this.amp.powerAmp.changePresenceFreqValue(val);
+        this.ampViewer.changePowerAmpFreqValueLabel(val);
+    }
+
+    changePowerAmpPresenceGainRangeValue(val) {
+        this.amp.powerAmp.changePresenceGainRange(val);
+        this.ampViewer.changePowerAmpPresenceGainRangeValueLabel(val);       
     }
 
     changePowerAmpK(val) {
         this.amp.powerAmp.changeK(val);
         this.ampViewer.changePowerAmpDistoLabel(val);
+        this.ampViewer.drawCurrentPowerAmpDistoCurve(this.amp.powerAmp.ws.curve);
     }
+
+    togglePoweAmpBypass() {
+        this.amp.powerAmp.toggleBypass();
+        this.ampViewer.changePowerAmpStatus(this.amp.powerAmp.getBypassStatus());
+    }
+
 
     setCurveHandlers() {
     	// Change distortion on mouse move in Canvas distoDrawer 1
@@ -305,9 +329,13 @@ class AmpController {
 // Power Amp handlers
 //
 
-changePresenceFilterValue(sliderVal) {
-    this.amp.powerAmp.changePresenceFilterValue(sliderVal);
+changePresenceFilterGainValue(sliderVal) {
+    this.amp.powerAmp.changePresenceFilterGainValue(sliderVal);
     this.ampViewer.changePresenceFilterValueTS(sliderVal);
+}
+
+changeBoostGainValue(sliderVal) {
+    this.amp.powerAmp.changeBoostGainValue(sliderVal);
 }
     //
     // Amp handlers
@@ -388,7 +416,7 @@ changePresenceFilterValue(sliderVal) {
         this.changeBassFilterValue(p.BF);
         this.changeMidFilterValue(p.MF);
         this.changeTrebleFilterValue(p.TF);
-        this.changePresenceFilterValue(p.PF);
+        this.changePresenceFilterGainValue(p.PF);
 
         this.changeMasterVolume(p.MV);
 

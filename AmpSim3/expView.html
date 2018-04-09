@@ -15,6 +15,7 @@
         <script src="js/convolver.js"></script>
         <script src="js/preamp.js"></script>
         <script src="js/tonestack.js"></script>
+        <script src="js/graphicEQ.js"></script>
         <script src="js/ampViewer.js"></script>
         <script src="js/ampController.js"></script>
         <script src="js/utils.js"></script>
@@ -26,6 +27,7 @@
     <link rel="import" href="./webcomponents/webaudio-controls.html">
         <link  rel="stylesheet" charset="UTF-8" href="css/translateelement.css">
         <link  rel="stylesheet" charset="UTF-8" href="css/amp.css">
+        <link  rel="stylesheet" charset="UTF-8" href="css/graphicEQ.css">
 
         <style type="text/css">
             table {
@@ -71,6 +73,13 @@
                           <option value="8">In Bloom riff</option>
                           <option value="9">Muse solo</option>
                           <option value="10">Muse rythm</option>
+                          <option value="11">Blues solo 1</option>
+                          <option value="12">Blues solo 2</option>
+                          <option value="13">Folk acoustic 1</option>
+                          <option value="14">Folk acoustic 2</option>
+                          <option value="15">Guitar riff 1</option>
+                          <option value="16">Guitar riff 2</option>
+
                           <!-- <option value="11">Simple guitar riff</option> -->
                         </select>
                     </div>
@@ -183,7 +192,7 @@
                 <div class="ampGUI" style="position:relative;background-image: url('img/expview.png');width:1127px;height:545px;padding:0px;">
                     <div>
                         <webaudio-knob id="Knob1"   midilearn="true" step="0.1"  style="position:absolute;left:66px;top:90px" src="img/Prophet.png" value="7"  min="0" max="10" diameter="69" sprites="99" tooltip="Volume" ></webaudio-knob>
-                        <webaudio-knob id="Knob2"    midilearn="true" step="0.1" style="position:absolute;left:136px;top:90px" src="img/Prophet.png" value="2" min="0" max="100" diameter="69" sprites="99" tooltip="Master"></webaudio-knob>
+                        <webaudio-knob id="Knob2"    midilearn="true" step="0.1" style="position:absolute;left:136px;top:90px" src="img/Prophet.png" value="2" min="0" max="10" diameter="69" sprites="99" tooltip="Master"></webaudio-knob>
                          <!-- boost button -->
                         <label style="color:white;position:absolute;left:70px;top:64px">Boost: </label>
                         <!--
@@ -252,15 +261,45 @@
                         <button id="addLamp" style="position:absolute;left:270px;top:130px;width:300px;" type="submit" onclick="ampCtrl.addPreampLamps();">Add preamp stage</button>
                         <button id="removeLamp" style="position:absolute;left:270px;top:160px;width:300px;" type="button" onclick="ampCtrl.removeLastLamp()" disabled>Remove last preamp stage</button>
 
-                        <div id="powerAmp" style="position:absolute;left:20px;top:200px;"><u>Power Amp </u></div>
+                        <div id="powerAmpStatus" style="position:absolute;left:20px;top:200px;"><u>Power Amp : on</u></div>
+                        <button style="position:absolute;left:20px;top:230px;" onclick="ampCtrl.togglePoweAmpBypass();">Toggle Power amp on/off</button>
                         <div style="position:absolute;left:270px;top:200px;">transfert function = </div>
                         <select style="position:absolute;left:400px;top:200px" id="distorsionMenu4" onchange="ampCtrl.changePowerAmpDistoType(this.value);"></select>
+                        <canvas id="signalDrawerPowerAmpCanvas" style="background-color:black;position:absolute;left:530px;top:200px" width="100" height="100"></canvas>
                         <div class="controls" style="position:absolute;left:255px;top:230px">
                                 <label id="kPAlabel">K4</label>
                                 <input id="KPAslider" type="range" value="8" step="0.1" min="0" max="10" oninput="ampCtrl.changePowerAmpK(this.value);"></input>
                                 <output id="kPA">8</output>
-                            </div>
-        
+                        </div>
+
+                        <div class="controls" style="position:absolute;left:680px;top:10px">
+                            <div id="divFilterBank" class="graphicEQwrapper"></div>
+                        </div>
+
+                        <div class="controls" style="position:absolute;left:255px;top:250px">
+                            <label id="PaNegativeGain">Negative gain</label>
+                            <input id="PANegativeGainSlider" type="range" value="-0.4" step="0.1" min="-5" max="0" oninput="ampCtrl.changePopwerAmpNegativeGainValue(this.value);"></input>
+                            <output id="PaNegativeGainValue">-0.4</output>
+                        </div>
+                        <!--
+                        <div class="controls" style="position:absolute;left:255px;top:280px">
+                            <label id="PaPresenceFreqLabel">Presence Freq</label>
+                            <input id="PaPresenceFreqSlider" type="range" value="3900" step="1" min="1000" max="5000" oninput="ampCtrl.changePowerAmpPresenceFreqValue(this.value);"></input>
+                            <output id="PaPresenceFreqSliderValue">3900 Hz</output> (for changing the filter gain use the presence knob on the amp GUI)
+                        </div>
+                    -->
+                        <div class="controls" style="position:absolute;left:255px;top:310px">
+                            <label id="PaPresenceGainRangeLabel">Presence gain range</label>
+                            <input id="PaPresenceGainRangeSlider" type="range" value="4" step="1" min="1" max="10" oninput="ampCtrl.changePowerAmpPresenceGainRangeValue(this.value);"></input>
+                            <output id="PaPresenceGainRangeValue">Entre -4 dB et 0</output>
+                        </div>
+
+                        <div class="controls" style="position:absolute;left:255px;top:360px">
+                            <label id="BoostGainLabel">Boost gain</label>
+                            <input id="BoostGainSlider" type="range" value="2" step="0.1" min="0.5" max="4" oninput="ampCtrl.changeBoostGainValue(this.value);"></input>
+                            <output id="BoostGainValue">1</output>
+                        </div>
+
                     </div>
             </section>
         </article>
@@ -323,7 +362,7 @@
             var presence = document.querySelector("#Knob8");
             presence.addEventListener("change", function (evt) {
                 if(ampCtrl !== undefined)
-                    ampCtrl.changePresenceFilterValue(evt.target.value);
+                    ampCtrl.changePresenceFilterGainValue(evt.target.value);
             });
 
             // input gain

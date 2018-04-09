@@ -13,6 +13,10 @@ function CurveDrawer(canvasId) {
   this.height = this.canvas.height;
   this.curve = [];
   
+  this.clear = function() {
+    this.ctx.clearRect(0, 0, this.width, this.height);
+  }
+
   this.drawAxis = function() {
     this.ctx.save();
         this.ctx.strokeStyle = '#ccc';
