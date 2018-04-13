@@ -12,16 +12,15 @@ function PowerAmp(ctx) {
     var wsFactory = new WaveShapers();
     var currentDistoName = "clean";
     ws.curve = wsFactory.distorsionCurves[currentDistoName](k);
-    
-    //ws.curve = wsFactory.distorsionCurves.clean(0);
-    
+     
+    /*
     var presenceFilter = ctx.createBiquadFilter();
     presenceFilter.frequency.value = 3900;
     presenceFilter.type = "peaking";
     presenceFilter.Q.value = 0.7071; // To check with Lepou
+*/
 
-
-    var presenceGainRange = 4; // de -4db à +4db
+    var presenceGainRange = 4; // from -4db to +4db
 
     //var presenceFilter2 = new PresenceFilter2(ctx);
 
@@ -30,7 +29,7 @@ function PowerAmp(ctx) {
     // Delay but it will not be possible to set a delay value less
     // than a sample quantum (128 or 512 samples ?)
     var delay = ctx.createDelay();
-    delay.delayTime.value = 0.1; // to adjust
+    delay.delayTime.value = 128/ctx.sampleRate; // to adjust
     
     // negative gain
     var negativeGain = ctx.createGain();
@@ -70,7 +69,7 @@ function PowerAmp(ctx) {
 */
 
 masterVolume.connect(wetGain).connect(adjustmentGain).connect(ws).connect(presenceFilter3.input);
-presenceFilter3.output.connect(negativeGain).connect(ws); // feedback loop
+presenceFilter3.output.connect(negativeGain).connect(delay).connect(ws); // feedback loop
 //ws.connect(eqhicut).connect(eqlocut).connect(outputGain);
 
 //presenceFilter3.output.connect(eqhicut).connect(eqlocut).connect(outputGain); // direct route from presence filter
@@ -179,7 +178,6 @@ ws.connect(hipass).connect(hipassgain).connect(outputGain);
       masterVolume: masterVolume,
       ws: ws,
       k:k,
-      presence: presenceFilter,
       delay: delay,
       negativeGain: negativeGain,
       toggleBypass:toggleBypass,
