@@ -11,6 +11,8 @@ function convertToMono(input) {
     input.connect(splitter);
     splitter.connect(merger, 0, 0);
     splitter.connect(merger, 0, 1);
+    splitter.connect(merger, 1, 0);
+    splitter.connect(merger, 1, 1);
     return merger;
 }
 

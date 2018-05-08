@@ -115,20 +115,20 @@ ws.connect(hipass).connect(hipassgain).connect(outputGain);
         //hipassgain.gain.value = value;
         //presenceFilter2.changeGainValue(value);
         // TO DO ! THINK ABOUT WHAT THE PRESENCE KNOB WOULD ADJUST IN CASE OF FILTER BANK
-        console.log("presence changee " + adjustedValue);
+        //console.log("presence changee " + adjustedValue);
         presenceFilter3.adjustPresence(adjustedValue);
     }
 
     function changePresenceFreqValue(sliderVal) {
         var value = parseFloat(sliderVal);
         presenceFilter.frequency.value = value
-        console.log("poweramp : presence new freq value = " + presenceFilter.frequency.value);
+        //console.log("poweramp : presence new freq value = " + presenceFilter.frequency.value);
     }
 
     function changePresenceGainRange(sliderVal) {
         var value = parseFloat(sliderVal);
         presenceGainRange = value
-        console.log("poweramp : presence gain range = +=" + presenceGainRange + " dB");
+        //console.log("poweramp : presence gain range = +=" + presenceGainRange + " dB");
     }
 
 
@@ -140,7 +140,7 @@ ws.connect(hipass).connect(hipassgain).connect(outputGain);
     function changeDistoType(type) {
         currentDistoName = type;
         ws.curve = wsFactory.distorsionCurves[type](k);
-        console.log("power amp, transfer function = " + type);
+        //console.log("power amp, transfer function = " + type);
     }
 
     
@@ -148,10 +148,10 @@ ws.connect(hipass).connect(hipassgain).connect(outputGain);
         // sliderValue is in [0, 10] range, adjust to [0, 1500] range  
     
         k = getRealKFrom_1_10_range(sliderValue);
-        console.log("change K current disto name = " + currentDistoName);
+        //console.log("change K current disto name = " + currentDistoName);
         ws.curve = wsFactory.distorsionCurves[currentDistoName](k);
 
-        console.log("power amp k = " + k);
+        //console.log("power amp k = " + k);
      }
 
      function getRealKFrom_1_10_range(val) {

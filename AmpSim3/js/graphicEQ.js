@@ -78,7 +78,7 @@ class FilterBank {
 
 
 
-        requestAnimationFrame(this.drawFrequencies.bind(this));
+        //requestAnimationFrame(this.drawFrequencies.bind(this));
     }
 
     // PRESETS
@@ -229,7 +229,7 @@ class FilterBank {
         }
 
         // call again the visualize function at 60 frames/s
-        requestAnimationFrame(this.drawFrequencies.bind(this));
+        //requestAnimationFrame(this.drawFrequencies.bind(this));
 
     }
 
