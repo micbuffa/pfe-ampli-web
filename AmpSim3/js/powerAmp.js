@@ -2,17 +2,17 @@ function PowerAmp(ctx) {
     var bypass = false;
 
     var wsFactory = ctx.createWaveShaper();
-  
+
     var masterVolume = ctx.createGain();
     var boostGain = ctx.createGain();
     boostGain.gain.value = 2;
-    
+
     var ws = ctx.createWaveShaper();
     var k = getRealKFrom_1_10_range(8);
     var wsFactory = new WaveShapers();
     var currentDistoName = "clean";
     ws.curve = wsFactory.distorsionCurves[currentDistoName](k);
-     
+
     /*
     var presenceFilter = ctx.createBiquadFilter();
     presenceFilter.frequency.value = 3900;
@@ -25,19 +25,19 @@ function PowerAmp(ctx) {
     //var presenceFilter2 = new PresenceFilter2(ctx);
 
     var presenceFilter3 = new PresenceFilter3(ctx);
-    
+
     // Delay but it will not be possible to set a delay value less
     // than a sample quantum (128 or 512 samples ?)
     var delay = ctx.createDelay();
-    delay.delayTime.value = 128/ctx.sampleRate; // to adjust
-    
+    delay.delayTime.value = 128 / ctx.sampleRate; // to adjust
+
     // negative gain
     var negativeGain = ctx.createGain();
     negativeGain.gain.value = -0.4; // to adjust
-    
+
     // output gain
     var outputGain = ctx.createGain();
-    
+
     // dry/wet gains
     var dryGain = ctx.createGain();
     dryGain.gain.value = 0;
@@ -48,17 +48,17 @@ function PowerAmp(ctx) {
 
     // lo and gi cut at the end, corresponds to output tranny (transformateur)
     var eqhicut = ctx.createBiquadFilter();
-        eqhicut.frequency.value = 10000;
-        eqhicut.type = "peaking";
-        eqhicut.gain.value = -24;
+    eqhicut.frequency.value = 10000;
+    eqhicut.type = "peaking";
+    eqhicut.gain.value = -24;
 
     var eqlocut = ctx.createBiquadFilter();
-        eqlocut.frequency.value = 60;
-        eqlocut.type = "peaking";
-        eqlocut.gain.value = -18;
-  
+    eqlocut.frequency.value = 60;
+    eqlocut.type = "peaking";
+    eqlocut.gain.value = -18;
+
     //var buildgraph = function() {
-        /*
+    /*
       masterVolume.connect(wetGain).connect(adjustmentGain).connect(ws).connect(presenceFilter).connect(negativeGain);
       negativeGain.connect(ws); // feedback loop
       presenceFilter.connect(eqhicut).connect(eqlocut).connect(outputGain); // direct route from presence filter
@@ -68,24 +68,24 @@ function PowerAmp(ctx) {
     //
 */
 
-masterVolume.connect(wetGain).connect(adjustmentGain).connect(ws).connect(presenceFilter3.input);
-presenceFilter3.output.connect(negativeGain).connect(delay).connect(ws); // feedback loop
-//ws.connect(eqhicut).connect(eqlocut).connect(outputGain);
+    masterVolume.connect(wetGain).connect(adjustmentGain).connect(ws).connect(presenceFilter3.input);
+    presenceFilter3.output.connect(negativeGain).connect(delay).connect(ws); // feedback loop
+    //ws.connect(eqhicut).connect(eqlocut).connect(outputGain);
 
-//presenceFilter3.output.connect(eqhicut).connect(eqlocut).connect(outputGain); // direct route from presence filter
+    //presenceFilter3.output.connect(eqhicut).connect(eqlocut).connect(outputGain); // direct route from presence filter
 
-// bypass route
-masterVolume.connect(dryGain).connect(eqhicut).connect(eqlocut).connect(outputGain);
-presenceFilter3.output.connect(boostGain).connect(eqhicut); 
-/*
-masterVolume.connect(wetGain).connect(adjustmentGain).connect(ws).connect(lowpass).connect(outputGain);
-ws.connect(hipass).connect(hipassgain).connect(outputGain);
-*/
-// bypass route
-//masterVolume.connect(dryGain).connect(outputGain);
+    // bypass route
+    masterVolume.connect(dryGain).connect(eqhicut).connect(eqlocut).connect(outputGain);
+    presenceFilter3.output.connect(boostGain).connect(eqhicut);
+    /*
+    masterVolume.connect(wetGain).connect(adjustmentGain).connect(ws).connect(lowpass).connect(outputGain);
+    ws.connect(hipass).connect(hipassgain).connect(outputGain);
+    */
+    // bypass route
+    //masterVolume.connect(dryGain).connect(outputGain);
 
     function toggleBypass() {
-        if(!bypass) {
+        if (!bypass) {
             dryGain.gain.value = 1;
             wetGain.gain.value = 0;
             //eqlocut.disconnect(outputGain);
@@ -102,7 +102,7 @@ ws.connect(hipass).connect(hipassgain).connect(outputGain);
     }
 
     function changeBoostGainValue(val) {
-        boostGain.gain.value = val;     
+        boostGain.gain.value = val;
     }
 
     function changePresenceFilterGainValue(sliderVal) {
@@ -116,7 +116,13 @@ ws.connect(hipass).connect(hipassgain).connect(outputGain);
         //presenceFilter2.changeGainValue(value);
         // TO DO ! THINK ABOUT WHAT THE PRESENCE KNOB WOULD ADJUST IN CASE OF FILTER BANK
         //console.log("presence changee " + adjustedValue);
-        presenceFilter3.adjustPresence(adjustedValue);
+
+        if(bypass) {
+            // No power amp enabled, use old presence implementation
+        } else {
+            // use the presence in the negative feedback loop of the power amp
+            presenceFilter3.adjustPresence(adjustedValue);
+        }
     }
 
     function changePresenceFreqValue(sliderVal) {
@@ -127,10 +133,13 @@ ws.connect(hipass).connect(hipassgain).connect(outputGain);
 
     function changePresenceGainRange(sliderVal) {
         var value = parseFloat(sliderVal);
-        presenceGainRange = value
+        presenceGainRange = value;
         //console.log("poweramp : presence gain range = +=" + presenceGainRange + " dB");
     }
 
+    function getPresenceGainRange() {
+        return presenceGainRange;
+    }
 
     function changeNegativeGainValue(sliderVal) {
         var value = parseFloat(sliderVal);
@@ -143,18 +152,23 @@ ws.connect(hipass).connect(hipassgain).connect(outputGain);
         //console.log("power amp, transfer function = " + type);
     }
 
-    
+    // Returns the value of k in the [0, 10] range
+    function getDistorsionValue() {
+        var pos = logToPos(k);
+        return parseFloat(pos).toFixed(1);
+    }
+
     function changeK(sliderValue) {
         // sliderValue is in [0, 10] range, adjust to [0, 1500] range  
-    
+
         k = getRealKFrom_1_10_range(sliderValue);
         //console.log("change K current disto name = " + currentDistoName);
         ws.curve = wsFactory.distorsionCurves[currentDistoName](k);
 
         //console.log("power amp k = " + k);
-     }
+    }
 
-     function getRealKFrom_1_10_range(val) {
+    function getRealKFrom_1_10_range(val) {
         var value = 150 * parseFloat(val);
         var minp = 0;
         var maxp = 1500;
@@ -169,38 +183,58 @@ ws.connect(hipass).connect(hipassgain).connect(outputGain);
         value = Math.exp(minv + scale * (value - minp));
         // end of logarithmic adjustment
         return value;
-     }
+    }
+
+    function getPresenceFilterParams() {
+        return presenceFilter3.getParams();
+    }
+
+    function setPresenceFilterParams(paramArray) {
+        presenceFilter3.setParams(paramArray);
+    }
+
+    function isEnabled() {
+        return !bypass;
+    }
 
     // API
     return {
-      input: masterVolume,
-      output: outputGain,
-      masterVolume: masterVolume,
-      ws: ws,
-      k:k,
-      delay: delay,
-      negativeGain: negativeGain,
-      toggleBypass:toggleBypass,
-      getBypassStatus: getBypassStatus,
-      changeBoostGainValue:changeBoostGainValue,
-      changePresenceFilterGainValue: changePresenceFilterGainValue,
-      changeNegativeGainValue : changeNegativeGainValue,
-      changePresenceFreqValue:changePresenceFreqValue,
-      changePresenceGainRange: changePresenceGainRange,
-      changeDistoType:changeDistoType,
-      changeK:changeK
+        bypass: bypass,
+        input: masterVolume,
+        output: outputGain,
+        masterVolume: masterVolume,
+        ws: ws,
+        k: k,
+        getDistorsionValue: getDistorsionValue,
+        delay: delay,
+        negativeGain: negativeGain,
+        toggleBypass: toggleBypass,
+        getBypassStatus: getBypassStatus,
+        boostGain: boostGain,
+        isEnabled: isEnabled,
+        changeBoostGainValue: changeBoostGainValue,
+        changePresenceFilterGainValue: changePresenceFilterGainValue,
+        changeNegativeGainValue: changeNegativeGainValue,
+        changePresenceFreqValue: changePresenceFreqValue,
+        getPresenceGainRange: getPresenceGainRange,
+        getPresenceFilterParams:getPresenceFilterParams,
+        presenceGainRange: presenceGainRange,
+        changePresenceGainRange: changePresenceGainRange,
+        setPresenceFilterParams:setPresenceFilterParams,
+        changeDistoType: changeDistoType,
+        changeK: changeK
     }
-  }
+}
 
-  function PresenceFilter2(ctx) {
-      var input = ctx.createGain();
+function PresenceFilter2(ctx) {
+    var input = ctx.createGain();
 
-    var lowpass  = ctx.createBiquadFilter();
+    var lowpass = ctx.createBiquadFilter();
     lowpass.frequency.value = 2000;
     lowpass.type = "lowpass";
     lowpass.Q.value = 0.7071;
 
-    var hipass  = ctx.createBiquadFilter();
+    var hipass = ctx.createBiquadFilter();
     hipass.frequency.value = 3000;
     hipass.type = "highpass";
     hipass.Q.value = 0.7071;
@@ -213,29 +247,39 @@ ws.connect(hipass).connect(hipassgain).connect(outputGain);
     input.connect(hipass).connect(hipassgain).connect(output);
 
     function changeGainValue(val) {
-    val = map(val, 0, 10, 0, 2);        
-    hipassgain.gain.value = -val;
+        val = map(val, 0, 10, 0, 2);
+        hipassgain.gain.value = -val;
     }
 
     return {
-        input:input,
-        output:output,
-        changeGainValue:changeGainValue
+        input: input,
+        output: output,
+        changeGainValue: changeGainValue
     }
-  }
+}
 
-  function PresenceFilter3(ctx) {
+function PresenceFilter3(ctx) {
     // filter bank/GrahicEQ from -10dB to +10dB
     var bank = new FilterBank(ctx, document.querySelector("#divFilterBank"), 8);
+    //console.log(bank.getCurrentSettingsJSON());
 
     function adjustPresence(val) {
         bank.adjustPresence(val);
     }
 
+    function getParams() {
+        return bank.getFiltersParamsAsArray();
+    }
+
+    function setParams(paramArray) {
+        bank.setFiltersParams(paramArray);
+    }
     // API
     return {
-        input:bank.getInput(),
-        output:bank.getOutput(),
-        adjustPresence:adjustPresence
+        input: bank.getInput(),
+        output: bank.getOutput(),
+        getParams:getParams,
+        setParams:setParams,
+        adjustPresence: adjustPresence
     }
-  }
+}

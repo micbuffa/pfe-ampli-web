@@ -35,10 +35,11 @@ class AmpViewer {
 
     // View change for distortions
     changeDistoLabels(sliderValue, numDisto) {
+        /*
         if (numDisto > 1) {
             numDisto = numDisto - 2;
         }
-
+*/
         // update output labels
         var output = document.querySelector("#k" + numDisto);
         output.value = parseFloat(sliderValue).toFixed(1);
@@ -78,8 +79,22 @@ class AmpViewer {
 
     changePowerAmpPresenceGainRangeValueLabel(sliderValue) {
         var output = document.querySelector("#PaPresenceGainRangeValue");
-        output.value = "+-" + parseFloat(sliderValue) + " Db"
+        output.value = parseFloat(sliderValue);
+
+        var slider = document.querySelector("#PaPresenceGainRangeSlider");
+        slider.value = parseFloat(sliderValue).toFixed(1);
+
     }
+
+    changePowerAmpBoostGainValueTS(sliderValue) {
+        // refresh knob state
+        var output = document.querySelector("#BoostGainValue");
+        output.value = parseFloat(sliderValue);
+
+        var slider = document.querySelector("#BoostGainSlider");
+        slider.value = parseFloat(sliderValue).toFixed(1);
+    }
+
 
     // View change for bezier curves
     changeBezierLabels(sliderValue, numDisto) {
@@ -222,7 +237,7 @@ class AmpViewer {
         var knob = document.querySelector("#Knob8");
         knob.setValue(parseFloat(sliderVal).toFixed(1), false);
     }
-
+    
     // View change for amp
 
     changeOutputGainAmp(sliderVal) {
@@ -425,6 +440,8 @@ class AmpViewer {
                 this.menuDisto3.appendChild(option);
             }
         }
+
+        this.menuDisto3.selectedIndex = 4;
     }
     // Build a drop down menu with all distorsion names
     buildDistoMenu4() {
@@ -445,6 +462,9 @@ class AmpViewer {
 
     updateDisto2Name(name) {
         this.menuDisto2.value = name;
+    }
+    updateDisto4Name(name) {
+        this.menuDisto4.value = name;
     }
 
     //

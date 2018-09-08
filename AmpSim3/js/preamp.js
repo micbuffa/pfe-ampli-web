@@ -25,6 +25,9 @@ class PreAmp {
         this.initialP1 = {x: 50, y: 100};
         this.initialP2 = {x: 50, y: 0};
         this.previousNode = [];
+
+        this.nbTubes = 2;
+        this.extraStages = [];
 	}
 
     createBoost() {
@@ -142,6 +145,10 @@ class PreAmp {
 
         // redraw curves
         this.drawCurrentDistos();
+
+        if(numDisto > 1) {
+            this.extraStages[numDisto-2].k = sliderValue;
+        }
     }
 
     // Just update and redraw
@@ -459,10 +466,10 @@ class PreAmp {
     addNewLamps(type, num) {
         // Creates a new waveshapper 
         // We store at num + 1 to not interfere with the max drive button algorithm
-        this.od[num + 1] = this.context.createWaveShaper();
+        this.od[num] = this.context.createWaveShaper();
         // 498 is the empirical value for slider = 7.8
-        this.od[num + 1].curve = this.wsFactory.distorsionCurves[type](498.1397311910594);
-        this.distoTypes[num + 1] = type;
+        this.od[num].curve = this.wsFactory.distorsionCurves[type](498.1397311910594);
+        this.distoTypes[num] = type;
 
         // Creates a new highpass
         var highPassNew = this.context.createBiquadFilter();
@@ -480,10 +487,17 @@ class PreAmp {
         var ctrlGain = this.context.createGain();
         ctrlGain.gain.value = 1.0;
 
-        this.addToGraph(this.od[num + 1], highPassNew, lowShelfNew, ctrlGain)
+        this.addToGraph(this.od[num], highPassNew, lowShelfNew, ctrlGain)
+
+        this.nbTubes++;
+        this.extraStages.push({
+            type:type,
+            k: this.getDistorsionValue(num)
+        });
     }
 
     addToGraph(newWs, newHp, newLs, newG) {
+        /*
         this.beforeOutputGain.disconnect(amp.outputGain);
         this.beforeOutputGain.connect(newWs);
         newWs.connect(newHp);
@@ -492,6 +506,13 @@ class PreAmp {
         newG.connect(amp.outputGain);
         this.previousNode.push(this.beforeOutputGain);
         this.beforeOutputGain = newG;
+*/
+        // MB
+        this.beforeOutputGain.disconnect(amp.outputGain);
+        this.beforeOutputGain.connect(newHp).connect(newLs).connect(newG).connect(newWs).connect(amp.outputGain);
+
+        this.previousNode.push(this.beforeOutputGain);
+        this.beforeOutputGain = newWs;
     }
 
     removeLastLamp(num) {
@@ -502,12 +523,32 @@ class PreAmp {
             previousDisto = num + 1;
         }
 
+        /*
         this.previousNode[this.previousNode.length - 1].disconnect(this.od[num+2]);
         this.beforeOutputGain.disconnect(amp.outputGain);
         this.previousNode[this.previousNode.length - 1].connect(amp.outputGain);
         this.beforeOutputGain = this.previousNode[this.previousNode.length - 1];
         this.previousNode.pop();
+        */
+
+        // MB
+        // One stage = hp + ls + gain + ws, we pushed all "last nodes of each stage i.e ws"
+        // First, disconnect last node of previous stage
+        this.previousNode[this.previousNode.length - 1].disconnect();
+        // disconnect last note of current last stage
+        this.beforeOutputGain.disconnect(amp.outputGain);
+        // connect last node of previous stage to ouput of preamp
+        this.previousNode[this.previousNode.length - 1].connect(amp.outputGain);
+        // Last node becomes the last from previous stage
+        this.beforeOutputGain = this.previousNode[this.previousNode.length - 1];
+        // remove from array
+        this.previousNode.pop();
+
+        this.nbTubes--;
+        this.extraStages.pop();
     }
+
+
 
 }
 

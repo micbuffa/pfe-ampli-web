@@ -83,7 +83,49 @@ class FilterBank {
 
     // PRESETS
     createDefaultPresets() {
-        this.presets.push("clean", [{"type":"highpass","freq":40,"Q":0.000009999999747378752,"gain":12,"color":"red"},{"type":"lowshelf","freq":78.48050689697266,"Q":0,"gain":-1.4166666269302368,"color":"yellow"},{"type":"peaking","freq":230,"Q":1,"gain":0,"color":"green"},{"type":"peaking","freq":2000,"Q":1,"gain":2.880000114440918,"color":"turquoise"},{"type":"peaking","freq":4000,"Q":1,"gain":2.880000114440918,"color":"pink"},{"type":"highshelf","freq":10000,"Q":1,"gain":0,"color":"violet"},{"type":"lowpass","freq":18000,"Q":0.000009999999747378752,"gain":12,"color":"red"}]);
+        this.presets.push("clean", [{
+            "type": "highpass",
+            "freq": 40,
+            "Q": 0.000009999999747378752,
+            "gain": 12,
+            "color": "red"
+        }, {
+            "type": "lowshelf",
+            "freq": 78.48050689697266,
+            "Q": 0,
+            "gain": -1.4166666269302368,
+            "color": "yellow"
+        }, {
+            "type": "peaking",
+            "freq": 230,
+            "Q": 1,
+            "gain": 0,
+            "color": "green"
+        }, {
+            "type": "peaking",
+            "freq": 2000,
+            "Q": 1,
+            "gain": 2.880000114440918,
+            "color": "turquoise"
+        }, {
+            "type": "peaking",
+            "freq": 4000,
+            "Q": 1,
+            "gain": 2.880000114440918,
+            "color": "pink"
+        }, {
+            "type": "highshelf",
+            "freq": 10000,
+            "Q": 1,
+            "gain": 0,
+            "color": "violet"
+        }, {
+            "type": "lowpass",
+            "freq": 18000,
+            "Q": 0.000009999999747378752,
+            "gain": 12,
+            "color": "red"
+        }]);
     }
 
     //-------
@@ -329,6 +371,34 @@ class FilterBank {
         return filter;
     }
 
+    getFiltersParamsAsArray() {
+        let params = [];
+
+        this.filters.forEach((f) => {
+            let p = {
+                Q: f.Q.value,
+                frequency: f.frequency.value,
+                gain : f.gain.value,
+            }
+            params.push(p);
+        });
+
+        return params;
+    }
+
+    setFiltersParams(paramArray) {
+        for(let i = 0; i < this.filters.length; i++) {
+            let f = this.filters[i];
+
+            f.frequency.value = paramArray[i].frequency;
+            f.gain.value = paramArray[i].gain;
+            f.Q.value = paramArray[i].Q;
+        }
+
+        this.clearCanvas();
+        this.draw();
+    }
+
     draw() {
         let ctx = this.ctx;
         ctx.save();
@@ -367,8 +437,10 @@ class FilterBank {
     drawTooltip() {
         if (this.mousePos === undefined) return;
 
-        let tooltipWidth = 50, tooltipHeight;
-        let displayQ = false, displayGain = false;
+        let tooltipWidth = 50,
+            tooltipHeight;
+        let displayQ = false,
+            displayGain = false;
 
         switch (this.selectedFilter.type) {
             case "lowpass":
@@ -478,7 +550,7 @@ class FilterBank {
         ctx.stroke();
 
         // Draw decibel scale.
-        let dbIncrement = this.dbScale*10/60;
+        let dbIncrement = this.dbScale * 10 / 60;
         for (let db = -this.dbScale; db < this.dbScale; db += dbIncrement) {
             let y = this.dbToY(db);
             ctx.fillStyle = this.textColor;
@@ -753,7 +825,7 @@ class FilterBank {
         // logarithmic scale
         var logf = Math.log2(f);
         var logmaxf = Math.log2(this.nyquist); // 24Khz for 11 octaves at 48Khz
-        var logminf = Math.log2(10);      // min freq value in our graphic
+        var logminf = Math.log2(10); // min freq value in our graphic
         var x = this.map(logf, logminf, logmaxf, -this.width / 50, this.width);
 
         return x;
@@ -763,7 +835,7 @@ class FilterBank {
         // x corresponds to a freq in log scale
         // logarithmic scale
         var logmaxf = Math.log2(this.nyquist); // 24Khz for 11 octaves at 48Khz
-        var logminf = Math.log2(10);      // min freq value in our graphic
+        var logminf = Math.log2(10); // min freq value in our graphic
         var flog = this.map(x, -this.width / 50, this.width, logminf, logmaxf);
         return Math.pow(2, flog); // reverse of a log function is 2^logf
     }

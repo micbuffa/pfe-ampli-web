@@ -69,6 +69,9 @@ function Amp(context, ampName) {
     // output gain after preamp stage
     var outputGain = context.createGain();
 
+    // Is the preamp located before the tonestack?
+    var preampBeforeTonestack = true;
+
     // ------------
     // PREAM STAGE
     // ------------
@@ -172,6 +175,8 @@ function Amp(context, ampName) {
         inputGain.connect(preamp.boost.input);
         //inputGain.connect(outputGain);
 
+        // Preamp before tonestack (default value)
+
         // JCM 800 preamp
         preamp.boost.output.connect(preamp.lowShelf1);
         preamp.lowShelf1.connect(preamp.lowShelf2);
@@ -216,8 +221,14 @@ function Amp(context, ampName) {
         byPass.connect(output);
     }
 
-    function changeGraph(normal) {
-        if (normal) {
+    function isPreampBeforeTonestack() {
+        return preampBeforeTonestack;
+    }
+
+    function changeTonestackAndPreampLocations(preampBeforeTS) {
+        preampBeforeTonestack = preampBeforeTS;
+        // Preamp before tonestack (default value)
+        if (preampBeforeTS) {
             // disconnection phase of TS before PA 
             preamp.boost.output.disconnect(tonestack.trebleFilter);
             tonestack.presenceFilter.disconnect(preamp.lowShelf1);
@@ -306,6 +317,7 @@ function Amp(context, ampName) {
         presets.push(preset6);
         presets.push(preset7);
         presets.push(preset8);
+        presets.push(preset9);
     }
 
     function bypassAmp(cb) {
@@ -360,6 +372,7 @@ function Amp(context, ampName) {
         bypassEQAmp: bypassEQAmp,
 
         outputGain: outputGain,
-        changeGraph: changeGraph
+        changeTonestackAndPreampLocations: changeTonestackAndPreampLocations,
+        isPreampBeforeTonestack: isPreampBeforeTonestack
     };
 }

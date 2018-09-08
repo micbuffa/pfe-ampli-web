@@ -35,3 +35,19 @@ var preset7 = {"name":"Hard Rock classic 2","boost":false,"LS1Freq":720,"LS1Gain
 var preset8 = {"name":"SuperClean/Jazz","boost":false,"LS1Freq":720,"LS1Gain":-6,"LS2Freq":320,"LS2Gain":-6.300000190734863,"gain1":1,"distoName1":"crunch","K1":"5.4",
     "HP1Freq":6,"HP1Q":0.707099974155426,"LS3Freq":720,"LS3Gain":-6,"gain2":1,"distoName2":"crunch","K2":"5.4","OG":"7.0","BF":"7.0","MF":"5.1","TF":"5.2","PF":"3.1",
     "EQ":[10,7,0,-10,5,12],"MV":"3.8","RN":"Fender Hot Rod","RG":"1.5","CN":"Marshall 1960, axis","CG":"4.5"};
+
+var preset9 = {"name":"test","boost":false,"LS1Freq":720,"LS1Gain":-6,"LS2Freq":320,"LS2Gain":-1,
+"gain1":1.0299999713897705,"distoName1":"asymetric",
+"K1":"7.8","HP1Freq":6,"HP1Q":0.707099974155426,"LS3Freq":720,"LS3Gain":-6,"gain2":1,"distoName2":"superClean",
+"K2":"7.8","OG":"10.0","BF":"8.2","MF":"6.7","TF":"5.0","PF":"5.0","EQ":[0,0,0,-1,0,1],"MV":"5.9",
+"RN":"Fender Hot Rod","RG":"1.1","CN":"Vox Custom Bright 4x12 M930 Axis 1","CG":"8.0",
+"PREAMP_BEFORE_TONESTACK":true,"PREAMP_EXTRA_STAGES":[{"type":"smooth","k":"2"},{"type":"asymetric","k":"4.0"}],
+"PA_ENABLED":true,"PA_DISTORSION_CURVE":"smooth","PA_K":"5.4","PA_NEGATIVE_GAIN":-0.3000000059604645,
+"PA_PRESENCE_FILTERS_PARAMS":[{"Q":2.883333444595337,"frequency":39.64677810668945,"gain":12},
+{"Q":0,"frequency":85.93848419189453,"gain":-3.211111068725586},
+{"Q":1,"frequency":247.2218780517578,"gain":2.9277777671813965},
+{"Q":1,"frequency":2000,"gain":1.5199999809265137},
+{"Q":1,"frequency":4000,"gain":1.5199999809265137},
+{"Q":1,"frequency":9433.009765625,"gain":-3.3888888359069824},
+{"Q":1.9500000476837158,"frequency":18606.16796875,"gain":12}],
+"PA_PRESENCE_GAIN_RANGE":7,"PA_BOOST_GAIN":0.8999999761581421}

@@ -78,7 +78,7 @@ if(window.customElements){
     useMidi:0,
     midilearn:0,
     mididump:0,
-    outline:1,
+    outline:0,
     knobSrc:null,
     knobSprites:0,
     knobWidth:0,
@@ -114,6 +114,43 @@ if(window.customElements){
       this.addEventListener("mouseout",this.pointerout);
       this.addEventListener("contextmenu",this.contextMenu);
       this.hover=this.drag=0;
+      document.body.appendChild(midimenu);
+      this.basestyle=`
+.webaudioctrl-tooltip{
+  display:inline-block;
+  position:absolute;
+  margin:0 -1000px;
+  z-index: 999;
+  background:#eee;
+  color:#000;
+  border:1px solid #666;
+  border-radius:4px;
+  padding:5px 10px;
+  text-align:center;
+  left:0; top:0;
+  font-size:11px;
+  opacity:0;
+  visibility:hidden;
+}
+.webaudioctrl-tooltip:before{
+  content: "";
+	position: absolute;
+	top: 100%;
+	left: 50%;
+ 	margin-left: -8px;
+	border: 8px solid transparent;
+	border-top: 8px solid #666;
+}
+.webaudioctrl-tooltip:after{
+  content: "";
+	position: absolute;
+	top: 100%;
+	left: 50%;
+ 	margin-left: -6px;
+	border: 6px solid transparent;
+	border-top: 6px solid #eee;
+}
+`;
     }
     sendEvent(ev){
       let event;
@@ -247,7 +284,8 @@ if(window.customElements){
     }
   }
 
-  customElements.define("webaudio-knob", class WebAudioKnob extends WebAudioControlsWidget {
+try{
+    customElements.define("webaudio-knob", class WebAudioKnob extends WebAudioControlsWidget {
     constructor(){
       super();
     }
@@ -259,40 +297,7 @@ if(window.customElements){
         root=this;
       root.innerHTML=
 `<style>
-.webaudioctrl-tooltip{
-  display:inline-block;
-  position:absolute;
-  margin:0 -1000px;
-  z-index: 999;
-  background:#eee;
-  color:#000;
-  border:1px solid #666;
-  border-radius:4px;
-  padding:5px 10px;
-  text-align:center;
-  left:0; top:0;
-  font-size:11px;
-  opacity:0;
-  visibility:hidden;
-}
-.webaudioctrl-tooltip:before{
-  content: "";
-	position: absolute;
-	top: 100%;
-	left: 50%;
- 	margin-left: -8px;
-	border: 8px solid transparent;
-	border-top: 8px solid #666;
-}
-.webaudioctrl-tooltip:after{
-  content: "";
-	position: absolute;
-	top: 100%;
-	left: 50%;
- 	margin-left: -6px;
-	border: 6px solid transparent;
-	border-top: 6px solid #eee;
-}
+${this.basestyle}
 webaudio-knob{
   display:inline-block;
   position:relative;
@@ -342,7 +347,8 @@ webaudio-knob{
       this.midiController={};
       this.midiMode="normal";
       if(this.midicc) {
-          let ch = parseInt(this.midicc.substring(0, this.midicc.lastIndexOf("."))) - 1;
+          // Michel Buffa, no -1 at this line !!!
+          let ch = parseInt(this.midicc.substring(0, this.midicc.lastIndexOf(".")));
           let cc = parseInt(this.midicc.substring(this.midicc.lastIndexOf(".") + 1));
           this.setMidiController(ch, cc);
       }
@@ -531,7 +537,11 @@ webaudio-knob{
       return false;
     }
   });
+} catch(error){
+  console.log("webaudio-knob already defined");
+}
 
+try{
   customElements.define("webaudio-slider", class WebAudioSlider extends WebAudioControlsWidget {
     constructor(){
       super();
@@ -544,40 +554,7 @@ webaudio-knob{
         root=this;
       root.innerHTML=
 `<style>
-.webaudioctrl-tooltip{
-  display:inline-block;
-  position:absolute;
-  margin:0 -1000px;
-  z-index: 999;
-  background:#eee;
-  color:#000;
-  border:1px solid #666;
-  border-radius:4px;
-  padding:5px 10px;
-  text-align:center;
-  left:0; top:0;
-  font-size:11px;
-  opacity:0;
-  visibility:hidden;
-}
-.webaudioctrl-tooltip:before{
-  content: "";
-	position: absolute;
-	top: 100%;
-	left: 50%;
- 	margin-left: -8px;
-	border: 8px solid transparent;
-	border-top: 8px solid #666;
-}
-.webaudioctrl-tooltip:after{
-  content: "";
-	position: absolute;
-	top: 100%;
-	left: 50%;
- 	margin-left: -6px;
-	border: 6px solid transparent;
-	border-top: 6px solid #eee;
-}
+${this.basestyle}
 webaudio-slider{
   display:inline-block;
   position:relative;
@@ -643,7 +620,7 @@ webaudio-slider{
       this.midiController={};
       this.midiMode="normal";
       if(this.midicc) {
-          let ch = parseInt(this.midicc.substring(0, this.midicc.lastIndexOf("."))) - 1;
+          let ch = parseInt(this.midicc.substring(0, this.midicc.lastIndexOf(".")));
           let cc = parseInt(this.midicc.substring(this.midicc.lastIndexOf(".") + 1));
           this.setMidiController(ch, cc);
       }
@@ -855,7 +832,11 @@ webaudio-slider{
       return false;
     }
   });
+} catch(error){
+  console.log("webaudio-slider already defined");
+}
 
+try{
   customElements.define("webaudio-switch", class WebAudioSwitch extends WebAudioControlsWidget {
     constructor(){
       super();
@@ -868,40 +849,7 @@ webaudio-slider{
         root=this;
       root.innerHTML=
 `<style>
-.webaudioctrl-tooltip{
-  display:inline-block;
-  position:absolute;
-  margin:0 -1000px;
-  z-index: 999;
-  background:#eee;
-  color:#000;
-  border:1px solid #666;
-  border-radius:4px;
-  padding:5px 10px;
-  text-align:center;
-  left:0; top:0;
-  font-size:11px;
-  opacity:0;
-  visibility:hidden;
-}
-.webaudioctrl-tooltip:before{
-  content: "";
-	position: absolute;
-	top: 100%;
-	left: 50%;
- 	margin-left: -8px;
-	border: 8px solid transparent;
-	border-top: 8px solid #666;
-}
-.webaudioctrl-tooltip:after{
-  content: "";
-	position: absolute;
-	top: 100%;
-	left: 50%;
- 	margin-left: -6px;
-	border: 6px solid transparent;
-	border-top: 6px solid #eee;
-}
+${this.basestyle}
 webaudio-switch{
   display:inline-block;
   margin:0;
@@ -940,7 +888,7 @@ webaudio-switch{
       this.midiController={};
       this.midiMode="normal";
       if(this.midicc) {
-          let ch = parseInt(this.midicc.substring(0, this.midicc.lastIndexOf("."))) - 1;
+          let ch = parseInt(this.midicc.substring(0, this.midicc.lastIndexOf(".")));
           let cc = parseInt(this.midicc.substring(this.midicc.lastIndexOf(".") + 1));
           this.setMidiController(ch, cc);
       }
@@ -1078,7 +1026,11 @@ webaudio-switch{
       return false;
     }
   });
+} catch(error){
+  console.log("webaudio-switch already defined");
+}
 
+try{
   customElements.define("webaudio-param", class WebAudioParam extends WebAudioControlsWidget {
     constructor(){
       super();
@@ -1098,40 +1050,7 @@ webaudio-switch{
         root=this;
       root.innerHTML=
 `<style>
-.webaudioctrl-tooltip{
-  display:inline-block;
-  position:absolute;
-  margin:0 -1000px;
-  z-index: 999;
-  background:#eee;
-  color:#000;
-  border:1px solid #666;
-  border-radius:4px;
-  padding:5px 10px;
-  text-align:center;
-  left:0; top:0;
-  font-size:11px;
-  opacity:0;
-  visibility:hidden;
-}
-.webaudioctrl-tooltip:before{
-  content: "";
-	position: absolute;
-	top: 100%;
-	left: 50%;
- 	margin-left: -8px;
-	border: 8px solid transparent;
-	border-top: 8px solid #666;
-}
-.webaudioctrl-tooltip:after{
-  content: "";
-	position: absolute;
-	top: 100%;
-	left: 50%;
- 	margin-left: -6px;
-	border: 6px solid transparent;
-	border-top: 6px solid #eee;
-}
+${this.basestyle}
 webaudio-param{
   display:inline-block;
   user-select:none;
@@ -1172,7 +1091,7 @@ webaudio-param{
       this.midiController={};
       this.midiMode="normal";
       if(this.midicc) {
-        let ch = parseInt(this.midicc.substring(0, this.midicc.lastIndexOf("."))) - 1;
+        let ch = parseInt(this.midicc.substring(0, this.midicc.lastIndexOf(".")));
         let cc = parseInt(this.midicc.substring(this.midicc.lastIndexOf(".") + 1));
         this.setMidiController(ch, cc);
       }
@@ -1268,7 +1187,11 @@ webaudio-param{
       return false;
     }
   });
+} catch(error){
+  console.log("webaudio-param already defined");
+}
 
+try{
   customElements.define("webaudio-keyboard", class WebAudioKeyboard extends WebAudioControlsWidget {
     constructor(){
       super();
@@ -1281,40 +1204,7 @@ webaudio-param{
         root=this;
       root.innerHTML=
 `<style>
-.webaudioctrl-tooltip{
-  display:inline-block;
-  position:absolute;
-  margin:0 -1000px;
-  z-index: 999;
-  background:#eee;
-  color:#000;
-  border:1px solid #666;
-  border-radius:4px;
-  padding:5px 10px;
-  text-align:center;
-  left:0; top:0;
-  font-size:11px;
-  opacity:0;
-  visibility:hidden;
-}
-.webaudioctrl-tooltip:before{
-  content: "";
-	position: absolute;
-	top: 100%;
-	left: 50%;
- 	margin-left: -8px;
-	border: 8px solid transparent;
-	border-top: 8px solid #666;
-}
-.webaudioctrl-tooltip:after{
-  content: "";
-	position: absolute;
-	top: 100%;
-	left: 50%;
- 	margin-left: -6px;
-	border: 6px solid transparent;
-	border-top: 6px solid #eee;
-}
+${this.basestyle}
 webaudio-keyboard{
   display:inline-block;
   position:relative;
@@ -1351,7 +1241,7 @@ webaudio-keyboard{
       this.midiController={};
       this.midiMode="normal";
       if(this.midicc) {
-          let ch = parseInt(this.midicc.substring(0, this.midicc.lastIndexOf("."))) - 1;
+          let ch = parseInt(this.midicc.substring(0, this.midicc.lastIndexOf(".")));
           let cc = parseInt(this.midicc.substring(this.midicc.lastIndexOf(".") + 1));
           this.setMidiController(ch, cc);
       }
@@ -1584,6 +1474,9 @@ webaudio-keyboard{
       this.redraw();
     }
   });
+} catch(error){
+  console.log("webaudio-keyboard already defined");
+}
 
   // FOR MIDI LEARN
   class WebAudioControlsMidiManager {
@@ -1682,9 +1575,6 @@ webaudio-keyboard{
       this.contextMenuClose();
     }
   }
-  window.addEventListener("load",()=>{
-    document.body.appendChild(midimenu);
-  });
   if(window.UseWebAudioControlsMidi||opt.useMidi)
     window.webAudioControlsMidiManager = new WebAudioControlsMidiManager();
 }

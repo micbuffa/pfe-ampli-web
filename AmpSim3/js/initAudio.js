@@ -1,6 +1,6 @@
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
-var audioContext = new AudioContext();
+var audioContext = new AudioContext({ latencyHint: 0.00001 /* seconds */ });
 
 window.addEventListener('load', startWithFirefoxComaptibility /*start*/);
 
