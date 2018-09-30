@@ -107,7 +107,7 @@ class PreAmp {
     // Distortion-related functions
     //
 
-    changeDistorsionValuesPA(sliderValue, numDisto) {
+    changeDistorsionValuesPA(sliderValue, numDisto, sourceIsDynamicAdjustment) {
         // sliderValue is in [0, 10] range, adjust to [0, 1500] range  
         var value = 150 * parseFloat(sliderValue);
         var minp = 0;
@@ -131,6 +131,16 @@ class PreAmp {
             //console.log("k = " + value + " pos = " + logToPos(value));
             //console.log("distoTypes = " + distoTypes[numDisto]);
             this.od[numDisto].curve = this.wsFactory.distorsionCurves[this.distoTypes[numDisto]](this.k[numDisto]); //makeDistortionCurve(k[numDisto]);
+
+            // useful for dynamic display
+            if(!sourceIsDynamicAdjustment) {
+                // drive knob or preset asked for a new curve
+                // let's store it for display against the dynamic adjusted curve
+                this.od[numDisto].curveWithDriveKnobValue = this.wsFactory.distorsionCurves[this.distoTypes[numDisto]](this.k[numDisto]); //makeDistortionCurve(k[numDisto]);
+            }
+
+            this.od[numDisto].curveOriginal = this.wsFactory.distorsionCurves[this.distoTypes[numDisto]](this.k[numDisto]); //makeDistortionCurve(k[numDisto]);
+
             this.currentWSCurve = this.od[numDisto].curve;
             //od[numDisto].curve = makeDistortionCurve(sliderValue);
             //makeDistortionCurve(k[numDisto]);
@@ -145,7 +155,7 @@ class PreAmp {
         this.currentK = maxPosVal2;//parseFloat(maxPosVal).toFixed(1);
 
         // redraw curves
-        this.drawCurrentDistos();
+        this.drawCurrentDistos(sourceIsDynamicAdjustment);
 
         if(numDisto > 1) {
             this.extraStages[numDisto-2].k = sliderValue;
@@ -282,7 +292,22 @@ class PreAmp {
         return parseFloat(bias).toFixed(1);
     }
 
-    drawCurrentDistos() {
+    drawCurrentDistos(dynamicCurveAdjustment) {
+        this.distoDrawer1.clear();
+        this.distoDrawer2.clear();
+
+        if(dynamicCurveAdjustment) {
+            // draw curves for original k value
+            //this.drawDistoCurves(this.distoDrawer1, this.signalDrawer1, this.od[0].curveWithDriveKnobValue, 0);
+            //this.drawDistoCurves(this.distoDrawer2, this.signalDrawer2, this.od[1].curveWithDriveKnobValue, 1);    
+    
+            this.distoDrawer1.setCurve(this.od[0].curveWithDriveKnobValue);
+            this.distoDrawer1.drawCurve('yellow', 2);
+            this.distoDrawer2.setCurve(this.od[1].curveWithDriveKnobValue);
+            this.distoDrawer2.drawCurve('yellow', 2);
+        }
+    
+
         // draws both the transfer function and a sinusoidal
         // signal transformed, for each distorsion stage
         this.drawDistoCurves(this.distoDrawer1, this.signalDrawer1, this.od[0].curve, 0);
@@ -291,7 +316,6 @@ class PreAmp {
 
     drawDistoCurves(distoDrawer, signalDrawer, curve, curveNumber) {
         var c = curve;
-        distoDrawer.clear();
 		// Draw control points and line only for bezier curve.
 		if(this.distoTypes[curveNumber] == "bezier") {
 			var p1 = this.bezierPoints[curveNumber][1];

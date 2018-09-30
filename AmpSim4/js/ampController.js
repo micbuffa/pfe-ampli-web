@@ -16,15 +16,21 @@ class AmpController {
 
   // Distortions
 
-  changeDistorsionValues(sliderValue, numDisto, doNotUpdateKnob) {
-    // update processing 
-    this.amp.preamp.changeDistorsionValuesPA(sliderValue, numDisto);
-    // update view
-    this.ampViewer.changeDistoLabels(sliderValue, numDisto, doNotUpdateKnob);
+  changeDistorsionValues(sliderValue, numDisto, sourceIsDynamicAdjustment) {
 
-    if(!doNotUpdateKnob) {
+    if (!sourceIsDynamicAdjustment) {
+      // source for changing K is drive knob manual adjustment or preset
+      // we need to store the current K value that will be used as
+      // a reference value for dynamic adjustment driven by input signal
+      // amplitude hysteresis
       this.currentK = parseFloat(sliderValue);
     }
+
+    // update processing 
+    this.amp.preamp.changeDistorsionValuesPA(sliderValue, numDisto, sourceIsDynamicAdjustment);
+    // update view
+    this.ampViewer.changeDistoLabels(sliderValue, numDisto, sourceIsDynamicAdjustment);
+
   }
 
   // Bezier
@@ -73,16 +79,35 @@ class AmpController {
   dynamicDriveAdjustment() {
     this.currentK = this.ampViewer.driveKnob.value;
     var k, inc;
-    var animId = setInterval(() =>  {
-       inc = map(this.ampViewer.inputVisualization.getAverageAmplitude(), 0, 100, -7, 7);
-        //console.log(averageInputValue)
-        k = parseFloat(this.currentK) + inc;
-        //console.log(inc);
-        //changeK(k.value);
-        //this.driveKnob.setValue(k, true);
-        this.changeDrive(k, true);
+    var old = undefined;
+    var delta;
+
+    var animId = setInterval(() => {
+      var currentAverageAmplitude = this.ampViewer.inputVisualization.getAverageAmplitude();
+      if (old != undefined) {
+        //compute delta
+        delta = old - currentAverageAmplitude;
+      } else {
+        old = currentAverageAmplitude;
+        delta = 0;
+      }
+      //console.log(delta);
+
+      inc = map(delta, -30, 30, -10, 10);
+      //console.log(averageInputValue)
+      k = parseFloat(this.currentK) + inc;
+
+      if (k < 0) k = 0; // k might be negative otherwise...
+      if (k > 10) k = 10; // k cannot be > 10
+
+      //console.log(inc);
+      //changeK(k.value);
+      //this.driveKnob.setValue(k, true);
+      this.changeDrive(k, true);
+
+      old = currentAverageAmplitude;
     }, 50);
-}
+  }
 
 
   changePowerAmpDistoType(name) {
@@ -122,7 +147,7 @@ class AmpController {
     this.ampViewer.changePowerAmpStatus(this.amp.powerAmp.getBypassStatus());
   }
 
-  
+
   setCurveHandlers() {
     // Change distortion on mouse move in Canvas distoDrawer 1
     var canvas1,
@@ -389,7 +414,7 @@ class AmpController {
     this.amp.powerAmp.setHiAndLoCutFilters(enableFilters);
     this.ampViewer.changePowerAmpHiAndLoCutFiltersStatus(this.amp.powerAmp.getLoHiCutFilterStatus());
   }
-  
+
 
   changePresenceFilterGainValue(sliderVal) {
     if (!this.amp.powerAmp.isEnabled()) {
@@ -425,8 +450,17 @@ class AmpController {
   }
 
   changeMasterVolume(sliderVal) {
-    this.amp.changeMasterVolumeAmp(sliderVal);
-    this.ampViewer.changeMasterVolumeAmp(sliderVal);
+    var value = parseFloat(sliderVal);
+
+    this.amp.changeMasterVolumeAmp(value);
+    this.ampViewer.changeMasterVolumeAmp(value);
+
+    // adjust boost gain
+    if (value < 5) {
+      // is master volume goes down below 50%
+      // boost gain at end of power amp goes up
+      this.amp.powerAmp.adjustLowMasterVolume((5 - value));
+    }
   }
 
   changeReverbGain(sliderVal) {
@@ -546,7 +580,7 @@ class AmpController {
     // If we are here, it means that presence is in the power amp,
     // so we set the presence located in the tonestack to a neutral value
     this.changeToneStackPresenceFilterValue(5); // ts presence
-    this.changePresenceFilterGainValue(p.PF);   // PA presence
+    this.changePresenceFilterGainValue(p.PF); // PA presence
 
     // set preamp extra stages
     this.addPreampLampsFromPresetExtraStages(p.PREAMP_EXTRA_STAGES);
@@ -786,7 +820,7 @@ class AmpController {
   }
 
   addPreampLampsFromPresetExtraStages(extraStages) {
-    for(let i = 0; i < extraStages.length; i++) {
+    for (let i = 0; i < extraStages.length; i++) {
       let tube = extraStages[i];
       this.amp.preamp.addNewLamps(tube.type, this.nbLampPairs);
       this.amp.preamp.changeDistorsionValuesPA(tube.k, this.nbLampPairs);
@@ -796,7 +830,7 @@ class AmpController {
   }
 
   removePreampExtraStages() {
-    while(this.nbLampPairs > 2) {
+    while (this.nbLampPairs > 2) {
       this.removeLastLamp();
     }
   }

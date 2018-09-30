@@ -291,8 +291,8 @@ function Amp(context, ampName) {
     function changeMasterVolumeAmp(sliderVal) {
         // sliderVal is in [0, 10]
         var value = parseFloat(sliderVal);
-        value = map(value, 0, 10, 0, 3);
-        masterVolume.gain.value = value;
+        var value1 = map(value, 0, 10, 0, 3);
+        masterVolume.gain.value = value1;
     }
 
     function changeReverbGainAmp(sliderVal) {

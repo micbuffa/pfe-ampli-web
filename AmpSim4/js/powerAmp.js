@@ -6,7 +6,9 @@ function PowerAmp(ctx) {
     var masterVolume = ctx.createGain();
     var boostGain = ctx.createGain();
     boostGain.gain.value = 2;
-
+    var boostOnBoost = 0;
+    var currentBoostGainValue = boostGain.gain.value;
+    
     var ws = ctx.createWaveShaper();
     var k = getRealKFrom_1_10_range(8);
     var wsFactory = new WaveShapers();
@@ -141,7 +143,14 @@ function PowerAmp(ctx) {
     }
 
     function changeBoostGainValue(val) {
-        boostGain.gain.value = val;
+        currentBoostGainValue = val;
+        boostGain.gain.value = val + boostOnBoost;
+    }
+
+    function adjustLowMasterVolume(val) {
+        boostOnBoost = parseFloat(val);
+        // call with current boost gain value. boostOnBoost will be applied
+        changeBoostGainValue(currentBoostGainValue);
     }
 
     function changePresenceFilterGainValue(sliderVal) {
@@ -251,6 +260,7 @@ function PowerAmp(ctx) {
         getBypassStatus: getBypassStatus,
         boostGain: boostGain,
         isEnabled: isEnabled,
+        adjustLowMasterVolume:adjustLowMasterVolume,
         changeBoostGainValue: changeBoostGainValue,
         changePresenceFilterGainValue: changePresenceFilterGainValue,
         changeNegativeGainValue: changeNegativeGainValue,
