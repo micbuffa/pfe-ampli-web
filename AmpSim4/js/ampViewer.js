@@ -23,6 +23,7 @@ class AmpViewer {
         this.lampNum = document.querySelector("#lampNum");
         this.advSettings = document.querySelector("#advSettings");
         this.powerAmpStatus = document.querySelector("#powerAmpStatus");
+        this.powerAmpHiLoCutFiltersStatus = document.querySelector("#powerAmpLoHiCutFiltersStatus");
         this.graphicEQParent = document.querySelector("#divFilterBank");
         this.distoDrawerPowerAmp = new CurveDrawer("signalDrawerPowerAmpCanvas");
     }
@@ -50,7 +51,7 @@ class AmpViewer {
         slider.value = parseFloat(sliderValue).toFixed(1);
 
         var knob = document.querySelector("#Knob3");
-        knob.setValue(this.amp.preamp.currentK, false);
+        knob.setValue(this.amp.preamp.currentK, false); // bug metal 5
     }
 
     drawCurrentPowerAmpDistoCurve(curve) {
@@ -70,6 +71,10 @@ class AmpViewer {
 
     changePowerAmpStatus(bypass) {
         this.powerAmpStatus.innerHTML = "Power Amp : " + ((bypass) ? "Off" : "On");
+    }
+
+    changePowerAmpHiAndLoCutFiltersStatus(filtersEnabled) {
+        this.powerAmpHiLoCutFiltersStatus.innerHTML = "Hi/Lo cut filters : " + ((filtersEnabled) ? "On" : "Off");
     }
 
     changePowerAmpFreqValueLabel(sliderValue) {
@@ -533,7 +538,9 @@ class AmpViewer {
         }
     }
 
-    updateLamps(num) {
+    updateLamps(num, k) {
+        if(k === undefined) k = 7.8;
+
         // Updates div with lamp number
         this.lampNum.innerHTML = "<u>Preamp : " + num + " WS (Pairs of lamps)</u>"
 
@@ -552,7 +559,7 @@ class AmpViewer {
         newSlider.type = 'range';
         newSlider.min = 0;
         newSlider.max = 10;
-        newSlider.value = 7.8;
+        newSlider.value = k;
         newSlider.step = 0.1;
         newSlider.oninput = ampCtrl.changeExtraDistos;
         newSlider.style.marginRight = "5px";
@@ -560,7 +567,7 @@ class AmpViewer {
 
         var newOutput = document.createElement('output');
         newOutput.id = "k" + (num - 1);
-        newOutput.value = 7.8;
+        newOutput.value = k;
         newDiv.appendChild(newOutput);
 
         this.updateButtonState(num);

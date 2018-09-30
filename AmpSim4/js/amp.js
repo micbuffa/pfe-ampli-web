@@ -59,6 +59,8 @@ function Amp(context, ampName) {
     // Main input and output and bypass
     var input = context.createGain();
     var output = context.createGain();
+    output.gain.value=0.35;
+
     var byPass = context.createGain();
     byPass.gain.value = 0;
 
@@ -289,7 +291,7 @@ function Amp(context, ampName) {
     function changeMasterVolumeAmp(sliderVal) {
         // sliderVal is in [0, 10]
         var value = parseFloat(sliderVal);
-        //value = map(value, 0, 10, 0, 1);
+        value = map(value, 0, 10, 0, 3);
         masterVolume.gain.value = value;
     }
 
@@ -318,6 +320,14 @@ function Amp(context, ampName) {
         presets.push(preset7);
         presets.push(preset8);
         presets.push(preset9);
+        presets.push(preset10);
+        presets.push(preset11);
+        presets.push(preset12);
+        presets.push(preset13);
+        presets.push(preset14);
+        presets.push(preset15);
+        presets.push(preset16);
+
     }
 
     function bypassAmp(cb) {

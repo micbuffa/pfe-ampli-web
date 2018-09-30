@@ -285,7 +285,7 @@
                 <div style="color:white;position:absolute;left:560px;top:405px">Input Gain
                 </div>
                 <webaudio-knob id="Knob10" midilearn="true" midicc="8.48" style="position:absolute;left:780px;top:350px" src="img/Prophet.png"
-                    value="5" default="5" min="0" max="10" step="0.1" diameter="49" sprites="99" tooltip="OutputGain"></webaudio-knob>
+                    value="3.5" default="3.5" min="0" max="10" step="0.1" diameter="49" sprites="99" tooltip="OutputGain"></webaudio-knob>
                 <canvas id="outputSignalCanvas" style="position:absolute;left:830px;top:350px" width=150 height=50></canvas>
                 <div style="color:white;position:absolute;left:763px;top:405px">Output Gain
                 </div>
@@ -333,6 +333,10 @@
                             <u>Power Amp : on</u>
                         </div>
                         <button style="position:absolute;left:20px;top:230px;" onclick="ampCtrl.togglePoweAmpBypass();">Toggle Power amp on/off</button>
+                        <div id="powerAmpLoHiCutFiltersStatus" style="position:absolute;left:20px;top:260px;">
+                            <u>Hi/Lo cut filters : off</u>
+                        </div>
+                        <button style="position:absolute;left:20px;top:290px;" onclick="ampCtrl.toggleHiAndLoCutFilters();">Toggle lo/hi cut filters</button>
                         <div style="position:absolute;left:270px;top:200px;">transfert function = </div>
                         <select style="position:absolute;left:400px;top:200px" id="distorsionMenu4" onchange="ampCtrl.changePowerAmpDistoType(this.value);"></select>
                         <canvas id="signalDrawerPowerAmpCanvas" style="background-color:black;position:absolute;left:530px;top:200px" width="100"
@@ -352,7 +356,7 @@
                         </div>
                         <div class="controls" style="position:absolute;left:255px;top:250px">
                             <label id="PaNegativeGain">Negative gain</label>
-                            <input id="PANegativeGainSlider" type="range" value="-0.4" step="0.1" min="-5" max="0" oninput="ampCtrl.changePopwerAmpNegativeGainValue(this.value);"></input>
+                            <input id="PANegativeGainSlider" type="range" value="-0.4" step="0.1" min="-5" max="0" oninput="ampCtrl.changePowerAmpNegativeGainValue(this.value);"></input>
                             <output id="PaNegativeGainValue">-0.4</output>
                         </div>
                         <!--

@@ -73,7 +73,7 @@ class AmpController {
     this.ampViewer.updateDisto4Name(name);
   }
 
-  changePopwerAmpNegativeGainValue(val) {
+  changePowerAmpNegativeGainValue(val) {
     this.amp.powerAmp.changeNegativeGainValue(val);
     this.ampViewer.changePowerAmpNegativeGainLabel(val);
   }
@@ -103,6 +103,7 @@ class AmpController {
     this.ampViewer.changePowerAmpStatus(this.amp.powerAmp.getBypassStatus());
   }
 
+  
   setCurveHandlers() {
     // Change distortion on mouse move in Canvas distoDrawer 1
     var canvas1,
@@ -349,32 +350,43 @@ class AmpController {
     this.ampViewer.changeTrebleFilterValueTS(sliderVal);
   }
 
-  
-    changeToneStackPresenceFilterValue(sliderVal) {
-        this.amp.tonestack.changePresenceFilterValueTS(sliderVal);
-        this.ampViewer.changePresenceFilterValueTS(sliderVal);
-    }
+
+  changeToneStackPresenceFilterValue(sliderVal) {
+    this.amp.tonestack.changePresenceFilterValueTS(sliderVal);
+    this.ampViewer.changePresenceFilterValueTS(sliderVal);
+  }
 
 
   //
   // Power Amp handlers
   //
 
+  toggleHiAndLoCutFilters() {
+    this.amp.powerAmp.toggleHiAndLoCutFilters();
+    this.ampViewer.changePowerAmpHiAndLoCutFiltersStatus(this.amp.powerAmp.getLoHiCutFilterStatus());
+  }
+
+  setHiAndLoCutFilters(enableFilters) {
+    this.amp.powerAmp.setHiAndLoCutFilters(enableFilters);
+    this.ampViewer.changePowerAmpHiAndLoCutFiltersStatus(this.amp.powerAmp.getLoHiCutFilterStatus());
+  }
+  
+
   changePresenceFilterGainValue(sliderVal) {
-    if(!this.amp.powerAmp.isEnabled()) {
+    if (!this.amp.powerAmp.isEnabled()) {
       this.changeToneStackPresenceFilterValue(sliderVal);
     } else {
       // use presence in power amp
       // set tonestack presence to neutral
-    this.changeToneStackPresenceFilterValue(5);
+      this.changeToneStackPresenceFilterValue(5);
       this.amp.powerAmp.changePresenceFilterGainValue(sliderVal);
       this.ampViewer.changePresenceFilterValueTS(sliderVal);
     }
-   
+
   }
 
   changeBoostGainValue(sliderVal) {
-    
+
     this.amp.powerAmp.changeBoostGainValue(sliderVal);
     this.ampViewer.changePowerAmpBoostGainValueTS(sliderVal);
   }
@@ -441,6 +453,8 @@ class AmpController {
     if (p.boost === undefined) p.boost = false;
     this.changeBoost(p.boost);
 
+
+    this.removePreampExtraStages();
     // Stage 1
 
     this.changeLowShelf1FrequencyValue(p.LS1Freq);
@@ -478,6 +492,11 @@ class AmpController {
 
     this.changeEQValues(p.EQ);
 
+
+    // default is preamp before tonestack, we need to do this for presets without power amp
+    this.setPATS(true);
+
+
     // Power amp
 
     // Switch PA on or off depending on preset
@@ -488,25 +507,31 @@ class AmpController {
     } else {
       // this is the case of an "old preset" without Power Amp
       // If PA is on we switch it off
-      if(this.amp.powerAmp.isEnabled()) 
+      if (this.amp.powerAmp.isEnabled())
         this.togglePoweAmpBypass();
     }
 
     if (p.PA_ENABLED === undefined) return; // old preset without Power Amp
 
+    this.setPATS(p.PREAMP_BEFORE_TONESTACK); // Preamp before tonestack ?
+
+    this.setHiAndLoCutFilters(p.PA_LO_HI_CUT_FILTERS_ENABLED);
+
     this.changePowerAmpDistoType(p.PA_DISTORSION_CURVE);
-    
     this.changePowerAmpK(p.PA_K);
-    this.changePopwerAmpNegativeGainValue(p.PA_NEGATIVE_GAIN);
-    this.changePowerAmpPresenceGainRangeValue(p.PA_PRESENCE_GAIN_RANGE); 
+    this.changePowerAmpNegativeGainValue(p.PA_NEGATIVE_GAIN);
+    this.changePowerAmpPresenceGainRangeValue(p.PA_PRESENCE_GAIN_RANGE);
     this.changeBoostGainValue(p.PA_BOOST_GAIN);
     this.setPowerAmpPresenceFilterParams(p.PA_PRESENCE_FILTERS_PARAMS);
 
-    this.changeToneStackPresenceFilterValue(5);
+    // If we are here, it means that presence is in the power amp,
+    // so we set the presence located in the tonestack to a neutral value
+    this.changeToneStackPresenceFilterValue(5); // ts presence
+    this.changePresenceFilterGainValue(p.PF);   // PA presence
 
-    //this.changePresenceFilterGainValue(p.PF);
+    // set preamp extra stages
+    this.addPreampLampsFromPresetExtraStages(p.PREAMP_EXTRA_STAGES);
 
-    
   }
 
   // Equalizer handlers
@@ -668,7 +693,7 @@ class AmpController {
       TF: (this.amp.tonestack.trebleFilter.gain.value / 10 + 10).toFixed(1), // trebleFilter.gain.value = (value-5) * 5;
       PF: (this.amp.tonestack.presenceFilter.gain.value / 2 + 5).toFixed(1), // presenceFilter.gain.value = (value-5) * 2;
       EQ: this.amp.eq.getValues(),
-      MV: this.amp.master.gain.value.toFixed(1),
+      MV: map(this.amp.master.gain.value.toFixed(1), 0, 3, 0, 10),
       RN: this.amp.reverb.getName(),
       RG: (this.amp.reverb.getGain() * 10).toFixed(1),
       CN: this.amp.cabinet.getName(),
@@ -678,6 +703,7 @@ class AmpController {
       PREAMP_EXTRA_STAGES: this.amp.preamp.extraStages,
 
       PA_ENABLED: this.amp.powerAmp.isEnabled(),
+      PA_LO_HI_CUT_FILTERS_ENABLED: this.amp.powerAmp.getLoHiCutFilterStatus(),
       PA_DISTORSION_CURVE: this.ampViewer.menuDisto4.value,
       PA_K: this.amp.powerAmp.getDistorsionValue(),
       PA_NEGATIVE_GAIN: this.amp.powerAmp.negativeGain.gain.value,
@@ -715,11 +741,19 @@ class AmpController {
   // ------- Experimentation handlers -------
 
   switchPATS() {
-    this.normalBuild = !this.normalBuild;
+    let preampBeforeTS = this.amp.isPreampBeforeTonestack();
 
-    this.amp.changeTonestackAndPreampLocations(this.normalBuild);
+    this.amp.changeTonestackAndPreampLocations(!preampBeforeTS);
 
-    this.ampViewer.switchPATS(this.normalBuild);
+    this.ampViewer.switchPATS(this.amp.isPreampBeforeTonestack());
+  }
+
+  setPATS(preampBefore) {
+    // we switch only if previous state was not the one we want
+    if (this.amp.isPreampBeforeTonestack() !== preampBefore) {
+      this.amp.changeTonestackAndPreampLocations(preampBefore);
+      this.ampViewer.switchPATS(this.amp.isPreampBeforeTonestack());
+    }
   }
 
   addPreampLamps() {
@@ -732,6 +766,21 @@ class AmpController {
     this.ampViewer.updateLamps(this.nbLampPairs);
   }
 
+  addPreampLampsFromPresetExtraStages(extraStages) {
+    for(let i = 0; i < extraStages.length; i++) {
+      let tube = extraStages[i];
+      this.amp.preamp.addNewLamps(tube.type, this.nbLampPairs);
+      this.amp.preamp.changeDistorsionValuesPA(tube.k, this.nbLampPairs);
+      this.nbLampPairs++;
+      this.ampViewer.updateLamps(this.nbLampPairs, tube.k);
+    }
+  }
+
+  removePreampExtraStages() {
+    while(this.nbLampPairs > 2) {
+      this.removeLastLamp();
+    }
+  }
   changeExtraDistos(e) {
     // Finds the number of the slider
     var distoNum = e.target.id.match(/^\d+|\d+\b|\d+(?=\w)/g)[0];

@@ -57,6 +57,8 @@ function PowerAmp(ctx) {
     eqlocut.type = "peaking";
     eqlocut.gain.value = -18;
 
+    var loAndHiCutFiltersEnabled = false;
+
     //var buildgraph = function() {
     /*
       masterVolume.connect(wetGain).connect(adjustmentGain).connect(ws).connect(presenceFilter).connect(negativeGain);
@@ -75,14 +77,47 @@ function PowerAmp(ctx) {
     //presenceFilter3.output.connect(eqhicut).connect(eqlocut).connect(outputGain); // direct route from presence filter
 
     // bypass route
-    masterVolume.connect(dryGain).connect(eqhicut).connect(eqlocut).connect(outputGain);
-    presenceFilter3.output.connect(boostGain).connect(eqhicut);
+    //masterVolume.connect(dryGain).connect(eqhicut).
+    masterVolume.connect(dryGain).connect(outputGain);
+    // WITH LO AND HI CUT
+    //presenceFilter3.output.connect(boostGain).connect(eqhicut).connect(eqlocut).connect(outputGain);
+    // WITHOUT LO AND HI CUT IN THE PA
+    presenceFilter3.output.connect(boostGain).connect(outputGain);
     /*
     masterVolume.connect(wetGain).connect(adjustmentGain).connect(ws).connect(lowpass).connect(outputGain);
     ws.connect(hipass).connect(hipassgain).connect(outputGain);
     */
     // bypass route
     //masterVolume.connect(dryGain).connect(outputGain);
+
+    function toggleHiAndLoCutFilters() {
+        if(loAndHiCutFiltersEnabled) {
+            // let's disconnect these filters
+            boostGain.disconnect(eqhicut);
+            eqlocut.disconnect(outputGain);
+
+            // connect directly boostGain to output gain
+            boostGain.connect(outputGain);
+        } else {
+            // Let's disconnect boostGain from outputGain
+            boostGain.disconnect(outputGain);
+            // let's add the filters
+            boostGain.connect(eqhicut).connect(eqlocut).connect(outputGain);
+        }
+
+        loAndHiCutFiltersEnabled = !loAndHiCutFiltersEnabled;
+    }
+
+    function setHiAndLoCutFilters(enableFilters) {
+        // for old presets without filters
+        if(enableFilters === undefined) enableFilters = false;
+
+        // If the power amp filters are int he requested state, do nothing
+        if(enableFilters ===  loAndHiCutFiltersEnabled) return;
+
+        // else toggle filters
+        toggleHiAndLoCutFilters();
+    }
 
     function toggleBypass() {
         if (!bypass) {
@@ -99,6 +134,10 @@ function PowerAmp(ctx) {
 
     function getBypassStatus() {
         return bypass;
+    }
+
+    function getLoHiCutFilterStatus() {
+        return loAndHiCutFiltersEnabled;
     }
 
     function changeBoostGainValue(val) {
@@ -222,7 +261,10 @@ function PowerAmp(ctx) {
         changePresenceGainRange: changePresenceGainRange,
         setPresenceFilterParams:setPresenceFilterParams,
         changeDistoType: changeDistoType,
-        changeK: changeK
+        changeK: changeK,
+        toggleHiAndLoCutFilters:toggleHiAndLoCutFilters,
+        getLoHiCutFilterStatus:getLoHiCutFilterStatus,
+        setHiAndLoCutFilters:setHiAndLoCutFilters
     }
 }
 

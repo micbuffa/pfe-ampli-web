@@ -139,9 +139,10 @@ class PreAmp {
 
         var maxPosVal1 = Math.max(logToPos(this.k[2]), logToPos(this.k[3]));
         var maxPosVal2 = Math.max(logToPos(this.k[0]), logToPos(this.k[1]));
+        
         var maxPosVal = Math.max(maxPosVal1, maxPosVal2);
         //var maxPosVal = Math.max(logToPos(k[2]), logToPos(k[3]));
-        this.currentK = parseFloat(maxPosVal).toFixed(1);
+        this.currentK = maxPosVal2;//parseFloat(maxPosVal).toFixed(1);
 
         // redraw curves
         this.drawCurrentDistos();
@@ -463,12 +464,15 @@ class PreAmp {
     // Experimental functions
     //
 
-    addNewLamps(type, num) {
+    addNewLamps(type, num, k) {
+        if(k === undefined) {
+                    // 498 is the empirical value for slider = 7.8
+            k = 498.1397311910594;
+        }
         // Creates a new waveshapper 
         // We store at num + 1 to not interfere with the max drive button algorithm
         this.od[num] = this.context.createWaveShaper();
-        // 498 is the empirical value for slider = 7.8
-        this.od[num].curve = this.wsFactory.distorsionCurves[type](498.1397311910594);
+        this.od[num].curve = this.wsFactory.distorsionCurves[type](k);
         this.distoTypes[num] = type;
 
         // Creates a new highpass
