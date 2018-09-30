@@ -8,6 +8,7 @@ function Visualization() {
   var analyzer;
 
   var dataArray, bufferLength;
+  var averageAmplitude=0;
 
   function configure(canvasId, analzr) {
     analyzer = analzr;
@@ -52,13 +53,13 @@ function Visualization() {
     canvasContext.save();
     
     analyzer.getByteFrequencyData(dataArray);
-    var average = getAverageVolume(dataArray);
+    averageAmplitude = getAverageVolume(dataArray);
     
     // set the fill style to a nice gradient
     canvasContext.fillStyle=gradient;
    
     // draw the vertical meter
-    var value = Math.max(height-average*0.5, 0)
+    var value = Math.max(height-averageAmplitude*0.5, 0)
     canvasContext.fillRect(0,value,25,height);
     
     canvasContext.restore();
@@ -119,9 +120,14 @@ function Visualization() {
     return average;
   }
 
+  function getAverageAmplitude() {
+    return averageAmplitude;
+  }
+
   // API
   return {
     configure: configure,
-    update: update
+    update: update,
+    getAverageAmplitude:getAverageAmplitude
   }
 }

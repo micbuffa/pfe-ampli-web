@@ -16,11 +16,15 @@ class AmpController {
 
   // Distortions
 
-  changeDistorsionValues(sliderValue, numDisto) {
-    // update processing values
+  changeDistorsionValues(sliderValue, numDisto, doNotUpdateKnob) {
+    // update processing 
     this.amp.preamp.changeDistorsionValuesPA(sliderValue, numDisto);
     // update view
-    this.ampViewer.changeDistoLabels(sliderValue, numDisto);
+    this.ampViewer.changeDistoLabels(sliderValue, numDisto, doNotUpdateKnob);
+
+    if(!doNotUpdateKnob) {
+      this.currentK = parseFloat(sliderValue);
+    }
   }
 
   // Bezier
@@ -53,7 +57,7 @@ class AmpController {
     this.ampViewer.updateDisto2Name(name);
   }
 
-  changeDrive(sliderValue) {
+  changeDrive(sliderValue, doNotUpdateKnob) {
     // sliderValue in [0,10]
     // We can imagine having some "profiles here" -> generate
     // different K values from one single sliderValue for the
@@ -62,9 +66,24 @@ class AmpController {
     // on bass frequencies and top high frequency
 
     for (var i = 0; i < 2; i++) {
-      this.changeDistorsionValues(sliderValue, i);
+      this.changeDistorsionValues(sliderValue, i, doNotUpdateKnob);
     }
   }
+
+  dynamicDriveAdjustment() {
+    this.currentK = this.ampViewer.driveKnob.value;
+    var k, inc;
+    var animId = setInterval(() =>  {
+       inc = map(this.ampViewer.inputVisualization.getAverageAmplitude(), 0, 100, -7, 7);
+        //console.log(averageInputValue)
+        k = parseFloat(this.currentK) + inc;
+        //console.log(inc);
+        //changeK(k.value);
+        //this.driveKnob.setValue(k, true);
+        this.changeDrive(k, true);
+    }, 50);
+}
+
 
   changePowerAmpDistoType(name) {
     this.amp.powerAmp.changeDistoType(name);

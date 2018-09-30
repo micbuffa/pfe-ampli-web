@@ -26,6 +26,8 @@ class AmpViewer {
         this.powerAmpHiLoCutFiltersStatus = document.querySelector("#powerAmpLoHiCutFiltersStatus");
         this.graphicEQParent = document.querySelector("#divFilterBank");
         this.distoDrawerPowerAmp = new CurveDrawer("signalDrawerPowerAmpCanvas");
+
+        this.driveKnob = document.querySelector("#Knob3");
     }
 
     // ------- Amp related handlers -------
@@ -35,7 +37,7 @@ class AmpViewer {
     //
 
     // View change for distortions
-    changeDistoLabels(sliderValue, numDisto) {
+    changeDistoLabels(sliderValue, numDisto, doNotUpdateKnob) {
         /*
         if (numDisto > 1) {
             numDisto = numDisto - 2;
@@ -50,8 +52,10 @@ class AmpViewer {
         var slider = document.querySelector("#K" + numSlider + "slider");
         slider.value = parseFloat(sliderValue).toFixed(1);
 
-        var knob = document.querySelector("#Knob3");
-        knob.setValue(this.amp.preamp.currentK, false); // bug metal 5
+        if(!doNotUpdateKnob) {
+            var knob = document.querySelector("#Knob3");
+            knob.setValue(this.amp.preamp.currentK, false);
+        }
     }
 
     drawCurrentPowerAmpDistoCurve(curve) {
@@ -242,7 +246,7 @@ class AmpViewer {
         var knob = document.querySelector("#Knob8");
         knob.setValue(parseFloat(sliderVal).toFixed(1), false);
     }
-    
+
     // View change for amp
 
     changeOutputGainAmp(sliderVal) {
@@ -476,22 +480,26 @@ class AmpViewer {
     // Display live sound signal I/O
     //
 
+  
+
+
+
     initCurveVisualisations() {
         // Signal visualisation
-        var inputVisualization = new Visualization();
-        var outputVisualization = new Visualization();
+        this.inputVisualization = new Visualization();
+        this.outputVisualization = new Visualization();
 
-        inputVisualization.configure("inputSignalCanvas", analyzerAtInput);
-        outputVisualization.configure("outputSignalCanvas", analyzerAtOutput);
+        this.inputVisualization.configure("inputSignalCanvas", analyzerAtInput);
+        this.outputVisualization.configure("outputSignalCanvas", analyzerAtOutput);
 
         // start updating the visualizations
-        requestAnimationFrame(visualize);
+        requestAnimationFrame(visualize.bind(this));
 
         function visualize() {
-            inputVisualization.update();
-            outputVisualization.update();
+            this.inputVisualization.update();
+            this.outputVisualization.update();
 
-            requestAnimationFrame(visualize);
+            requestAnimationFrame(visualize.bind(this));
         }
     }
 
@@ -539,7 +547,7 @@ class AmpViewer {
     }
 
     updateLamps(num, k) {
-        if(k === undefined) k = 7.8;
+        if (k === undefined) k = 7.8;
 
         // Updates div with lamp number
         this.lampNum.innerHTML = "<u>Preamp : " + num + " WS (Pairs of lamps)</u>"
