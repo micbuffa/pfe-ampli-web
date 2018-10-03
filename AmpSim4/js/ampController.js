@@ -76,37 +76,40 @@ class AmpController {
     }
   }
 
-  dynamicDriveAdjustment() {
+
+
+  startDynamicDriveAdjustment(upStep, downStep) {
     this.currentK = this.ampViewer.driveKnob.value;
-    var k, inc;
+    var k;
     var old = undefined;
-    var delta;
+    var upStep = upStep || 8;
+    var downStep = downStep || 32;
 
-    var animId = setInterval(() => {
+    this.dynamicAdjustmentId = setInterval(() => {
       var currentAverageAmplitude = this.ampViewer.inputVisualization.getAverageAmplitude();
-      if (old != undefined) {
-        //compute delta
-        delta = old - currentAverageAmplitude;
-      } else {
+
+      if (old === undefined) {
         old = currentAverageAmplitude;
-        delta = 0;
       }
-      //console.log(delta);
 
-      inc = map(delta, -30, 30, -10, 10);
-      //console.log(averageInputValue)
-      k = parseFloat(this.currentK) + inc;
+      var deltaAmplitude = currentAverageAmplitude - old;
+      if (deltaAmplitude < 0) {
+        // instead of going directly from old to new value
+        k = map(currentAverageAmplitude + deltaAmplitude / downStep, 0, 100, 0, 10);
+      } else {
+        k = map(currentAverageAmplitude - deltaAmplitude / upStep, 0, 100, 0, 10);
+      }
 
-      if (k < 0) k = 0; // k might be negative otherwise...
-      if (k > 10) k = 10; // k cannot be > 10
+      var newK = Math.max(this.currentK, Math.min(this.currentK + k, 10));
 
-      //console.log(inc);
-      //changeK(k.value);
-      //this.driveKnob.setValue(k, true);
-      this.changeDrive(k, true);
+      this.changeDrive(newK, true);
 
       old = currentAverageAmplitude;
-    }, 50);
+    }, 50); // actualise each 50ms
+  }
+
+  stopDynamicDriveAdjustment() {
+    clearInterval(this.dynamicAdjustmentId);
   }
 
 
