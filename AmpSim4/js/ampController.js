@@ -82,8 +82,8 @@ class AmpController {
     this.currentK = this.ampViewer.driveKnob.value;
     var k;
     var old = undefined;
-    var upStep = upStep || 8;
-    var downStep = downStep || 32;
+    var upStep = upStep || 16;
+    var downStep = downStep || 64;
 
     this.dynamicAdjustmentId = setInterval(() => {
       var currentAverageAmplitude = this.ampViewer.inputVisualization.getAverageAmplitude();

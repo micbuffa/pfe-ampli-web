@@ -327,6 +327,7 @@ function Amp(context, ampName) {
         presets.push(preset14);
         presets.push(preset15);
         presets.push(preset16);
+        presets.push(preset17);
 
     }
 
