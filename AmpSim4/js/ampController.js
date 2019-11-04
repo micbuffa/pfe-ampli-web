@@ -17,7 +17,6 @@ class AmpController {
   // Distortions
 
   changeDistorsionValues(sliderValue, numDisto, sourceIsDynamicAdjustment) {
-
     if (!sourceIsDynamicAdjustment) {
       // source for changing K is drive knob manual adjustment or preset
       // we need to store the current K value that will be used as
@@ -26,11 +25,18 @@ class AmpController {
       this.currentK = parseFloat(sliderValue);
     }
 
-    // update processing 
-    this.amp.preamp.changeDistorsionValuesPA(sliderValue, numDisto, sourceIsDynamicAdjustment);
+    // update processing
+    this.amp.preamp.changeDistorsionValuesPA(
+      sliderValue,
+      numDisto,
+      sourceIsDynamicAdjustment
+    );
     // update view
-    this.ampViewer.changeDistoLabels(sliderValue, numDisto, sourceIsDynamicAdjustment);
-
+    this.ampViewer.changeDistoLabels(
+      sliderValue,
+      numDisto,
+      sourceIsDynamicAdjustment
+    );
   }
 
   // Bezier
@@ -76,8 +82,6 @@ class AmpController {
     }
   }
 
-
-
   startDynamicDriveAdjustment(upStep, downStep) {
     this.currentK = this.ampViewer.driveKnob.value;
     var k;
@@ -95,9 +99,21 @@ class AmpController {
       var deltaAmplitude = currentAverageAmplitude - old;
       if (deltaAmplitude < 0) {
         // instead of going directly from old to new value
-        k = map(currentAverageAmplitude + deltaAmplitude / downStep, 0, 100, 0, 10);
+        k = map(
+          currentAverageAmplitude + deltaAmplitude / downStep,
+          0,
+          100,
+          0,
+          10
+        );
       } else {
-        k = map(currentAverageAmplitude - deltaAmplitude / upStep, 0, 100, 0, 10);
+        k = map(
+          currentAverageAmplitude - deltaAmplitude / upStep,
+          0,
+          100,
+          0,
+          10
+        );
       }
 
       var newK = Math.max(this.currentK, Math.min(this.currentK + k, 10));
@@ -111,7 +127,6 @@ class AmpController {
   stopDynamicDriveAdjustment() {
     clearInterval(this.dynamicAdjustmentId);
   }
-
 
   changePowerAmpDistoType(name) {
     this.amp.powerAmp.changeDistoType(name);
@@ -149,7 +164,6 @@ class AmpController {
     this.amp.powerAmp.toggleBypass();
     this.ampViewer.changePowerAmpStatus(this.amp.powerAmp.getBypassStatus());
   }
-
 
   setCurveHandlers() {
     // Change distortion on mouse move in Canvas distoDrawer 1
@@ -397,12 +411,10 @@ class AmpController {
     this.ampViewer.changeTrebleFilterValueTS(sliderVal);
   }
 
-
   changeToneStackPresenceFilterValue(sliderVal) {
     this.amp.tonestack.changePresenceFilterValueTS(sliderVal);
     this.ampViewer.changePresenceFilterValueTS(sliderVal);
   }
-
 
   //
   // Power Amp handlers
@@ -410,14 +422,17 @@ class AmpController {
 
   toggleHiAndLoCutFilters() {
     this.amp.powerAmp.toggleHiAndLoCutFilters();
-    this.ampViewer.changePowerAmpHiAndLoCutFiltersStatus(this.amp.powerAmp.getLoHiCutFilterStatus());
+    this.ampViewer.changePowerAmpHiAndLoCutFiltersStatus(
+      this.amp.powerAmp.getLoHiCutFilterStatus()
+    );
   }
 
   setHiAndLoCutFilters(enableFilters) {
     this.amp.powerAmp.setHiAndLoCutFilters(enableFilters);
-    this.ampViewer.changePowerAmpHiAndLoCutFiltersStatus(this.amp.powerAmp.getLoHiCutFilterStatus());
+    this.ampViewer.changePowerAmpHiAndLoCutFiltersStatus(
+      this.amp.powerAmp.getLoHiCutFilterStatus()
+    );
   }
-
 
   changePresenceFilterGainValue(sliderVal) {
     if (!this.amp.powerAmp.isEnabled()) {
@@ -429,11 +444,9 @@ class AmpController {
       this.amp.powerAmp.changePresenceFilterGainValue(sliderVal);
       this.ampViewer.changePresenceFilterValueTS(sliderVal);
     }
-
   }
 
   changeBoostGainValue(sliderVal) {
-
     this.amp.powerAmp.changeBoostGainValue(sliderVal);
     this.ampViewer.changePowerAmpBoostGainValueTS(sliderVal);
   }
@@ -509,7 +522,6 @@ class AmpController {
     if (p.boost === undefined) p.boost = false;
     this.changeBoost(p.boost);
 
-
     this.removePreampExtraStages();
     // Stage 1
 
@@ -548,10 +560,8 @@ class AmpController {
 
     this.changeEQValues(p.EQ);
 
-
     // default is preamp before tonestack, we need to do this for presets without power amp
     this.setPATS(true);
-
 
     // Power amp
 
@@ -563,8 +573,7 @@ class AmpController {
     } else {
       // this is the case of an "old preset" without Power Amp
       // If PA is on we switch it off
-      if (this.amp.powerAmp.isEnabled())
-        this.togglePoweAmpBypass();
+      if (this.amp.powerAmp.isEnabled()) this.togglePoweAmpBypass();
     }
 
     if (p.PA_ENABLED === undefined) return; // old preset without Power Amp
@@ -587,7 +596,6 @@ class AmpController {
 
     // set preamp extra stages
     this.addPreampLampsFromPresetExtraStages(p.PREAMP_EXTRA_STAGES);
-
   }
 
   // Equalizer handlers

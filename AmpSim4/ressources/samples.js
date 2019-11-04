@@ -18,5 +18,7 @@ var demoSampleURLs = [
   "assets/audio/FolkAcousticDI.mp3",
   "assets/audio/3F_DI_guitar.wav",
   "assets/audio/DIGuitarRIFF.mp3",
-  "assets/audio/CleanGuitarRiff.mp3"
+  "assets/audio/CleanGuitarRiff.mp3",
+  "assets/audio/Master-Of-Puppets.mp3",
+  "assets/audio/Funky-Guitar.mp3"
 ];
