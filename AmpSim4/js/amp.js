@@ -58,10 +58,14 @@ function Amp(context, ampName) {
   // Main input and output and bypass
   var input = context.createGain();
   var output = context.createGain();
-  output.gain.value = 0.35;
+  output.gain.value = 0.1;
 
   var byPass = context.createGain();
   byPass.gain.value = 0;
+
+  // input gain BEFORE preamp, not used by bypass
+  // binded to a slider or a knob, default value = 1
+  var inputGainBeforePreamp = context.createGain();
 
   // amp input gain towards pream stage
   var inputGain = context.createGain();
@@ -135,12 +139,12 @@ function Amp(context, ampName) {
   var eqhicut = context.createBiquadFilter();
   eqhicut.frequency.value = 10000;
   eqhicut.type = "peaking";
-  eqhicut.gain.value = -25;
+  //eqhicut.gain.value = -25;
 
   var eqlocut = context.createBiquadFilter();
   eqlocut.frequency.value = 60;
   eqlocut.type = "peaking";
-  eqlocut.gain.value = -19;
+  //eqlocut.gain.value = -19;
 
   var bypassEQg = context.createGain();
   bypassEQg.gain.value = 0; // by defaut EQ is in
@@ -167,8 +171,12 @@ function Amp(context, ampName) {
   }
 
   function buildGraph() {
-    input.connect(inputGain);
-    input.connect(byPass);
+    //input.connect(inputGain);
+    //input.connect(byPass);
+
+    input.connect(inputGainBeforePreamp);
+    inputGainBeforePreamp.connect(inputGain);
+    inputGainBeforePreamp.connect(byPass);
 
     // boost is not activated, it's just a sort of disto at
     // the very beginning of the amp route
@@ -271,6 +279,11 @@ function Amp(context, ampName) {
     // changeDistoType2();
   }
 
+  // gain before preamp
+  function changeGainBeforePreampValue(sliderval) {
+    inputGainBeforePreamp.gain.value = parseFloat(sliderval);
+  }
+
   // volume aka preamp output volume
   function changeOutputGainAmp(sliderVal) {
     // sliderVal is in [0, 10], adjust to [0, 1]
@@ -305,6 +318,13 @@ function Amp(context, ampName) {
     cabinetSim.setGain(value);
   }
 
+  function changeOutputGainCabinetAmp(sliderVal) {
+    // slider val in [0, 1] 
+    console.log("change cabinet sim output gain value = " + sliderVal);
+    var value = parseFloat(sliderVal);
+    cabinetSim.setOutputGainAfterCabinetSim(value);
+  }
+
   function initPresets() {
     // presets are added from the preset repertory
     // here presets are js variables
@@ -326,6 +346,13 @@ function Amp(context, ampName) {
     presets.push(preset16);
     presets.push(preset17);
     presets.push(preset18);
+    presets.push(preset19);
+    presets.push(preset20);
+    presets.push(preset21);
+    presets.push(preset22);
+    presets.push(preset23);
+    presets.push(preset24);
+    presets.push(preset25);
   }
 
   function bypassAmp(cb) {
@@ -372,10 +399,11 @@ function Amp(context, ampName) {
     changeOversamplingAmp: changeOversamplingAmp,
     changeOutputGainAmp: changeOutputGainAmp,
     changeInputGainAmp: changeInputGainAmp,
-
+    changeGainBeforePreampValue: changeGainBeforePreampValue,
     changeMasterVolumeAmp: changeMasterVolumeAmp,
     changeReverbGainAmp: changeReverbGainAmp,
     changeRoomAmp: changeRoomAmp,
+    changeOutputGainCabinetAmp : changeOutputGainCabinetAmp,
     bypassAmp: bypassAmp,
     bypassEQAmp: bypassEQAmp,
 

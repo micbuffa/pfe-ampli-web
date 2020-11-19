@@ -4,6 +4,7 @@ function Convolver(context, impulses, menuId) {
     // create source and gain node
     var inputGain = context.createGain();
     var outputGain = context.createGain();
+    var outputGainAfterCabinetSim = context.createGain();
     var decodedImpulse;
 
     var IRs = impulses;
@@ -63,13 +64,15 @@ function Convolver(context, impulses, menuId) {
     function buildAudioGraphConvolver() {
         // direct/dry route source -> directGain -> destination
         inputGain.connect(directGain);
-        directGain.connect(outputGain);
+        directGain.connect(outputGainAfterCabinetSim);
 
         // wet route with convolver: source -> convolver 
         // -> convolverGain -> destination
         inputGain.connect(convolverNode);
         convolverNode.connect(convolverGain);
-        convolverGain.connect(outputGain);
+        convolverGain.connect(outputGainAfterCabinetSim);
+
+        outputGainAfterCabinetSim.connect(outputGain);
     }
 
     function setGain(value) {
@@ -78,6 +81,16 @@ function Convolver(context, impulses, menuId) {
 
         directGain.gain.value = v1;
         convolverGain.gain.value = v2;
+    }
+
+    function setOutputGainAfterCabinetSim(value) {
+        console.log("convolver.js adjusting output gain val = " + value);
+        console.log("old outputGain.gain.value =" +  outputGainAfterCabinetSim.gain.value);
+        outputGainAfterCabinetSim.gain.value = parseFloat(value);
+    }
+
+    function getOutputGainAfterCabinetSim() {
+        return outputGainAfterCabinetSim.gain.value;
     }
 
     function getGain() {
@@ -97,6 +110,8 @@ function Convolver(context, impulses, menuId) {
         IRs: IRs, 
         setGain: setGain,
         getGain: getGain,
+        setOutputGainAfterCabinetSim:setOutputGainAfterCabinetSim,
+        getOutputGainAfterCabinetSim:getOutputGainAfterCabinetSim,
         getName: getName,
         loadImpulseFromMenu: loadImpulseFromMenu,
         loadImpulseByUrl: loadImpulseByUrl,

@@ -49,7 +49,7 @@ function PowerAmp(ctx) {
   var adjustmentGain = ctx.createGain();
   adjustmentGain.gain.value = 1;
 
-  // lo and gi cut at the end, corresponds to output tranny (transformateur)
+  // lo and hi cut at the end, corresponds to output tranny (transformateur)
   var eqhicut = ctx.createBiquadFilter();
   eqhicut.frequency.value = 10000;
   eqhicut.type = "peaking";

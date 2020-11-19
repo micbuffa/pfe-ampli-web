@@ -119,6 +119,8 @@ class AmpController {
       var newK = Math.max(this.currentK, Math.min(this.currentK + k, 10));
 
       this.changeDrive(newK, true);
+      this.changePowerAmpK(newK);
+      //this.ampViewer.power
 
       old = currentAverageAmplitude;
     }, 50); // actualise each 50ms
@@ -339,6 +341,10 @@ class AmpController {
   }
 
   // Gains
+  changeGainBeforePreamp(sliderVal) {
+    this.amp.changeGainBeforePreampValue(sliderVal);
+    this.ampViewer.changeGainBeforePreampValue(sliderVal);
+  }
 
   changePreampStage1GainValue(sliderVal) {
     this.amp.preamp.changePreampStage1GainValuePA(sliderVal);
@@ -475,7 +481,7 @@ class AmpController {
     if (value < 5) {
       // is master volume goes down below 50%
       // boost gain at end of power amp goes up
-      this.amp.powerAmp.adjustLowMasterVolume((5 - value));
+      this.amp.powerAmp.adjustLowMasterVolume(5 - value);
     }
   }
 
@@ -489,6 +495,10 @@ class AmpController {
     this.ampViewer.changeRoomAmp(sliderVal);
   }
 
+  changeOutputGainCabinet(sliderVal) {
+    this.amp.changeOutputGainCabinetAmp(sliderVal);
+    this.ampViewer.changeOutputGainCabinetAmp(sliderVal);
+  }
   //
   // Preset handlers
   //
@@ -555,8 +565,14 @@ class AmpController {
     this.changeReverbGain(p.RG);
     this.changeReverbImpulseFromPreset(p.RN);
 
-    this.changeRoom(p.CG);
+    // cabinet sim
+    this.changeRoom(p.CG); // dry/wet
     this.changeCabinetImpulseFromPreset(p.CN);
+    if(p.CAB_OUTPUT_GAIN !== undefined) {
+      this.changeOutputGainCabinet(p.CAB_OUTPUT_GAIN);
+    } else {
+      this.changeOutputGainCabinet(1);
+    }
 
     this.changeEQValues(p.EQ);
 
@@ -710,7 +726,7 @@ class AmpController {
   toggleGuitarInput(event) {
     if (!this.guitarPluggedIn) {
       guitarInput.connect(this.amp.input);
-      this.changeOutputGainValue(5);
+      this.changeOutputGainValue(1);
       this.ampViewer.setButton("ACTIVATED");
     } else {
       guitarInput.disconnect();
@@ -751,7 +767,7 @@ class AmpController {
       distoName2: this.ampViewer.menuDisto2.value,
       K2: this.amp.preamp.getDistorsionValue(1),
 
-      OG: (this.amp.output.gain.value * 10).toFixed(1),
+      OG: (this.amp.outputGain.gain.value * 10).toFixed(1),
       BF: (this.amp.tonestack.bassFilter.gain.value / 7 + 10).toFixed(1), // bassFilter.gain.value = (value-5) * 3;
       MF: (this.amp.tonestack.midFilter.gain.value / 4 + 5).toFixed(1), // midFilter.gain.value = (value-5) * 2;
       TF: (this.amp.tonestack.trebleFilter.gain.value / 10 + 10).toFixed(1), // trebleFilter.gain.value = (value-5) * 5;
@@ -762,6 +778,7 @@ class AmpController {
       RG: (this.amp.reverb.getGain() * 10).toFixed(1),
       CN: this.amp.cabinet.getName(),
       CG: (this.amp.cabinet.getGain() * 10).toFixed(1),
+      CAB_OUTPUT_GAIN: this.amp.cabinet.getOutputGainAfterCabinetSim().toFixed(1),
 
       PREAMP_BEFORE_TONESTACK: this.amp.isPreampBeforeTonestack(),
       PREAMP_EXTRA_STAGES: this.amp.preamp.extraStages,
@@ -785,8 +802,10 @@ class AmpController {
 
   changeOutputGainValue(sliderVal) {
     this.amp.output.gain.value = parseFloat(sliderVal) / 10;
-    //console.log("changeOutputGainValue value = " + output.gain.value);
+    console.log("changeOutputGainValue value = " + this.amp.output.gain.value);
   }
+
+  
 
   // ------- Webpage related handlers -------
 

@@ -63,5 +63,77 @@ var cabinetImpulses = [
   {
     name: "009a-SM57-G12T75-4x12",
     url: "assets/impulses/cabinet/KalthallenCabsIR/009a-SM57-G12T75-4x12.wav"
-  }
+  },
+  {
+    name: "Hesu2x12V30_440center_edge",
+    url: "assets/impulses/cabinet/Hesu2x12V30_440center_edge.wav"
+  },
+  {
+    name: "5150",
+    url: "assets/impulses/cabinet/5150.wav"
+  },
+  {
+    name: "Blackstar",
+    url: "assets/impulses/cabinet/Blackstar.wav"
+  },
+  {
+    name: "Block Inside",
+    url: "assets/impulses/cabinet/Block Inside.wav"
+  },
+  {
+    name: "DV Mark Triple Six",
+    url: "assets/impulses/cabinet/DV Mark Triple Six.wav"
+  },
+  {
+    name: "Engl",
+    url: "assets/impulses/cabinet/Engl.wav"
+  },
+  {
+    name: "JB 1",
+    url: "assets/impulses/cabinet/JB 1.wav"
+  },
+  {
+    name: "JB 2",
+    url: "assets/impulses/cabinet/JB 2.wav"
+  },
+  {
+    name: "Mark V",
+    url: "assets/impulses/cabinet/Mark V.wav"
+  }, 
+  {
+    name: "Orange 2x12",
+    url: "assets/impulses/cabinet/Orange 2x12.wav"
+  }, 
+  {
+    name: "Orange 4x12",
+    url: "assets/impulses/cabinet/Orange 4x12.wav"
+  }, 
+  {
+    name: "Randall 667",
+    url: "assets/impulses/cabinet/Randall 667.wav"
+  }, 
+  {
+    name: "Rectifier",
+    url: "assets/impulses/cabinet/Rectifier.wav"
+  }, 
+  {
+    name: "KillEm-SoloLead-_dc",
+    url: "assets/impulses/cabinet/KillEm-SoloLead-_dc.wav"
+  }, 
+  {
+    name: "RideTL-SoloLeadOD_dc",
+    url: "assets/impulses/cabinet/RideTL-SoloLeadOD_dc.wav"
+  },  
+  {
+    name: "RectJusticeFor-SoloLeadOD_dcifier",
+    url: "assets/impulses/cabinet/JusticeFor-SoloLeadOD_dc.wav"
+  },
+  {
+    name: "BlackAlbum-SoloLeadOD_dc",
+    url: "assets/impulses/cabinet/BlackAlbum-SoloLeadOD_dc.wav"
+  }, 
+  {
+    name: "MasterOf-GermanUbersonic_dc",
+    url: "assets/impulses/cabinet/MasterOf-GermanUbersonic_dc.wav"
+  }, 
 ];
